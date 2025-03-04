@@ -1,7 +1,6 @@
 ### Monopoly Game File Structure 
 - src/ 
   - main/
-    - ControlProgram.java 
       - game/
         - MonopolyGame.java
         - Dice.java
