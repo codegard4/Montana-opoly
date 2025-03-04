@@ -1,5 +1,4 @@
 package src.main.board;
-import javax.swing.*;
 
 
 public class Board {
@@ -8,7 +7,7 @@ public class Board {
      * Board is a hollow 11x11 square that will be represented by a 1x44 array.
      *
      */
-    private int[][] board;
+    private Space[] board;
 
     public Board() {
         // board = new Card[44];

@@ -1,7 +1,4 @@
 package src.main.player;
-import java.util.ArrayList;
-import java.util.List;
-
 import src.main.board.Property;
 
 public class Player{
