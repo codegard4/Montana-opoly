@@ -1,5 +1,6 @@
+package src.main.board;
 
-
+import src.main.player.Player;
 
 public class Property extends Space{
     /*
