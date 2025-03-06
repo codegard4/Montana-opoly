@@ -1,7 +1,7 @@
 
 
 
-public class Property {
+public class Property extends Space{
     /*
      * Constructor for the Property card.
      * A property card has the property's name, price, rent, owner and number of houses.
@@ -12,6 +12,13 @@ public class Property {
     private int houses; 
     private Player owner;
     private boolean mortgaged;
+    private int[][] playerPlaces;
+    private JPanel labelHolder;
+    private JLabel label;
+    private final static int LABEL_WIDTH = 75;
+    private final static int LABEL_HEIGHT = 30;
+    private final int labelX;
+    private final int labelY;
 
     public Property(String name, int price, int[] rent){
         this.name = name; // set the property name
