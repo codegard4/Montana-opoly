@@ -35,12 +35,16 @@ public class Player{
         return true;
 
     }
-    private Property sellProperty(Property property){
+    public Property sellProperty(Property property){
         /*
          * Removes a property from the player's list of properties.
          */
         return null;
 
+    }
+
+    public void passGo(){
+        wallet.addMoney(200);
     }
 
 

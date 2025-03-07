@@ -10,7 +10,10 @@ public class Board {
     private Space[] board;
 
     public Board() {
-        // board = new Card[44];
+        board = new Space[44];
+        board[0] = new Space("Go", 0);
+        
+
     }
 
 
