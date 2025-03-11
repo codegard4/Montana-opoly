@@ -13,7 +13,6 @@ public class Board {
         board = new Space[44];
         board[0] = new Space("Go", 0);
         
-
     }
 
 
