@@ -27,7 +27,7 @@ class MonopolyGame extends JFrame {
 
     private static final Color HUNTER_GREEN = new Color(35,133,51);
 
-    private void startGame() {
+    private void openGame() {
         startScreen = new JFrame("Montana-opoly");
 		startScreen.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		startScreen.setBounds(0, 0, width, height);
@@ -84,7 +84,7 @@ class MonopolyGame extends JFrame {
     }
     
     public MonopolyGame(){
-        startGame();
+        openGame();
     }
 
     public static void main(String[] args){
@@ -160,7 +160,7 @@ class MonopolyGame extends JFrame {
 
             @Override
             public void windowDeactivated(WindowEvent e) {
-                startGame();
+                openGame();
             }
         });
         bio.setBounds(0, 0, 400, 400);

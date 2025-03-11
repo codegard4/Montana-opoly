@@ -12,12 +12,12 @@ public class Wallet{
     private List<Property> properties;
 
 
-    public Wallet(){
+    public Wallet(int startingMoney){
         /*
          * Constructor for the Wallet.
          * A wallet is initialized with 1500 money and an empty list of properties.
          */
-        this.money = 1500;
+        this.money = startingMoney;
         this.properties = new ArrayList<Property>();
     }
 
