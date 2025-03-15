@@ -1,5 +1,3 @@
-package src.main.board;
-
 import src.main.player.Player;
 
 public class Property extends Space {
@@ -7,6 +5,19 @@ public class Property extends Space {
      * Constructor for the Property card.
      * A property card has the property's name, price, rent, owner and number of houses.
      */
+    private enum PropertyClass {
+        Brown,
+        LightBlue,
+        Magenta,
+        Orange,
+        Red,
+        Yellow,
+        Green,
+        Blue,
+        Railroad,
+        Utility
+    }
+    
     private String name; // name of the property
     private int price; // price to buy the property
     private int[] rent; // rent for each of the house numbers for the property
@@ -22,14 +33,12 @@ public class Property extends Space {
     private final int labelY;
 
     public Property(String name, int price, int[] rent){
-        this.name = name; // set the property name
+        super("Property", name); // define a Space instance
         this.price = price; // set the property price
         this.houses = 0; // initially all properties have 0 houses
         this.rent = rent; 
         this.owner = null;
         this.mortgaged = false; // initially all properties are not mortgaged
-
-
     }
     public String getName(){
         /*
