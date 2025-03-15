@@ -2,7 +2,7 @@ package src.main.board;
 
 import src.main.player.Player;
 
-public class Property extends Space{
+public class Property extends Space {
     /*
      * Constructor for the Property card.
      * A property card has the property's name, price, rent, owner and number of houses.
