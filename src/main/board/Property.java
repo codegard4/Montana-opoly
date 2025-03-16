@@ -1,5 +1,8 @@
 package src.main.board;
 
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+
 import src.main.player.Player;
 
 public class Property extends Space{
@@ -18,19 +21,18 @@ public class Property extends Space{
     private JLabel label;
     private final static int LABEL_WIDTH = 75;
     private final static int LABEL_HEIGHT = 30;
-    private final int labelX;
-    private final int labelY;
+    private final int labelX = -1; // TODO: change
+    private final int labelY = -1; // TODO: change
 
-    public Property(String name, int price, int[] rent){
-        this.name = name; // set the property name
-        this.price = price; // set the property price
-        this.houses = 0; // initially all properties have 0 houses
-        this.rent = rent; 
+    public Property(String name, int price, int[] rent) {
+        super(name, SpaceType.PROPERTY);  // Calls Space constructor
+        this.price = price;
+        this.rent = rent;
+        this.houses = 0;
         this.owner = null;
-        this.mortgaged = false; // initially all properties are not mortgaged
-
-
+        this.mortgaged = false;
     }
+
     public String getName(){
         /*
          * Returns the name of the property.
@@ -77,12 +79,12 @@ public class Property extends Space{
         /*
          * Sets the owner of the property to the player.
          */
-        owner = newOwner;
+        this.owner = newOwner;
     }
 
-    @Override
-    public String toString(){
-        return name + " - Price: " + price + " - Rent: " + rent[houses] + " - Houses: " + houses;
+     @Override
+    public String toString() {
+        return super.toString() + " - Price: " + price + " - Rent: " + rent[houses] + " - Houses: " + houses;
     }
 
 }
