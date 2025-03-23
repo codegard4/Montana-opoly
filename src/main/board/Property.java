@@ -14,13 +14,16 @@ public class Property extends Space {
         Yellow,
         Green,
         Blue,
-        Railroad,
+        Mountain,
         Utility
     }
+
+    private PropertyClass color;
     
     private String name; // name of the property
     private int price; // price to buy the property
     private int[] rent; // rent for each of the house numbers for the property
+    private int rrRent;
     private int houses; 
     private Player owner;
     private boolean mortgaged;
@@ -32,14 +35,44 @@ public class Property extends Space {
     private final int labelX;
     private final int labelY;
 
-    public Property(String name, int price, int[] rent){
-        super("Property", name); // define a Space instance
+    /*
+     * Costructor for standard properties
+     */
+    public Property(String name, String imgfile, String propertyClass, int price, int[] rent){
+        super("Property", name, imgfile); // define a Space instance
         this.price = price; // set the property price
+        this.color = PropertyClass.valueOf(propertyClass);
         this.houses = 0; // initially all properties have 0 houses
         this.rent = rent; 
         this.owner = null;
         this.mortgaged = false; // initially all properties are not mortgaged
     }
+
+    /*
+     * Constructor for Railroads
+    */
+    public Property(String name, String imgfile, String propertyClass, int price, int rent){
+        super("Property", name, imgfile); // define a Space instance
+        this.price = price; // set the property price
+        this.color = PropertyClass.valueOf(propertyClass);
+        this.houses = 0; // initially all properties have 0 houses
+        this.rrRent = rent; 
+        this.owner = null;
+        this.mortgaged = false; // initially all properties are not mortgaged
+    }
+
+    /*
+     * Constructor for Utilties
+     */
+    public Property(String name, String imgfile, String propertyClass, int price){
+        super("Property", name, imgfile); // define a Space instance
+        this.price = price; // set the property price
+        this.color = PropertyClass.valueOf(propertyClass);
+        this.houses = 0; // initially all properties have 0 houses 
+        this.owner = null;
+        this.mortgaged = false; // initially all properties are not mortgaged
+    }
+
     public String getName(){
         /*
          * Returns the name of the property.

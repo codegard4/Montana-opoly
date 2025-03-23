@@ -15,10 +15,10 @@ Farm,Property,farm.jpg,Utility,150,,,,,,,
 Kalispell,Property,kalispell.jpg,Magenta,140,10,20,50,150,450,625,750
 Bozeman,Property,bozeman.jpg,Magenta,160,12,24,60,180,500,700,900
 BeartoothMountains,Property,beartoothmountains.jpg,Mountain,200,,,,,,,
-LonePineStatePark,Property,lonepinestatepark.jpg,Orange,180,14,28,70,200,550,750,950
+MedicineRocksStatePark,Property,medicinerocksstatepark.jpg,Orange,180,14,28,70,200,550,750,950
 Chance,Chance,chance.jpg,,,,,,,,,
 SpringMeadowStatePark,Property,springmeadowstatepark.jpg,Orange,180,14,28,70,200,550,750,950
-MedicineRocksStatePark,Property,medicinerocksstatepark.jpg,Orange,200,14,28,70,200,550,750,950
+LonePineStatePark,Property,lonepinestatepark.jpg,Orange,200,14,28,70,200,550,750,950
 RestArea,RestArea,restarea.jpg,,,,,,,,,
 CanyonFerryLake,Property,canyonferrylake.jpg,Red,200,16,32,80,220,600,800,1000
 CommunityChest,CommunityChest,communitychest.jpg,,,,,,,,,
