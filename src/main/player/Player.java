@@ -42,14 +42,12 @@ public class Player {
         return true;
 
     }
-<<<<<<< HEAD
     public Property sellProperty(Property property){
         /*
          * Removes a property from the player's list of properties.
          */
         return null;
-=======
->>>>>>> 4ee229b7842e327074b5814db2977ecff55751b1
+    }
 
     /**
      * Sells a property if the player owns it
@@ -61,12 +59,6 @@ public class Player {
         wallet.addMoney(200);
     }
 
-<<<<<<< HEAD
-    public void passGo(){
-        wallet.addMoney(200);
-    }
-
-=======
     /**
      * Sells a property if the player owns it
      * Gives the buyer the property and transfers the cost of the property
@@ -86,6 +78,5 @@ public class Player {
             return null;
         }
     }
->>>>>>> 4ee229b7842e327074b5814db2977ecff55751b1
 
 }
