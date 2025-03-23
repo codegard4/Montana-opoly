@@ -1,3 +1,5 @@
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 import src.main.player.Player;
 
 public class Property extends Space {
@@ -28,12 +30,12 @@ public class Property extends Space {
     private Player owner;
     private boolean mortgaged;
     private int[][] playerPlaces;
-    private JPanel labelHolder;
-    private JLabel label;
-    private final static int LABEL_WIDTH = 75;
-    private final static int LABEL_HEIGHT = 30;
-    private final int labelX;
-    private final int labelY;
+    // private JPanel labelHolder;
+    // private JLabel label;
+    // private final static int LABEL_WIDTH = 75;
+    // private final static int LABEL_HEIGHT = 30;
+    // private final int labelX;
+    // private final int labelY;
 
     /*
      * Costructor for standard properties
