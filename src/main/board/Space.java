@@ -1,3 +1,4 @@
+package src.main.board;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Rectangle;
@@ -13,9 +14,11 @@ import javax.swing.JLabel;
 
 import src.main.player.Player;
 
+//TODO: javadocs
+
 public class Space {
     private String spaceName;
-    private List<Player> playersOnSpace;
+//    private List<Player> playersOnSpace;
     private ImageIcon spaceImg;
 
     private Rectangle clickPane;
@@ -33,12 +36,17 @@ public class Space {
     }
 
     private SpaceType spaceType;
+    private int index;
 
-    public Space(String spaceType, String spaceName, String imgFile) {
+    public Space(String spaceType, String spaceName, String imgFile, int index) {
         this.spaceType = SpaceType.valueOf(spaceType);
         this.spaceName = spaceName;
-        this.spaceImg = new ImageIcon("Montana-opoly\\src\\dependencies\\propertyImages\\" + imgFile);
-        this.playersOnSpace = new LinkedList<>();
+        this.index = index; // keep track of where the space is numerically so that we can move players around spaces easier
+        this.spaceImg = new ImageIcon("src\\dependencies\\propertyImages\\" + imgFile);
+//        this.playersOnSpace = new LinkedList<>();
+    }
+    public int getIndex() {
+        return index;
     }
 
     public void setClickPane(int[] coords) {
@@ -89,5 +97,9 @@ public class Space {
             }
         });
         view.setVisible(true);
+    }
+    @Override
+    public String toString(){
+        return spaceName;
     }
 }

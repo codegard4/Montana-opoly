@@ -1,3 +1,4 @@
+package src.main.board;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import src.main.player.Player;
@@ -40,8 +41,8 @@ public class Property extends Space {
     /*
      * Costructor for standard properties
      */
-    public Property(String name, String imgfile, String propertyClass, int price, int[] rent){
-        super("Property", name, imgfile); // define a Space instance
+    public Property(String name, String imgfile, String propertyClass, int price, int[] rent, int index){
+        super("Property", name, imgfile, index); // define a Space instance
         this.price = price; // set the property price
         this.color = PropertyClass.valueOf(propertyClass);
         this.houses = 0; // initially all properties have 0 houses
@@ -53,8 +54,8 @@ public class Property extends Space {
     /*
      * Constructor for Railroads
     */
-    public Property(String name, String imgfile, String propertyClass, int price, int rent){
-        super("Property", name, imgfile); // define a Space instance
+    public Property(String name, String imgfile, String propertyClass, int price, int rent, int index){
+        super("Property", name, imgfile, index); // define a Space instance
         this.price = price; // set the property price
         this.color = PropertyClass.valueOf(propertyClass);
         this.houses = 0; // initially all properties have 0 houses
@@ -66,8 +67,8 @@ public class Property extends Space {
     /*
      * Constructor for Utilties
      */
-    public Property(String name, String imgfile, String propertyClass, int price){
-        super("Property", name, imgfile); // define a Space instance
+    public Property(String name, String imgfile, String propertyClass, int price, int index){
+        super("Property", name, imgfile, index); // define a Space instance
         this.price = price; // set the property price
         this.color = PropertyClass.valueOf(propertyClass);
         this.houses = 0; // initially all properties have 0 houses 

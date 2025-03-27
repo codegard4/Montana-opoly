@@ -1,4 +1,6 @@
 package src.main.game;
+import src.main.board.Board;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -9,7 +11,7 @@ import java.io.FileNotFoundException;
 import java.util.Scanner;
 import javax.swing.*;
 
-class MonopolyGame extends JFrame {
+public class MonopolyGame extends JFrame {
     /**
      * Creates instance of game
      */
@@ -41,6 +43,11 @@ class MonopolyGame extends JFrame {
         picLabel.setBounds(0,0,width,height);
         startGame = new JButton("Start Game");
         startGame.setBounds(2*centerHrzntl - 235, 20,200,30);
+        startGame.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                startGame();
+            }
+        });
         rules = new JButton("Rules & How To Play");
         rules.setBounds(2*centerHrzntl - 235, 60, 200, 30);
         about = new JButton("Credits & About the Team");
@@ -77,6 +84,24 @@ class MonopolyGame extends JFrame {
         background.setBounds(0,0,width-200,height-200);
         contentPane.add(background);
         startScreen.setVisible(true);
+    }
+    private void startGame() {
+        startScreen.dispose(); // Close the start screen
+        int numPlayers = getPlayerCount(); // Ask for player count
+        Board gameBoard = new Board(numPlayers); // Pass player count to board
+    }
+
+    private int getPlayerCount() {
+        Integer[] options = {1, 2, 3, 4};
+        return (int) JOptionPane.showInputDialog(
+                null,
+                "How many players will be playing?",
+                "Player Selection",
+                JOptionPane.QUESTION_MESSAGE,
+                null,
+                options,
+                options[0]
+        );
     }
 
     private void exit() {

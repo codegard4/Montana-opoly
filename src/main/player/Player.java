@@ -1,6 +1,7 @@
 package src.main.player;
 
 import src.main.board.Property;
+import src.main.board.Space;
 
 /**
  * The player class represents a player in the game. Players have a token, a
@@ -8,22 +9,42 @@ import src.main.board.Property;
  */
 public class Player {
     private String token;
-    private String name;
     public Wallet wallet;
-    public Property currentProperty;
+    public Space currentSpace;
+    private static final int STARTING_MONEY = 1500;
 
     /**
      * Constructor for the Player. Players should be constructed fully at the start
      * of the game
-     * @param token
-     * @param name
      */
-    public Player(String token, String name, int startingMoney) {
+    public Player() {
+        this(null);
+    }
+    /**
+     * Constructor for the Player. Players should be constructed fully at the start
+     * of the game
+     * @param token
+     */
+    public Player(String token) {
         this.token = token;
-        this.name = name;
-        this.wallet = new Wallet(startingMoney);
-        this.currentProperty = null;
+        this.wallet = new Wallet(STARTING_MONEY);
+        this.currentSpace = null;
 
+    }
+    public String getToken(){
+        return token;
+    }
+    public void setToken(String token){
+        this.token = token;
+    }
+    public int getMoney(){
+        return wallet.getMoney();
+    }
+    public Space getSpace(){
+        return currentSpace;
+    }
+    public void move(Space newSpace){
+        currentSpace = newSpace;
     }
 
     /**
