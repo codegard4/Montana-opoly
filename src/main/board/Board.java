@@ -34,9 +34,9 @@ public class Board extends JFrame {
         boardArray = new Space[40];
         // load the board spaces
         loadSpaces();
-       for(Space s: boardArray) {
-           System.out.println(s); // check if the spaces are loaded properly
-       }
+        for(Space s: boardArray) {
+            System.out.println(s); // check if the spaces are loaded properly
+        }
         // Initialize players
         players = new Player[numPlayers];
         for (int i = 0; i < numPlayers; i++) {
