@@ -11,6 +11,9 @@ import src.main.player.Player;
 
 // TODO: add javadocs
 
+/**
+ *
+ */
 public class Board extends JFrame {
 
     private JFrame board;
@@ -27,6 +30,10 @@ public class Board extends JFrame {
     private int currentPlayerIndex = 0; // start with the first player
     private Random dice = new Random();
 
+    /**
+     *
+     * @param numPlayers
+     */
     public Board(int numPlayers) {
         populateTokens();
         board = new JFrame("Montana-opoly");
@@ -94,11 +101,19 @@ public class Board extends JFrame {
         Board testBoard = new Board(0);
     }
 
+    /**
+     *
+     */
     private void populateTokens() {
+        // TODO: change to montana themed tokens
         String[] tokensToAdd = {"Car", "Dog", "Hat", "Boat", "Thimble", "Iron"};
         tokens.addAll(Arrays.asList(tokensToAdd));
     }
 
+    /**
+     *
+     *
+     */
     private void setupPlayerPanel() {
         playerPanel = new JPanel();
         playerPanel.setBounds(WIDTH, 0, 200, HEIGHT);
@@ -106,8 +121,13 @@ public class Board extends JFrame {
 
         updatePlayerPanel(); // Populate it with player info
     }
+
+    /**
+     *
+     */
     private void updatePlayerPanel() {
         playerPanel.removeAll();
+        //TODO: update properties too
         for (Player p : players) {
             JLabel playerLabel = new JLabel(p.getToken() + " - $" + p.getMoney() + " is on: " + p.getSpace());
             playerPanel.add(playerLabel);
@@ -116,6 +136,10 @@ public class Board extends JFrame {
         playerPanel.repaint();
     }
 
+    /**
+     *
+     * @param playerIndex
+     */
     private void showTokenSelectionPopup(int playerIndex) {
         // Display a dropdown for token selection
         String[] tokenChoices = tokens.toArray(new String[0]); // we have to pass the JOptionPane a []
@@ -133,7 +157,9 @@ public class Board extends JFrame {
         }
     }
 
-
+    /**
+     *
+     */
     private void loadSpaces(){
         try(final Scanner spaceReader = new Scanner(new File("src\\dependencies\\spaceList.txt"))){
             spaceReader.nextLine();
@@ -193,6 +219,10 @@ public class Board extends JFrame {
         }
     }
 
+    /**
+     *
+     * @param e
+     */
     public void clickProperty(MouseEvent e){
         Point clickPoint = new Point(e.getX(), e.getY());
         for(Rectangle r : viewMap.keySet()){
@@ -202,6 +232,9 @@ public class Board extends JFrame {
         }
     }
 
+    /**
+     *
+     */
     private void playGame() {
         int turnsTaken = 0;
         while(turnsTaken < turns * players.length){
@@ -209,28 +242,64 @@ public class Board extends JFrame {
         }
     }
 
+    /**
+     *
+     */
     private void takeTurn() {
         Player currentPlayer = players[currentPlayerIndex];
         JOptionPane.showMessageDialog(null, currentPlayer.getToken() + "'s turn!", "Turn Notification", JOptionPane.INFORMATION_MESSAGE);
 
         int roll = rollDice();
-        // TODO: implement a button that allows the player to roll dice
         JOptionPane.showMessageDialog(null, currentPlayer.getToken() + " rolled a " + roll, "Dice Roll", JOptionPane.INFORMATION_MESSAGE);
+
         int currentIndex = currentPlayer.getSpace().getIndex();
         currentIndex = (currentIndex + roll) % boardArray.length;
-        currentPlayer.move(boardArray[currentIndex]);
-        updatePlayerPanel();
-        JOptionPane.showMessageDialog(null, currentPlayer.getToken() + " landed on "+ boardArray[currentIndex],"Player Move", JOptionPane.INFORMATION_MESSAGE);
+        Space landedSpace = boardArray[currentIndex];
+        currentPlayer.move(landedSpace);
 
-        // Implement logic for landing on properties, chance, community chest, etc.
+        updatePlayerPanel();
+        // we landed on a property
+        if (landedSpace instanceof Property) {
+            Property landedProperty = (Property) landedSpace;
+            handlePropertyLanding(currentPlayer, landedProperty);
+        } else {
+            JOptionPane.showMessageDialog(null, currentPlayer.getToken() + " landed on " + landedSpace.getName(), "Player Move", JOptionPane.INFORMATION_MESSAGE);
+        }
 
         nextTurn();
     }
 
+    private void handlePropertyLanding(Player player, Property property) {
+        if (property.getOwner() == null) {
+            int buyProperty = JOptionPane.showConfirmDialog(null,
+                    "Would you like to buy " + property.getName() + " for $" + property.getPrice() + "?",
+                    "Buy Property",
+                    JOptionPane.YES_NO_OPTION);
+
+            if (buyProperty == JOptionPane.YES_OPTION && player.getMoney() >= property.getPrice()) {
+                player.buyProperty(property);
+                JOptionPane.showMessageDialog(null, player.getToken() + " bought " + property.getName() + "!", "Purchase Successful", JOptionPane.INFORMATION_MESSAGE);
+            } else {
+                JOptionPane.showMessageDialog(null, "Purchase declined!", "Purchase", JOptionPane.INFORMATION_MESSAGE);
+            }
+        } else if (!property.getOwner().equals(player)) {
+            int rent = property.getRent();
+            player.payRent(property.getOwner(), rent); //TODO: implement
+            JOptionPane.showMessageDialog(null, player.getToken() + " paid $" + rent + " in rent to " + property.getOwner().getToken(), "Rent Payment", JOptionPane.INFORMATION_MESSAGE);
+        }
+    }
+
+    /**
+     *
+     * @return
+     */
     private int rollDice() {
         return dice.nextInt(6) + 1 + dice.nextInt(6) + 1;
     }
 
+    /**
+     *
+     */
     private void nextTurn() {
         currentPlayerIndex = (currentPlayerIndex + 1) % players.length;
         takeTurn();
