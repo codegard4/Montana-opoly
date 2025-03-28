@@ -1,6 +1,4 @@
 package src.main.board;
-import src.main.player.Player;
-
 import java.awt.Container;
 import java.awt.Point;
 import java.awt.Rectangle;
@@ -9,6 +7,7 @@ import java.awt.event.MouseListener;
 import java.io.*;
 import java.util.*;
 import javax.swing.*;
+import src.main.player.Player;
 
 // TODO: add javadocs
 
@@ -35,9 +34,9 @@ public class Board extends JFrame {
         boardArray = new Space[40];
         // load the board spaces
         loadSpaces();
-//        for(Space s: boardArray) {
-//            System.out.println(s); // check if the spaces are loaded properly
-//        }
+       for(Space s: boardArray) {
+           System.out.println(s); // check if the spaces are loaded properly
+       }
         // Initialize players
         players = new Player[numPlayers];
         for (int i = 0; i < numPlayers; i++) {
