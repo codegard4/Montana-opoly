@@ -8,6 +8,7 @@ import java.io.*;
 import java.util.*;
 import javax.swing.*;
 import src.main.player.Player;
+import src.main.board.Card;
 
 // TODO: add javadocs
 
@@ -20,6 +21,8 @@ public class Board extends JFrame {
     private JPanel playerPanel;
     private ImageIcon gameBoard = new ImageIcon("src\\dependencies\\fullBoard.jpg");
     private Space[] boardArray;
+    private List<Card> chanceCards = new ArrayList<>();
+    private List<Card> communityChestCards = new ArrayList<>();
     private Map<Rectangle, Space> viewMap;
     private static final int WIDTH = 900;
     private static final int HEIGHT = 900;
@@ -29,6 +32,7 @@ public class Board extends JFrame {
     private final int turns;
     private int currentPlayerIndex = 0; // start with the first player
     private Random dice = new Random();
+    private Random randomCard = new Random();
 
     /**
      *
@@ -42,6 +46,7 @@ public class Board extends JFrame {
         boardArray = new Space[40];
         // load the board spaces
         loadSpaces();
+        loadCards();
        for(Space s: boardArray) {
            System.out.println(s); // check if the spaces are loaded properly
        }
@@ -90,6 +95,32 @@ public class Board extends JFrame {
 
     public static void main(String[] args) {
         Board testBoard = new Board(0);
+    }
+
+    private void loadCards() {
+        loadCardFile("src\\dependencies\\cards.txt");
+    }
+
+    private void loadCardFile(String filePath) {
+        try (Scanner scanner = new Scanner(new File(filePath))) {
+            while (scanner.hasNextLine()) {
+                String[] data = scanner.nextLine().split(",");
+                String description = data[0];
+                int moneyEffect = Integer.parseInt(data[1]);
+                int moveSpaces = Integer.parseInt(data[2]);
+                boolean goToLocation = Boolean.parseBoolean(data[3]);
+                boolean isChance = Boolean.parseBoolean(data[4]);
+
+                Card card = new Card(description, moneyEffect, moveSpaces, goToLocation);
+                if (isChance) {
+                    chanceCards.add(card);
+                } else {
+                    communityChestCards.add(card);
+                }
+            }
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(null, "Error loading cards from file: " + filePath, "File Load Error", JOptionPane.ERROR_MESSAGE);
+        }
     }
 
     /**
@@ -233,8 +264,16 @@ public class Board extends JFrame {
             nextTurn();
         }
     }
+
+    public Space getSpaceAt(int index){
+        return boardArray[index];
+    }
+
+    public int getBoardSize() {
+        return boardArray.length;
+    }
+
     //TODO: trading properties
-    //TODO: community chest & chance
     //TODO: bankruptcy logic
     //TODO
     private void takeTurn() {
@@ -253,14 +292,31 @@ public class Board extends JFrame {
             JOptionPane.showMessageDialog(null, currentPlayer.getToken() + " passed GO and collected $200!",
                     "Pass GO", JOptionPane.INFORMATION_MESSAGE);
         }
-
         Space landedSpace = boardArray[newIndex];
         currentPlayer.move(landedSpace);
-
         updatePlayerPanel();
         handleSpecialSpace(currentPlayer, landedSpace);
+        // Draw Chance or Community Chest card if applicable
+        if (landedSpace.getType() == SpaceType.CHANCE) {
+            drawChanceCard(currentPlayer);
+        } else if (landedSpace.getType() == SpaceType.COMMUNITY_CHEST) {
+            drawCommunityChestCard(currentPlayer);
+        }
 
         nextTurn();
+    }
+
+
+    public void drawChanceCard(Player player) {
+        if (chanceCards.isEmpty()) return;
+        Card drawnCard = chanceCards.get(randomCard.nextInt(chanceCards.size()));
+        drawnCard.applyEffect(player, this);
+    }
+
+    public void drawCommunityChestCard(Player player) {
+        if (communityChestCards.isEmpty()) return;
+        Card drawnCard = communityChestCards.get(randomCard.nextInt(communityChestCards.size()));
+        drawnCard.applyEffect(player, this);
     }
 
 
@@ -273,10 +329,16 @@ public class Board extends JFrame {
         } else if (space.getType().equals("Rest Area")) {
             JOptionPane.showMessageDialog(null, player.getToken() + " landed on Rest Area.", "Rest Area", JOptionPane.INFORMATION_MESSAGE);
         } else if (space.getType().equals("Go to Butte")) {
-            JOptionPane.showMessageDialog(null, player.getToken() + " must go to Butte!", "Go to Butte", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(null, player.getToken() + " must go to Butte! Oh the horror!!", "Go to Butte", JOptionPane.INFORMATION_MESSAGE);
             player.move(boardArray[9]); // move them to Butte
         } else if (space.getType().equals("Butte")) {
             JOptionPane.showMessageDialog(null, player.getToken() + " is just visiting Butte.", "Just Visiting", JOptionPane.INFORMATION_MESSAGE);
+        }
+        else if (space.getType().equals("Lose A Turn")) {
+            JOptionPane.showMessageDialog(null, player.getToken() + "Lost their turn", "Lose a Turn", JOptionPane.INFORMATION_MESSAGE);
+        }
+        else{
+            // it is not a railroad, rest area, go to butte or butte -- do nothing
         }
     }
 
