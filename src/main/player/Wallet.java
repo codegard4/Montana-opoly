@@ -1,7 +1,8 @@
 package src.main.player;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-
+import java.util.Map;
 import src.main.board.Property;
 
 public class Wallet{
@@ -10,7 +11,10 @@ public class Wallet{
      */
     private int money;
     private List<Property> properties;
-
+    private String[] colors = new String[] {"Brown","LightBlue","Magenta","Orange","Red","Yellow","Green","Blue"};
+    private int[] numFull = new int[] {2,3,3,3,3,3,3,3};
+    private Map<String, Integer> fullSetList; 
+ 
 
     public Wallet(int startingMoney){
         /*
@@ -18,7 +22,11 @@ public class Wallet{
          * A wallet is initialized with 1500 money and an empty list of properties.
          */
         this.money = startingMoney;
-        this.properties = new ArrayList<Property>();
+        this.properties = new ArrayList<>();
+        fullSetList = new HashMap<>();
+        for(int i = 0;i<colors.length;i++){
+            fullSetList.put(colors[i], numFull[i]);
+        }
     }
 
     public int getMoney(){
@@ -60,10 +68,26 @@ public class Wallet{
         }
         return totalValue;
     }
+    
     public boolean addProperty(Property property){
         /*
          * Adds a property to the wallet.
          */
+        String col = property.getColor();
+        List<Property> checkForSet = new ArrayList<>();
+        checkForSet.add(property);
+        if(!col.equals("Utility") && !col.equals("Mountain")){
+            for(Property p: properties){
+                if(p.getColor().equals(property.getColor())){
+                    checkForSet.add(p);
+                }
+            }
+            if(fullSetList.get(property.getColor()).equals(checkForSet.size())){
+                for(Property p: checkForSet){
+                    p.fullSet(true);
+                }
+            }
+        }
         return properties.add(property);
     }
 

@@ -1,5 +1,6 @@
 package src.main.game;
 import src.main.board.Board;
+import src.main.player.Wallet;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -10,6 +11,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 import javax.swing.*;
+import src.main.board.Property;
+import src.main.player.Player;
 
 public class MonopolyGame extends JFrame {
     /**
@@ -26,7 +29,8 @@ public class MonopolyGame extends JFrame {
     private JButton rules;
     private JButton about;
     private JButton exit;
-
+    private Board gameBoard;
+    
     private static final Color HUNTER_GREEN = new Color(35,133,51);
 
     private void openGame() {
@@ -88,7 +92,7 @@ public class MonopolyGame extends JFrame {
     private void startGame() {
         startScreen.dispose(); // Close the start screen
         int numPlayers = getPlayerCount(); // Ask for player count
-        Board gameBoard = new Board(numPlayers); // Pass player count to board
+        gameBoard = new Board(numPlayers); // Pass player count to board
     }
 
     private int getPlayerCount() {
@@ -191,5 +195,50 @@ public class MonopolyGame extends JFrame {
         bio.setBounds(0, 0, 400, 400);
         bio.setVisible(true);
         
+    }
+
+    public int calculateRent(Player p, Property prop) {
+        Wallet owner = p.getWallet();
+        if (prop.getColor().equals("Mountain")){
+            int count = 0;
+            for (Property k: owner.getProperties()){
+                if (k.getColor().equals("Mountain")){
+                    count += 1;
+                }
+            }
+            return (int) (25*Math.pow(2.0, (count-1)));
+        }
+        else {
+            if (prop.getColor().equals("Utility")){
+                int count = 0;
+                for (Property k: owner.getProperties()){
+                    if (k.getColor().equals("Utility")){
+                        count += 1;
+                    }
+                }
+                return (int) (4 + 6*(count-1))*gameBoard.rollDice();
+            }
+            else {
+                return prop.getRent();
+            }
+        }
+    }
+
+    public void trade(Player p) {
+        JFrame tradeMachine = new JFrame();
+        Container tradePane = tradeMachine.getContentPane();
+        tradePane.setLayout(null);
+        tradeMachine.setBounds(5,5,600,600);
+        JPanel p1box = new JPanel();
+        JPanel p2box = new JPanel();
+        JPanel p1acquire = new JPanel();
+        JPanel p2acquire = new JPanel();
+        p1box.setBounds(10, 10, 150, 500);
+        p2box.setBounds(400, 10, 150, 500);
+        p1acquire.setBounds(200, 10, 150, 225);
+        p2acquire.setBounds(200, 250, 150, 225);
+        
+
+
     }
 }

@@ -1,6 +1,8 @@
 package src.main.board;
 import src.main.player.Player;
 
+// TO-DO: Trade algorithms and bot player behavior
+
 public class Property extends Space {
     /*
      * Constructor for the Property card.
@@ -29,6 +31,7 @@ public class Property extends Space {
     private Player owner;
     private boolean mortgaged;
     private int[][] playerPlaces;
+    private boolean fullSetMember = false;
     // private JPanel labelHolder;
     // private JLabel label;
     // private final static int LABEL_WIDTH = 75;
@@ -93,7 +96,15 @@ public class Property extends Space {
         /*
          * Returns the rent of the property.
          */
-        return rent[houses];
+        if(houses > 0){
+            return rent[houses+1];
+        }
+        else {
+            if(fullSetMember){
+                return rent[1];
+            }
+        }
+        return rent[0];
     }
     public int getHouses(){
         /*
@@ -101,24 +112,42 @@ public class Property extends Space {
          */
         return houses;
     }
+
+    public String getColor() {
+        return String.valueOf(color);
+    }
+
     public void addHouse(){
         /*
          * Adds a house to the property.
          */
         houses += 1;
     }
+
+    public void fullSet(boolean b){
+        fullSetMember = b;  
+    }
+
     private void sellHouse(){
         /*
          * Removes a house from the property.
          */
         houses -= 1;
     }
+    /**
+     * 
+     * @return
+     */
     public Player getOwner(){
         /*
          * Returns the owner of the property.
          */
         return owner;
     }
+    /**
+     * 
+     * @param newOwner
+     */
     public void purchased(Player newOwner){
         /*
          * Sets the owner of the property to the player.

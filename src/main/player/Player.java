@@ -80,6 +80,15 @@ public class Player {
         wallet.addMoney(200);
     }
 
+    public Wallet getWallet() {
+        return wallet;
+    }
+
+    public void payRent(Player p, int amount) {
+        wallet.removeMoney(amount);
+        p.getWallet().addMoney(amount);
+    }
+
     /**
      * Sells a property if the player owns it
      * Gives the buyer the property and transfers the cost of the property

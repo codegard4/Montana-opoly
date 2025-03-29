@@ -227,7 +227,7 @@ public class Board extends JFrame {
         nextTurn();
     }
 
-    private int rollDice() {
+    public int rollDice() {
         return dice.nextInt(6) + 1 + dice.nextInt(6) + 1;
     }
 
