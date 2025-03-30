@@ -95,7 +95,7 @@ public class Board extends JFrame {
     }
 
     public static void main(String[] args) {
-        Board testBoard = new Board(0);
+        Board testBoard = new Board(0, 0);
     }
 
     private void loadCards() {
@@ -267,6 +267,10 @@ public class Board extends JFrame {
         int turnsTaken = 0;
         while(turnsTaken < turns * players.length){
             nextTurn();
+            turnsTaken++;
+        }
+        for(Player p : players){
+            //TODO: end of game popup that says who had more money
         }
     }
 
@@ -280,9 +284,9 @@ public class Board extends JFrame {
 
     //TODO: trading properties
     //TODO: bankruptcy logic
-    //TODO
+    //TODO: end of game
     private void takeTurn() {
-        currentPlayer = players[currentPlayerIndex];
+        Player currentPlayer = players[currentPlayerIndex];
         JOptionPane.showMessageDialog(null, currentPlayer.getToken() + "'s turn!", "Turn Notification", JOptionPane.INFORMATION_MESSAGE);
 
         int roll = rollDice();
@@ -302,9 +306,9 @@ public class Board extends JFrame {
         updatePlayerPanel();
         handleSpecialSpace(currentPlayer, landedSpace);
         // Draw Chance or Community Chest card if applicable
-        if (landedSpace.getType() == SpaceType.CHANCE) {
+        if (landedSpace.getType() == Space.SpaceType.Chance) {
             drawChanceCard(currentPlayer);
-        } else if (landedSpace.getType() == SpaceType.COMMUNITY_CHEST) {
+        } else if (landedSpace.getType() == Space.SpaceType.CommunityChest) {
             drawCommunityChestCard(currentPlayer);
         }
 
@@ -328,17 +332,17 @@ public class Board extends JFrame {
         if (space instanceof Property) {
             Property property = (Property) space;
             handlePropertyLanding(player, property);
-        } else if (space.getType().equals("Railroad")) { //TODO: implement getType
+        } else if (space.getType().equals(Space.SpaceType.Property)) { //TODO: implement getType
             handleRailroad(player, space);
-        } else if (space.getType().equals("Rest Area")) {
+        } else if (space.getType().equals(Space.SpaceType.GoToRestArea)) {
             JOptionPane.showMessageDialog(null, player.getToken() + " landed on Rest Area.", "Rest Area", JOptionPane.INFORMATION_MESSAGE);
-        } else if (space.getType().equals("Go to Butte")) {
+        } else if (space.getType().equals(Space.SpaceType.GoToButte)) {
             JOptionPane.showMessageDialog(null, player.getToken() + " must go to Butte! Oh the horror!!", "Go to Butte", JOptionPane.INFORMATION_MESSAGE);
             player.move(boardArray[9]); // move them to Butte
-        } else if (space.getType().equals("Butte")) {
+        } else if (space.getType().equals(Space.SpaceType.Butte)) {
             JOptionPane.showMessageDialog(null, player.getToken() + " is just visiting Butte.", "Just Visiting", JOptionPane.INFORMATION_MESSAGE);
         }
-        else if (space.getType().equals("Lose A Turn")) {
+        else if (space.getType().equals(Space.SpaceType.LoseATurn)) {
             JOptionPane.showMessageDialog(null, player.getToken() + "Lost their turn", "Lose a Turn", JOptionPane.INFORMATION_MESSAGE);
         }
         else{
@@ -448,7 +452,7 @@ public class Board extends JFrame {
     }
 
 
-    private int rollDice() {
+    public int rollDice() {
         return dice.nextInt(6) + 1 + dice.nextInt(6) + 1;
     }
 

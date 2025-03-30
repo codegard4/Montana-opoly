@@ -23,7 +23,7 @@ public class Space {
 
     private Rectangle clickPane;
     
-    private enum SpaceType {
+    public enum SpaceType {
         Property,
         RestArea,
         GoToRestArea,
@@ -47,6 +47,10 @@ public class Space {
     }
     public int getIndex() {
         return index;
+    }
+
+    public SpaceType getType(){
+        return spaceType;
     }
 
     public void setClickPane(int[] coords) {

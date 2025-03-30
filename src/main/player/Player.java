@@ -3,6 +3,9 @@ package src.main.player;
 import src.main.board.Property;
 import src.main.board.Space;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * The player class represents a player in the game. Players have a token, a
  * name, and a wallet. The wallet contains the player's money and properties.
@@ -26,6 +29,8 @@ public class Player {
      */
     public Player() {
         token = null;
+        this.wallet = new Wallet(STARTING_MONEY);
+        this.currentSpace = null;
     }
     /**
      * Constructor for the Player. Players should be constructed fully at the start
@@ -79,12 +84,6 @@ public class Player {
         return null;
     }
 
-    /**
-     * Sells a property if the player owns it
-     * 
-     * @param property
-     * @return
-     */
     public void passGo() {
         wallet.addMoney(200);
     }
@@ -105,7 +104,7 @@ public class Player {
      * @param property
      * @return
      */
-    private Property sellProperty(Property property, Player buyer) {
+    public Property sellProperty(Property property, Player buyer) {
         if (wallet.getProperties().contains(property)) {
             wallet.addMoney(property.getPrice());
             wallet.getProperties().remove(property);
@@ -116,6 +115,28 @@ public class Player {
             System.out.println("You do not own the property so you cannot sell it");
             return null;
         }
+    }
+    public List<Property> getUnmortgagedProperties(){
+        List<Property> unmortgagedProperties = new ArrayList<Property>();
+        for (Property property : wallet.getProperties()) {
+            if (!property.isMortgaged()){
+                unmortgagedProperties.add(property);
+            }
+        }
+        return unmortgagedProperties;
+    }
+
+    public void mortgageProperty(Property property) {
+        // mortgage the property by setting it to mortgaged and give the player the mortgage amount
+    }
+    public void unmortgageProperty(Property property) {
+        // unmortgage a property by setting it to unmortgaged and charge the player the amount to unmortgage
+    }
+
+    public int calculateRailroadRent(){
+        // calculate the amount someone will pay in rent based on the number of railroads owned
+//        (25$ for every) railroad that is owned by this player
+        return -1;
     }
 
 }

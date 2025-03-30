@@ -34,6 +34,11 @@ public class MonopolyGame extends JFrame {
     
     private static final Color HUNTER_GREEN = new Color(35,133,51);
 
+    public MonopolyGame(){
+        openGame();
+//        trade();
+    }
+
     private void openGame() {
         startScreen = new JFrame("Montana-opoly");
 		startScreen.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -94,7 +99,7 @@ public class MonopolyGame extends JFrame {
         startScreen.dispose(); // Close the start screen
         int numPlayers = getPlayerCount(); // Ask for player count
         int numTurns = getNumberTurns(); //implement
-        Board gameBoard = new Board(numPlayers, numTurns); // Pass player count to board
+        gameBoard = new Board(numPlayers, numTurns); // Pass player count to board
     }
 
     private int getNumberTurns() {
@@ -125,11 +130,6 @@ public class MonopolyGame extends JFrame {
 
     private void exit() {
         System.exit(0);
-    }
-    
-    public MonopolyGame(){
-        openGame();
-        trade();
     }
 
     public static void main(String[] args){

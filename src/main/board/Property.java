@@ -1,7 +1,7 @@
 package src.main.board;
 import src.main.player.Player;
 
-// TO-DO: Trade algorithms and bot player behavior
+// TODO: Trade algorithms and bot player behavior
 
 public class Property extends Space {
     /*
@@ -26,7 +26,6 @@ public class Property extends Space {
     private String name; // name of the property
     private int price; // price to buy the property
     private int[] rent; // rent for each of the house numbers for the property
-    private int rrRent;
     private int houses; 
     private Player owner;
     private boolean mortgaged;
@@ -62,7 +61,7 @@ public class Property extends Space {
         this.price = price; // set the property price
         this.color = PropertyClass.valueOf(propertyClass);
         this.houses = 0; // initially all properties have 0 houses
-        this.rrRent = rent; 
+        this.rent = new int[]{rent}; // TODO: calculate railroad rent
         this.owner = null;
         this.mortgaged = false; // initially all properties are not mortgaged
     }
@@ -92,6 +91,15 @@ public class Property extends Space {
          */
         return price;
     }
+
+    /**
+     * Is the property mortgaged?
+     * @return whether property is mortgaged
+     */
+    public boolean isMortgaged(){
+        return mortgaged;
+    }
+
     public int getRent(){
         /*
          * Returns the rent of the property.
