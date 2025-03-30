@@ -168,4 +168,8 @@ public class Property extends Space {
         return name + " - Price: " + price + " - Rent: Dependent upon how many utilities are owned and the roll of the dice"  + " - Houses cannot be placed on this property";
     }
 
+    public String shortListing() {
+        return name + " - $" + price;
+    }
+
 }

@@ -26,6 +26,7 @@ public class Board extends JFrame {
     private int turns =  10;
     private int currentPlayerIndex = 0; // start with the first player
     private Random dice = new Random();
+    private Player currentPlayer;
 
     public Board(int numPlayers) {
         populateTokens();
@@ -97,6 +98,10 @@ public class Board extends JFrame {
     private void populateTokens() {
         String[] tokensToAdd = {"Car", "Dog", "Hat", "Boat", "Thimble", "Iron"};
         tokens.addAll(Arrays.asList(tokensToAdd));
+    }
+
+    public Player getCurrentPlayer() {
+        return currentPlayer;
     }
 
     private void setupPlayerPanel() {
@@ -210,7 +215,7 @@ public class Board extends JFrame {
     }
 
     private void takeTurn() {
-        Player currentPlayer = players[currentPlayerIndex];
+        currentPlayer = players[currentPlayerIndex];
         JOptionPane.showMessageDialog(null, currentPlayer.getToken() + "'s turn!", "Turn Notification", JOptionPane.INFORMATION_MESSAGE);
 
         int roll = rollDice();
