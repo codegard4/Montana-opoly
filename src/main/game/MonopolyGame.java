@@ -88,7 +88,21 @@ public class MonopolyGame extends JFrame {
     private void startGame() {
         startScreen.dispose(); // Close the start screen
         int numPlayers = getPlayerCount(); // Ask for player count
-        Board gameBoard = new Board(numPlayers); // Pass player count to board
+        int numTurns = getNumberTurns(); //implement
+        Board gameBoard = new Board(numPlayers, numTurns); // Pass player count to board
+    }
+
+    private int getNumberTurns() {
+        Integer[] options = {5, 10, 20, 30, 50};
+        return (int) JOptionPane.showInputDialog(
+                null,
+                "How many turns will the game last?",
+                "Turn Selection",
+                JOptionPane.QUESTION_MESSAGE,
+                null,
+                options,
+                options[0]
+        );
     }
 
     private int getPlayerCount() {
