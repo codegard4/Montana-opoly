@@ -34,6 +34,7 @@ public class Board extends JFrame {
     private Random dice = new Random();
     private Random randomCard = new Random();
 
+
     /**
      *
      * @param numPlayers
@@ -130,6 +131,10 @@ public class Board extends JFrame {
         // TODO: change to montana themed tokens
         String[] tokensToAdd = {"Car", "Dog", "Hat", "Boat", "Thimble", "Iron"};
         tokens.addAll(Arrays.asList(tokensToAdd));
+    }
+
+    public Player getCurrentPlayer() {
+        return players[currentPlayerIndex];
     }
 
     /**
@@ -277,7 +282,7 @@ public class Board extends JFrame {
     //TODO: bankruptcy logic
     //TODO
     private void takeTurn() {
-        Player currentPlayer = players[currentPlayerIndex];
+        currentPlayer = players[currentPlayerIndex];
         JOptionPane.showMessageDialog(null, currentPlayer.getToken() + "'s turn!", "Turn Notification", JOptionPane.INFORMATION_MESSAGE);
 
         int roll = rollDice();
@@ -305,7 +310,6 @@ public class Board extends JFrame {
 
         nextTurn();
     }
-
 
     public void drawChanceCard(Player player) {
         if (chanceCards.isEmpty()) return;

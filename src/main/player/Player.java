@@ -8,32 +8,41 @@ import src.main.board.Space;
  * name, and a wallet. The wallet contains the player's money and properties.
  */
 public class Player {
+
+    private enum PlayerType {
+        HUMAN,
+        CPU
+    }
+
     private String token;
     public Wallet wallet;
     public Space currentSpace;
     private static final int STARTING_MONEY = 1500;
+    private static PlayerType playerType;
 
     /**
      * Constructor for the Player. Players should be constructed fully at the start
      * of the game
      */
     public Player() {
-        this(null);
+        token = null;
     }
     /**
      * Constructor for the Player. Players should be constructed fully at the start
      * of the game
      * @param token
      */
-    public Player(String token) {
+    public Player(String token, String type) {
         this.token = token;
         this.wallet = new Wallet(STARTING_MONEY);
         this.currentSpace = null;
-
+        playerType = PlayerType.valueOf(type);
     }
+    
     public String getToken(){
         return token;
     }
+
     public void setToken(String token){
         this.token = token;
     }
@@ -78,6 +87,15 @@ public class Player {
      */
     public void passGo() {
         wallet.addMoney(200);
+    }
+
+    public Wallet getWallet() {
+        return wallet;
+    }
+
+    public void payRent(Player p, int amount) {
+        wallet.removeMoney(amount);
+        p.getWallet().addMoney(amount);
     }
 
     /**

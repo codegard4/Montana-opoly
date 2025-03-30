@@ -1,5 +1,6 @@
 package src.main.game;
 import src.main.board.Board;
+import src.main.player.Wallet;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -8,8 +9,11 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.Scanner;
 import javax.swing.*;
+import src.main.board.Property;
+import src.main.player.Player;
 
 public class MonopolyGame extends JFrame {
     /**
@@ -26,7 +30,8 @@ public class MonopolyGame extends JFrame {
     private JButton rules;
     private JButton about;
     private JButton exit;
-
+    private Board gameBoard;
+    
     private static final Color HUNTER_GREEN = new Color(35,133,51);
 
     private void openGame() {
@@ -124,6 +129,7 @@ public class MonopolyGame extends JFrame {
     
     public MonopolyGame(){
         openGame();
+        trade();
     }
 
     public static void main(String[] args){
@@ -205,5 +211,88 @@ public class MonopolyGame extends JFrame {
         bio.setBounds(0, 0, 400, 400);
         bio.setVisible(true);
         
+    }
+
+    public int calculateRent(Player p, Property prop) {
+        Wallet owner = p.getWallet();
+        if (prop.getColor().equals("Mountain")){
+            int count = 0;
+            for (Property k: owner.getProperties()){
+                if (k.getColor().equals("Mountain")){
+                    count += 1;
+                }
+            }
+            return (int) (25*Math.pow(2.0, (count-1)));
+        }
+        else {
+            if (prop.getColor().equals("Utility")){
+                int count = 0;
+                for (Property k: owner.getProperties()){
+                    if (k.getColor().equals("Utility")){
+                        count += 1;
+                    }
+                }
+                return (int) (4 + 6*(count-1))*gameBoard.rollDice();
+            }
+            else {
+                return prop.getRent();
+            }
+        }
+    }
+
+    
+    
+    public void trade() {
+        JFrame tradeMachine = new JFrame();
+        Container tradePane = tradeMachine.getContentPane();
+        tradePane.setLayout(null);
+        tradeMachine.setBounds(5,5,600,600);
+        JPanel p1Box = new JPanel();
+        JPanel p2Box = new JPanel();
+        JPanel p1Acquire = new JPanel();
+        JPanel p2Acquire = new JPanel();
+        p1Box.setBounds(10, 10, 150, 500);
+        p2Box.setBounds(400, 10, 150, 500);
+        p1Acquire.setBounds(200, 10, 150, 225);
+        p2Acquire.setBounds(200, 250, 150, 225);
+        JList<String> p1List = new JList<>();
+        loadList(p1List);
+        JList<String> p2List = new JList<>();
+        JList<String> p1AcqList = new JList<>();
+        JList<String> p2AcqList = new JList<>();
+        JScrollPane p1Pane = new JScrollPane();
+        JScrollPane p2Pane =  new JScrollPane();
+        JScrollPane p1AcqPane = new JScrollPane();
+        JScrollPane p2AcqPane = new JScrollPane();
+        JComboBox<String> players = new JComboBox<>();
+        p1Box.add(p1List);
+        p2Box.add(p2List);
+        p1Acquire.add(p1AcqList);
+        p2Acquire.add(p2AcqList);
+        p2Box.add(players);
+        tradePane.add(p1Box);
+        tradePane.add(p2Box);
+        tradePane.add(p1Acquire);
+        tradePane.add(p2Acquire);
+        tradeMachine.setVisible(true);
+    }
+
+    private void loadList(JList j) {
+        Player active = gameBoard.getCurrentPlayer();
+        Wallet activeWallet = active.getWallet();
+        ArrayList<String> listProp = new ArrayList<>();
+        for(Property p: activeWallet.getProperties()){
+            listProp.add(p.shortListing());
+        }
+        j.setListData(listProp.toArray());
+    }
+
+    private void loadList(JList j, Player p) {
+        Wallet activeWallet = p.getWallet();
+        ArrayList<String> listProp = new ArrayList<>();
+        for(Property m: activeWallet.getProperties()){
+            listProp.add(m.shortListing());
+        }
+        j.setListData(listProp.toArray());
     }
 }
