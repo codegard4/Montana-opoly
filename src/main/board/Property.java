@@ -8,7 +8,7 @@ public class Property extends Space {
      * Constructor for the Property card.
      * A property card has the property's name, price, rent, owner and number of houses.
      */
-    private enum PropertyClass {
+    public enum PropertyClass {
         Brown,
         LightBlue,
         Magenta,
@@ -21,7 +21,7 @@ public class Property extends Space {
         Utility
     }
 
-    private PropertyClass color;
+    public PropertyClass color;
     
     private String name; // name of the property
     private int price; // price to buy the property
@@ -61,7 +61,7 @@ public class Property extends Space {
         this.price = price; // set the property price
         this.color = PropertyClass.valueOf(propertyClass);
         this.houses = 0; // initially all properties have 0 houses
-        this.rent = new int[]{rent}; // TODO: calculate railroad rent
+        this.rent = new int[]{25,50,75,100}; // TODO: calculate railroad rent
         this.owner = null;
         this.mortgaged = false; // initially all properties are not mortgaged
     }
@@ -72,6 +72,7 @@ public class Property extends Space {
     public Property(String name, String imgfile, String propertyClass, int price, int index){
         super("Property", name, imgfile, index); // define a Space instance
         this.name = name;
+        this.rent = new int[]{4,7};
         this.price = price; // set the property price
         this.color = PropertyClass.valueOf(propertyClass);
         this.houses = 0; // initially all properties have 0 houses 
@@ -100,6 +101,13 @@ public class Property extends Space {
         return mortgaged;
     }
 
+    public void morgtage(){
+        mortgaged = true;
+    }
+    public void unmorgtage(){
+        mortgaged = false;
+    }
+
     public int getRent(){
         /*
          * Returns the rent of the property.
@@ -112,8 +120,13 @@ public class Property extends Space {
                 return rent[1];
             }
         }
+        System.out.println(rent[0]);
         return rent[0];
     }
+    public PropertyClass getPropertyClass(){
+        return color;
+    }
+
     public int getHouses(){
         /*
          * Returns the number of houses on the property.
