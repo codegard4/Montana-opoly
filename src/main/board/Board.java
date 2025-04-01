@@ -31,10 +31,16 @@ public class Board extends JFrame {
     // TODO: change to Montana themed tokens
     private final List<String> tokens = new ArrayList<>();
     private final int turns;
+    private int turnsTaken = 0;
+    private boolean newTurn = true;
     private int currentPlayerIndex = 0; // start with the first player
     private Random dice = new Random();
     private Random randomCard = new Random();
 
+    public JButton newTurnButton = new JButton("New Turn");
+    public JButton endGameButton = new JButton("End Game");
+    public JButton tradeButton = new JButton("Trade");
+    public JButton addHousesButton = new JButton("Add Houses");
 
     /**
      * @param numPlayers
@@ -62,12 +68,24 @@ public class Board extends JFrame {
             showTokenSelectionPopup(i);
         }
         // Setup player panel
+
         setupPlayerPanel();
         board.add(playerPanel);
         Container boardContent = board.getContentPane();
         boardContent.setLayout(new BorderLayout());
         JPanel boardPanel = new JPanel();
         JLabel boardLabel = new JLabel(gameBoard);
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.setLayout(new FlowLayout());
+        newTurnButton.setEnabled(false); // Start disabled until a round finishes
+
+
+        buttonPanel.add(newTurnButton);
+        buttonPanel.add(endGameButton);
+        buttonPanel.add(tradeButton);
+        buttonPanel.add(addHousesButton);
+
+        boardContent.add(buttonPanel, BorderLayout.NORTH);
         boardPanel.add(boardLabel);
 //        boardLabel.setBounds(5, 5, WIDTH - 10, HEIGHT - 10);
 //        boardContent.add(boardPanel);
@@ -95,6 +113,13 @@ public class Board extends JFrame {
             public void mouseExited(MouseEvent e) {
             }
         });
+        newTurnButton.addActionListener(e -> {
+            newTurnButton.setEnabled(false);
+            startNewTurn();
+        });
+        endGameButton.addActionListener(e -> endGame());
+        tradeButton.addActionListener(e -> initiateTrade());
+        addHousesButton.addActionListener(e -> addHouses());
         board.paintComponents(getGraphics());
         board.setVisible(true);
         playGame();
@@ -128,6 +153,31 @@ public class Board extends JFrame {
         } catch (IOException e) {
             JOptionPane.showMessageDialog(null, "Error loading cards from file: " + filePath, "File Load Error", JOptionPane.ERROR_MESSAGE);
         }
+    }
+
+    private void endGame() {
+        // END GAME -- Print results
+        // Sort players by total money in descending order
+        Arrays.sort(players, (p1, p2) -> Integer.compare(p2.getMoney(), p1.getMoney()));
+
+        // Build summary string
+        StringBuilder summary = new StringBuilder("Game Over! Final Rankings:\n");
+        int rank = 1;
+        for (Player p : players) {
+            summary.append(rank).append(". ").append(p.summarizeMoney()).append("\n");
+            rank++;
+        }
+        // Display final rankings
+        JOptionPane.showMessageDialog(null, summary.toString(), "Final Rankings", JOptionPane.INFORMATION_MESSAGE);
+
+    }
+
+    private void initiateTrade() {
+        JOptionPane.showMessageDialog(board, "Trade feature not yet implemented.", "Trade", JOptionPane.INFORMATION_MESSAGE);
+    }
+
+    private void addHouses() {
+        JOptionPane.showMessageDialog(board, "House purchasing not yet implemented.", "Add Houses", JOptionPane.INFORMATION_MESSAGE);
     }
 
     /**
@@ -167,11 +217,13 @@ public class Board extends JFrame {
             singlePlayerPanel.setLayout(new BoxLayout(singlePlayerPanel, BoxLayout.Y_AXIS));
             singlePlayerPanel.setBorder(BorderFactory.createTitledBorder(p.getToken())); // Title for each player
 
-            // Player Token and Money
+            // Player Token Money and current space
             JLabel playerLabel = new JLabel("Money: $" + p.getMoney());
             singlePlayerPanel.add(playerLabel);
+            JLabel spaceLabel = new JLabel("Current Space: " + p.getSpace());
+            singlePlayerPanel.add(spaceLabel);
 
-            // Show owned properties
+            // Display owned properties
             List<Property> ownedProperties = p.getUnmortgagedProperties();
             if (!ownedProperties.isEmpty()) {
                 singlePlayerPanel.add(new JLabel("Properties:"));
@@ -284,14 +336,15 @@ public class Board extends JFrame {
      *
      */
     private void playGame() {
-        int turnsTaken = 0;
-        while (turnsTaken < turns * players.length) {
-            nextTurn();
-            turnsTaken++;
+        while (turnsTaken <= (turns * players.length)) {
+            if (newTurn) {
+                JOptionPane.showMessageDialog(null, "Turn " + turnsTaken, "Turns Info", JOptionPane.INFORMATION_MESSAGE);
+                nextTurn();
+            }
         }
-        for (Player p : players) {
-            //TODO: end of game popup that says who had more money
-        }
+
+        endGame();
+
     }
 
     public Space getSpaceAt(int index) {
@@ -304,7 +357,6 @@ public class Board extends JFrame {
 
     //TODO: trading properties
     //TODO: bankruptcy logic
-    //TODO: end of game
     private void takeTurn() {
         Player currentPlayer = players[currentPlayerIndex];
         JOptionPane.showMessageDialog(null, currentPlayer.getToken() + "'s turn!", "Turn Notification", JOptionPane.INFORMATION_MESSAGE);
@@ -316,24 +368,25 @@ public class Board extends JFrame {
         int newIndex = (currentIndex + roll) % boardArray.length;
 
         // Check if player passes GO
-        if (newIndex < currentIndex) { // Looping around the board means they passed GO
+        if (newIndex < currentIndex) {
             currentPlayer.passGo();
             JOptionPane.showMessageDialog(null, currentPlayer.getToken() + " passed GO and collected $200!",
                     "Pass GO", JOptionPane.INFORMATION_MESSAGE);
         }
+
         Space landedSpace = boardArray[newIndex];
         currentPlayer.move(landedSpace);
         updatePlayerPanel();
         handleSpecialSpace(currentPlayer, landedSpace);
+
         // Draw Chance or Community Chest card if applicable
         if (landedSpace.getType() == Space.SpaceType.Chance) {
             drawChanceCard(currentPlayer);
         } else if (landedSpace.getType() == Space.SpaceType.CommunityChest) {
             drawCommunityChestCard(currentPlayer);
         }
-
-        nextTurn();
     }
+
 
     public void drawChanceCard(Player player) {
         if (chanceCards.isEmpty()) return;
@@ -474,9 +527,32 @@ public class Board extends JFrame {
         return dice.nextInt(6) + 1 + dice.nextInt(6) + 1;
     }
 
-    private void nextTurn() {
-        currentPlayerIndex = (currentPlayerIndex + 1) % players.length;
-        takeTurn();
+    private void startNewTurn() {
+        newTurn = true;
+        nextTurn();
     }
+    private void nextTurn() {
+        // Loop through each player and allow them to take a turn
+        for (currentPlayerIndex = 0; currentPlayerIndex < players.length; currentPlayerIndex++) {
+            System.out.println("Player " + (currentPlayerIndex + 1) + "'s turn.");
+            takeTurn();
+        }
+
+        // Round complete, disable turns until "New Turn" button is clicked
+        newTurn = false;
+
+        // Show message to indicate that all players have taken their turn
+        JOptionPane.showMessageDialog(board,
+                "All players have taken their turns. You can trade, buy houses, or end the game before continuing.",
+                "Round Complete", JOptionPane.INFORMATION_MESSAGE);
+        updatePlayerPanel();
+
+        // Enable the "New Turn" button for the user to start the next round
+        newTurnButton.setEnabled(true);
+
+        // Increment turnsTaken to track game progress
+        turnsTaken++;
+    }
+
 }
     
