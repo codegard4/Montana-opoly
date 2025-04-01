@@ -1,12 +1,13 @@
 package src.main.board;
-import java.awt.Container;
-import java.awt.Point;
-import java.awt.Rectangle;
+
+import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.*;
 import java.util.*;
+import java.util.List;
 import javax.swing.*;
+
 import src.main.player.Player;
 import src.main.board.Card;
 
@@ -36,21 +37,20 @@ public class Board extends JFrame {
 
 
     /**
-     *
      * @param numPlayers
      */
     public Board(int numPlayers, int numTurns) {
         turns = numTurns;
         populateTokens();
         board = new JFrame("Montana-opoly");
-        board.setBounds(0,0,WIDTH-100,HEIGHT); //TODO: add player panel in the last 100 pixel width of the board
+        board.setBounds(0, 0, WIDTH, HEIGHT);
         boardArray = new Space[40];
         // load the board spaces
         loadSpaces();
         loadCards();
-       for(Space s: boardArray) {
-           System.out.println(s); // check if the spaces are loaded properly
-       }
+//        for (Space s : boardArray) {
+//            System.out.println(s); // check if the spaces are loaded properly
+//        }
         // Initialize players
         players = new Player[numPlayers];
         for (int i = 0; i < numPlayers; i++) {
@@ -65,26 +65,32 @@ public class Board extends JFrame {
         setupPlayerPanel();
         board.add(playerPanel);
         Container boardContent = board.getContentPane();
-        boardContent.setLayout(new OverlayLayout(boardContent));
+        boardContent.setLayout(new BorderLayout());
         JPanel boardPanel = new JPanel();
         JLabel boardLabel = new JLabel(gameBoard);
         boardPanel.add(boardLabel);
-        boardLabel.setBounds(5,5,WIDTH-10,HEIGHT-10);
-        boardContent.add(boardPanel);
+//        boardLabel.setBounds(5, 5, WIDTH - 10, HEIGHT - 10);
+//        boardContent.add(boardPanel);
+        boardContent.add(boardPanel, BorderLayout.CENTER); // Game board in the center
+        boardContent.add(playerPanel, BorderLayout.SOUTH); // Player panel at the bottom
         board.addMouseListener(new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 clickProperty(e);
             }
+
             @Override
             public void mousePressed(MouseEvent e) {
             }
+
             @Override
             public void mouseReleased(MouseEvent e) {
             }
+
             @Override
             public void mouseEntered(MouseEvent e) {
             }
+
             @Override
             public void mouseExited(MouseEvent e) {
             }
@@ -95,7 +101,7 @@ public class Board extends JFrame {
     }
 
     public static void main(String[] args) {
-        Board testBoard = new Board(0, 0);
+        Board testBoard = new Board(2, 5);
     }
 
     private void loadCards() {
@@ -137,35 +143,55 @@ public class Board extends JFrame {
         return players[currentPlayerIndex];
     }
 
-    /**
-     *
-     *
-     */
     private void setupPlayerPanel() {
         playerPanel = new JPanel();
-        //TODO: move the player panel below the board
-        playerPanel.setBounds(WIDTH, 0, 200, HEIGHT);
         playerPanel.setLayout(new BoxLayout(playerPanel, BoxLayout.Y_AXIS));
+        playerPanel.setBorder(BorderFactory.createTitledBorder("Players"));
+//        playerPanel.setBounds(0, HEIGHT, WIDTH, 100);
 
         updatePlayerPanel(); // Populate it with player info
     }
 
     /**
-     *
+     * Updates the player panel to display players' money and owned properties.
      */
     private void updatePlayerPanel() {
         playerPanel.removeAll();
-        //TODO: update properties too
+
+        // Set GridLayout: 1 row, n columns (one for each player)
+        playerPanel.setLayout(new GridLayout(1, players.length, 10, 10));
+
         for (Player p : players) {
-            JLabel playerLabel = new JLabel(p.getToken() + " - $" + p.getMoney() + " is on: " + p.getSpace());
-            playerPanel.add(playerLabel);
+            // Create individual player column
+            JPanel singlePlayerPanel = new JPanel();
+            singlePlayerPanel.setLayout(new BoxLayout(singlePlayerPanel, BoxLayout.Y_AXIS));
+            singlePlayerPanel.setBorder(BorderFactory.createTitledBorder(p.getToken())); // Title for each player
+
+            // Player Token and Money
+            JLabel playerLabel = new JLabel("Money: $" + p.getMoney());
+            singlePlayerPanel.add(playerLabel);
+
+            // Show owned properties
+            List<Property> ownedProperties = p.getUnmortgagedProperties();
+            if (!ownedProperties.isEmpty()) {
+                singlePlayerPanel.add(new JLabel("Properties:"));
+
+                for (Property prop : ownedProperties) {
+                    JLabel propertyLabel = new JLabel("• " + prop.getName() + " ($" + prop.getPrice() + ")");
+                    singlePlayerPanel.add(propertyLabel);
+                }
+            }
+
+            // Add this player's column to the player panel
+            playerPanel.add(singlePlayerPanel);
         }
+
         playerPanel.revalidate();
         playerPanel.repaint();
     }
 
+
     /**
-     *
      * @param playerIndex
      */
     private void showTokenSelectionPopup(int playerIndex) {
@@ -188,73 +214,67 @@ public class Board extends JFrame {
     /**
      *
      */
-    private void loadSpaces(){
-        try(final Scanner spaceReader = new Scanner(new File("src\\dependencies\\spaceList.txt"))){
+    private void loadSpaces() {
+        try (final Scanner spaceReader = new Scanner(new File("src\\dependencies\\spaceList.txt"))) {
             spaceReader.nextLine();
             int i = 0;
-            while(spaceReader.hasNext()){
+            while (spaceReader.hasNext()) {
                 String[] newSpace = spaceReader.next().split(",");
-                if(newSpace[1].equals("Property")){
-                    if(newSpace.length > 6){
+                if (newSpace[1].equals("Property")) {
+                    if (newSpace.length > 6) {
                         int[] propRent = new int[7];
-                        for(int k=5;k<12;k++){
-                            propRent[k-5] = Integer.parseInt(newSpace[k]);
+                        for (int k = 5; k < 12; k++) {
+                            propRent[k - 5] = Integer.parseInt(newSpace[k]);
                         }
                         boardArray[i] = new Property(newSpace[0], newSpace[2], newSpace[3], Integer.parseInt(newSpace[4]), propRent, i);
                         i++;
-                    }
-                    else {
-                        if(newSpace.length > 5){
+                    } else {
+                        if (newSpace.length > 5) {
                             boardArray[i] = new Property(newSpace[0], newSpace[2], newSpace[3], Integer.parseInt(newSpace[4]), Integer.parseInt(newSpace[5]), i);
                             i++;
-                        }
-                        else{
+                        } else {
                             boardArray[i] = new Property(newSpace[0], newSpace[2], newSpace[3], Integer.parseInt(newSpace[4]), i);
                             i++;
                         }
                     }
-                }
-                else{
+                } else {
                     boardArray[i] = new Space(newSpace[1], newSpace[0], newSpace[2], i);
                     i++;
                 }
             }
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             JOptionPane.showMessageDialog(null, "Space File Not Found!", "Game Initialization Error", JOptionPane.ERROR_MESSAGE);
         }
 
-        try(final Scanner coordReader = new Scanner(new File("src\\dependencies\\spaceCoords.txt"))){
+        try (final Scanner coordReader = new Scanner(new File("src\\dependencies\\spaceCoords.txt"))) {
             coordReader.nextLine();
             int i = 0;
-            while(coordReader.hasNext()){
+            while (coordReader.hasNext()) {
                 String[] newCoord = coordReader.next().split(",");
                 int[] coords = new int[8];
-                for(int k=1;k<9;k++){
-                    coords[k-1] = Integer.parseInt(newCoord[k]);
+                for (int k = 1; k < 9; k++) {
+                    coords[k - 1] = Integer.parseInt(newCoord[k]);
                 }
                 boardArray[i].setClickPane(coords);
                 i++;
             }
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             JOptionPane.showMessageDialog(null, "Coordinates File Not Found!", "Game Initialization Error", JOptionPane.ERROR_MESSAGE);
         }
 
         viewMap = new HashMap<>();
-        for (Space c : boardArray){
+        for (Space c : boardArray) {
             viewMap.put(c.getClickPane(), c);
         }
     }
 
     /**
-     *
      * @param e
      */
-    public void clickProperty(MouseEvent e){
+    public void clickProperty(MouseEvent e) {
         Point clickPoint = new Point(e.getX(), e.getY());
-        for(Rectangle r : viewMap.keySet()){
-            if(r.contains(clickPoint)){
+        for (Rectangle r : viewMap.keySet()) {
+            if (r.contains(clickPoint)) {
                 viewMap.get(r).viewProperty();
             }
         }
@@ -265,16 +285,16 @@ public class Board extends JFrame {
      */
     private void playGame() {
         int turnsTaken = 0;
-        while(turnsTaken < turns * players.length){
+        while (turnsTaken < turns * players.length) {
             nextTurn();
             turnsTaken++;
         }
-        for(Player p : players){
+        for (Player p : players) {
             //TODO: end of game popup that says who had more money
         }
     }
 
-    public Space getSpaceAt(int index){
+    public Space getSpaceAt(int index) {
         return boardArray[index];
     }
 
@@ -341,11 +361,9 @@ public class Board extends JFrame {
             player.move(boardArray[9]); // move them to Butte
         } else if (space.getType().equals(Space.SpaceType.Butte)) {
             JOptionPane.showMessageDialog(null, player.getToken() + " is just visiting Butte.", "Just Visiting", JOptionPane.INFORMATION_MESSAGE);
-        }
-        else if (space.getType().equals(Space.SpaceType.LoseATurn)) {
+        } else if (space.getType().equals(Space.SpaceType.LoseATurn)) {
             JOptionPane.showMessageDialog(null, player.getToken() + "Lost their turn", "Lose a Turn", JOptionPane.INFORMATION_MESSAGE);
-        }
-        else{
+        } else {
             // it is not a railroad, rest area, go to butte or butte -- do nothing
         }
     }

@@ -4,6 +4,7 @@ import src.main.board.Property;
 import src.main.board.Space;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -123,13 +124,18 @@ public class Player {
                 unmortgagedProperties.add(property);
             }
         }
+        unmortgagedProperties.sort(Comparator.comparing(Property::getPropertyClass));
         return unmortgagedProperties;
     }
 
     public void mortgageProperty(Property property) {
         // mortgage the property by setting it to mortgaged and give the player the mortgage amount
+        property.morgtage();
+        wallet.addMoney(property.getPrice() / 2);
     }
     public void unmortgageProperty(Property property) {
+        property.unmorgtage();
+        wallet.removeMoney(property.getPrice() / 2);
         // unmortgage a property by setting it to unmortgaged and charge the player the amount to unmortgage
     }
 
