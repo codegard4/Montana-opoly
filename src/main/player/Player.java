@@ -139,6 +139,22 @@ public class Player {
         // unmortgage a property by setting it to unmortgaged and charge the player the amount to unmortgage
     }
 
+    public int getTotalWealth() {
+        int totalWealth = wallet.getMoney(); // Start with wallet balance
+        for (Property property : wallet.getProperties()) {
+            if (property.isMortgaged()) {
+                totalWealth += property.getPrice() / 2; // Add half the value if mortgaged
+            } else {
+                totalWealth += property.getPrice(); // Add full value otherwise
+            }
+        }
+        return totalWealth;
+    }
+
+    public String summarizeMoney() {
+        return getToken() + " - Total Wealth: $" + getTotalWealth();
+    }
+
     public int calculateRailroadRent(){
         // calculate the amount someone will pay in rent based on the number of railroads owned
 //        (25$ for every) railroad that is owned by this player
