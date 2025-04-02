@@ -14,7 +14,7 @@ import src.main.board.Card;
 // TODO: add javadocs
 
 /**
- *
+ * Board is called by MonopolyGame and creates a gameboard to play monopoly on
  */
 public class Board extends JFrame {
 
@@ -43,7 +43,9 @@ public class Board extends JFrame {
     public JButton addHousesButton = new JButton("Add Houses");
 
     /**
-     * @param numPlayers
+     * Board constructor
+     * @param numPlayers number of players
+     * @param numTurns number of game turns each player gets
      */
     public Board(int numPlayers, int numTurns) {
         turns = numTurns;
@@ -51,75 +53,65 @@ public class Board extends JFrame {
         board = new JFrame("Montana-opoly");
         board.setBounds(0, 0, WIDTH, HEIGHT);
         boardArray = new Space[40];
-        // load the board spaces
+        // load the board spaces and cards
         loadSpaces();
         loadCards();
-//        for (Space s : boardArray) {
-//            System.out.println(s); // check if the spaces are loaded properly
-//        }
+
         // Initialize players
         players = new Player[numPlayers];
         for (int i = 0; i < numPlayers; i++) {
             players[i] = new Player();
             players[i].move(boardArray[0]); // all players start on GO
         }
+
         // Show Token Selection Dialog for each player
         for (int i = 0; i < numPlayers; i++) {
             showTokenSelectionPopup(i);
         }
-        // Setup player panel
 
+        // Setup player panel
         setupPlayerPanel();
         board.add(playerPanel);
+        // Setup board
         Container boardContent = board.getContentPane();
         boardContent.setLayout(new BorderLayout());
         JPanel boardPanel = new JPanel();
         JLabel boardLabel = new JLabel(gameBoard);
         JPanel buttonPanel = new JPanel();
         buttonPanel.setLayout(new FlowLayout());
-        newTurnButton.setEnabled(false); // Start disabled until a round finishes
+        newTurnButton.setEnabled(false);
 
-
+        // Add all the buttons
         buttonPanel.add(newTurnButton);
         buttonPanel.add(endGameButton);
         buttonPanel.add(tradeButton);
         buttonPanel.add(addHousesButton);
 
-        boardContent.add(buttonPanel, BorderLayout.NORTH);
         boardPanel.add(boardLabel);
-//        boardLabel.setBounds(5, 5, WIDTH - 10, HEIGHT - 10);
-//        boardContent.add(boardPanel);
-        boardContent.add(boardPanel, BorderLayout.CENTER); // Game board in the center
-        boardContent.add(playerPanel, BorderLayout.SOUTH); // Player panel at the bottom
+        boardContent.add(buttonPanel, BorderLayout.NORTH);
+        boardContent.add(boardPanel, BorderLayout.CENTER);
+        boardContent.add(playerPanel, BorderLayout.SOUTH);
         board.addMouseListener(new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 clickProperty(e);
             }
-
             @Override
-            public void mousePressed(MouseEvent e) {
-            }
-
+            public void mousePressed(MouseEvent e) {}
             @Override
-            public void mouseReleased(MouseEvent e) {
-            }
-
+            public void mouseReleased(MouseEvent e) {}
             @Override
-            public void mouseEntered(MouseEvent e) {
-            }
-
+            public void mouseEntered(MouseEvent e) {}
             @Override
-            public void mouseExited(MouseEvent e) {
-            }
+            public void mouseExited(MouseEvent e) {}
         });
-        newTurnButton.addActionListener(e -> {
-            newTurnButton.setEnabled(false);
-            startNewTurn();
-        });
+
+        // Listen for each of the buttons to be clicked
+        newTurnButton.addActionListener(e -> {newTurnButton.setEnabled(false); startNewTurn();});
         endGameButton.addActionListener(e -> endGame());
         tradeButton.addActionListener(e -> initiateTrade());
         addHousesButton.addActionListener(e -> addHouses());
+
         board.paintComponents(getGraphics());
         board.setVisible(true);
         playGame();
@@ -129,10 +121,17 @@ public class Board extends JFrame {
         Board testBoard = new Board(2, 5);
     }
 
+    /**
+     * Load all the chance and community chest cards
+     */
     private void loadCards() {
         loadCardFile("src\\dependencies\\cards.txt");
     }
 
+    /**
+     * Loads each card from a properly formatted .txt file
+     * @param filePath the path to the chance and community chest cards
+     */
     private void loadCardFile(String filePath) {
         try (Scanner scanner = new Scanner(new File(filePath))) {
             while (scanner.hasNextLine()) {
@@ -155,8 +154,10 @@ public class Board extends JFrame {
         }
     }
 
+    /**
+     * End the game and show who won
+     */
     private void endGame() {
-        // END GAME -- Print results
         // Sort players by total money in descending order
         Arrays.sort(players, (p1, p2) -> Integer.compare(p2.getMoney(), p1.getMoney()));
 
@@ -167,15 +168,22 @@ public class Board extends JFrame {
             summary.append(rank).append(". ").append(p.summarizeMoney()).append("\n");
             rank++;
         }
+
         // Display final rankings
         JOptionPane.showMessageDialog(null, summary.toString(), "Final Rankings", JOptionPane.INFORMATION_MESSAGE);
 
     }
 
+    /**
+     * Allow two players to make a property trade
+     */
     private void initiateTrade() {
         JOptionPane.showMessageDialog(board, "Trade feature not yet implemented.", "Trade", JOptionPane.INFORMATION_MESSAGE);
     }
 
+    /**
+     * Allow a player to add houses to their properties
+     */
     private void addHouses() {
         JOptionPane.showMessageDialog(board, "House purchasing not yet implemented.", "Add Houses", JOptionPane.INFORMATION_MESSAGE);
     }
@@ -185,21 +193,27 @@ public class Board extends JFrame {
      */
     private void populateTokens() {
         // TODO: change to montana themed tokens
-        String[] tokensToAdd = {"Car", "Dog", "Hat", "Boat", "Thimble", "Iron"};
+//        String[] tokensToAdd = {"Car", "Dog", "Hat", "Boat", "Thimble", "Iron"};
+        String[] tokensToAdd = {"F-150", "Hay Bale", "Bird Dog", "Fishing Boat", "Pickaxe", "Cowboy Boot"};
         tokens.addAll(Arrays.asList(tokensToAdd));
     }
 
+    /**
+     * Gets the current player
+     * @return the current player
+     */
     public Player getCurrentPlayer() {
         return players[currentPlayerIndex];
     }
 
+    /**
+     * Sets up the panel that will display player information
+     */
     private void setupPlayerPanel() {
         playerPanel = new JPanel();
         playerPanel.setLayout(new BoxLayout(playerPanel, BoxLayout.Y_AXIS));
         playerPanel.setBorder(BorderFactory.createTitledBorder("Players"));
-//        playerPanel.setBounds(0, HEIGHT, WIDTH, 100);
-
-        updatePlayerPanel(); // Populate it with player info
+        updatePlayerPanel();
     }
 
     /**
@@ -212,12 +226,13 @@ public class Board extends JFrame {
         playerPanel.setLayout(new GridLayout(1, players.length, 10, 10));
 
         for (Player p : players) {
+
             // Create individual player column
             JPanel singlePlayerPanel = new JPanel();
             singlePlayerPanel.setLayout(new BoxLayout(singlePlayerPanel, BoxLayout.Y_AXIS));
-            singlePlayerPanel.setBorder(BorderFactory.createTitledBorder(p.getToken())); // Title for each player
+            singlePlayerPanel.setBorder(BorderFactory.createTitledBorder(p.getToken()));
 
-            // Player Token Money and current space
+            // Player, Token, Money and current space
             JLabel playerLabel = new JLabel("Money: $" + p.getMoney());
             singlePlayerPanel.add(playerLabel);
             JLabel spaceLabel = new JLabel("Current Space: " + p.getSpace());
@@ -227,24 +242,22 @@ public class Board extends JFrame {
             List<Property> ownedProperties = p.getUnmortgagedProperties();
             if (!ownedProperties.isEmpty()) {
                 singlePlayerPanel.add(new JLabel("Properties:"));
-
                 for (Property prop : ownedProperties) {
                     JLabel propertyLabel = new JLabel("• " + prop.getName() + " ($" + prop.getPrice() + ")");
                     singlePlayerPanel.add(propertyLabel);
                 }
             }
-
             // Add this player's column to the player panel
             playerPanel.add(singlePlayerPanel);
         }
-
         playerPanel.revalidate();
         playerPanel.repaint();
     }
 
 
     /**
-     * @param playerIndex
+     * Shows the tokens that players can select at the start of the game
+     * @param playerIndex which player is selecting their token
      */
     private void showTokenSelectionPopup(int playerIndex) {
         // Display a dropdown for token selection
@@ -264,7 +277,7 @@ public class Board extends JFrame {
     }
 
     /**
-     *
+     * Load all the gameboard spaces from a .txt file
      */
     private void loadSpaces() {
         try (final Scanner spaceReader = new Scanner(new File("src\\dependencies\\spaceList.txt"))) {
@@ -321,7 +334,8 @@ public class Board extends JFrame {
     }
 
     /**
-     * @param e
+     * Detects when a property is clicked
+     * @param e mouse click event
      */
     public void clickProperty(MouseEvent e) {
         Point clickPoint = new Point(e.getX(), e.getY());
@@ -333,7 +347,7 @@ public class Board extends JFrame {
     }
 
     /**
-     *
+     * Play the game until the number of turns is reached
      */
     private void playGame() {
         while (turnsTaken <= (turns * players.length)) {
@@ -347,16 +361,29 @@ public class Board extends JFrame {
 
     }
 
+    /**
+     * Get the space at the index provided
+     * @param index the board index
+     * @return the space at that index
+     */
     public Space getSpaceAt(int index) {
         return boardArray[index];
     }
 
+    /**
+     * Get the size of the game board
+     * @return length of the baord array
+     */
     public int getBoardSize() {
         return boardArray.length;
     }
 
     //TODO: trading properties
     //TODO: bankruptcy logic
+
+    /**
+     * Current player takes their turn
+     */
     private void takeTurn() {
         Player currentPlayer = players[currentPlayerIndex];
         JOptionPane.showMessageDialog(null, currentPlayer.getToken() + "'s turn!", "Turn Notification", JOptionPane.INFORMATION_MESSAGE);
@@ -387,13 +414,20 @@ public class Board extends JFrame {
         }
     }
 
-
+    /**
+     * Draw a chance card and apply the changes to the player
+     * @param player the player drawing the card
+     */
     public void drawChanceCard(Player player) {
         if (chanceCards.isEmpty()) return;
         Card drawnCard = chanceCards.get(randomCard.nextInt(chanceCards.size()));
         drawnCard.applyEffect(player, this);
     }
 
+    /**
+     * Draw a community chest card and apply the changes to the player
+     * @param player the player drawing the card
+     */
     public void drawCommunityChestCard(Player player) {
         if (communityChestCards.isEmpty()) return;
         Card drawnCard = communityChestCards.get(randomCard.nextInt(communityChestCards.size()));
@@ -401,6 +435,11 @@ public class Board extends JFrame {
     }
 
 
+    /**
+     * Handle a player landing on a space
+     * @param player the player landing on the space
+     * @param space the space landed on
+     */
     private void handleSpecialSpace(Player player, Space space) {
         if (space instanceof Property) {
             Property property = (Property) space;
@@ -421,6 +460,11 @@ public class Board extends JFrame {
         }
     }
 
+    /**
+     * Options for a player to take when they land on a property
+     * @param player the player landing on the property
+     * @param property the property landed on
+     */
     private void handlePropertyLanding(Player player, Property property) {
         if (property.getOwner() == null) {
             int buyProperty = JOptionPane.showConfirmDialog(null,
@@ -451,6 +495,11 @@ public class Board extends JFrame {
         }
     }
 
+    /**
+     * Popup to have players mortgage properties until they can afford a required amount of money
+     * @param player the player to choose properties from
+     * @param requiredAmount the amount the player needs
+     */
     private void mortgageToAfford(Player player, int requiredAmount) {
         while (player.getMoney() < requiredAmount) {
             List<Property> unmortgagedProperties = player.getUnmortgagedProperties();
@@ -462,13 +511,11 @@ public class Board extends JFrame {
                         JOptionPane.WARNING_MESSAGE);
                 return;
             }
-
             // Convert properties to String list for selection
             String[] propertyChoices = new String[unmortgagedProperties.size()];
             for (int i = 0; i < unmortgagedProperties.size(); i++) {
                 propertyChoices[i] = unmortgagedProperties.get(i).getName() + " (Mortgage Value: $" + unmortgagedProperties.get(i).getPrice() / 2 + ")";
             }
-
             String chosenProperty = (String) JOptionPane.showInputDialog(null,
                     "You need more money! Choose a property to mortgage:",
                     "Mortgage Property",
@@ -480,7 +527,6 @@ public class Board extends JFrame {
             if (chosenProperty == null) {
                 break; // welp, guess they want to lose...
             }
-
             // Find the selected property and mortgage it
             for (Property p : unmortgagedProperties) {
                 if (chosenProperty.startsWith(p.getName())) {
@@ -491,6 +537,11 @@ public class Board extends JFrame {
         }
     }
 
+    /**
+     * Handle landing on a railroad
+     * @param player the player landing on the railroad
+     * @param space the railroad
+     */
     private void handleRailroad(Player player, Space space) {
         Property railroad = (Property) space;
 
@@ -523,14 +574,25 @@ public class Board extends JFrame {
     }
 
 
+    /**
+     * Roll the dice randomly
+     * @return the dice roll
+     */
     public int rollDice() {
         return dice.nextInt(6) + 1 + dice.nextInt(6) + 1;
     }
 
+    /**
+     * Start a new turn with the button click
+     */
     private void startNewTurn() {
         newTurn = true;
         nextTurn();
     }
+
+    /**
+     * Allow every player to roll dice in a "turn"
+     */
     private void nextTurn() {
         // Loop through each player and allow them to take a turn
         for (currentPlayerIndex = 0; currentPlayerIndex < players.length; currentPlayerIndex++) {

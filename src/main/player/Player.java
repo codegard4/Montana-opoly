@@ -8,11 +8,12 @@ import java.util.Comparator;
 import java.util.List;
 
 /**
- * The player class represents a player in the game. Players have a token, a
+ * The Player class represents a player in the game. Players have a token, a
  * name, and a wallet. The wallet contains the player's money and properties.
  */
 public class Player {
 
+    // TODO: implement CPU's :)
     private enum PlayerType {
         HUMAN,
         CPU
@@ -25,18 +26,19 @@ public class Player {
     private static PlayerType playerType;
 
     /**
-     * Constructor for the Player. Players should be constructed fully at the start
-     * of the game
+     * Default constructor for the Player. Players should be constructed fully at the start
+     * of the game.
      */
     public Player() {
         token = null;
         this.wallet = new Wallet(STARTING_MONEY);
         this.currentSpace = null;
     }
+
     /**
-     * Constructor for the Player. Players should be constructed fully at the start
-     * of the game
-     * @param token
+     * Constructor for the Player with a specified token and type.
+     * @param token The player's token identifier.
+     * @param type The type of player (HUMAN or CPU).
      */
     public Player(String token, String type) {
         this.token = token;
@@ -44,29 +46,51 @@ public class Player {
         this.currentSpace = null;
         playerType = PlayerType.valueOf(type);
     }
-    
+
+    /**
+     * Gets the player's token.
+     * @return The player's token.
+     */
     public String getToken(){
         return token;
     }
 
+    /**
+     * Sets the player's token.
+     * @param token The new token to be set.
+     */
     public void setToken(String token){
         this.token = token;
     }
+
+    /**
+     * Gets the player's current money balance.
+     * @return The amount of money in the player's wallet.
+     */
     public int getMoney(){
         return wallet.getMoney();
     }
+
+    /**
+     * Gets the space the player is currently on.
+     * @return The current space occupied by the player.
+     */
     public Space getSpace(){
         return currentSpace;
     }
+
+    /**
+     * Moves the player to a new space.
+     * @param newSpace The space to move to.
+     */
     public void move(Space newSpace){
         currentSpace = newSpace;
     }
 
     /**
-     * Buys a property if the player has enough money
-     * 
-     * @param property
-     * @return
+     * Buys a property if the player has enough money.
+     * @param property The property to be purchased.
+     * @return true if the property was successfully purchased, false otherwise.
      */
     public boolean buyProperty(Property property) {
         if (property.getPrice() > wallet.getMoney()) {
@@ -76,34 +100,38 @@ public class Player {
         wallet.addProperty(property);
         property.purchased(this);
         return true;
-
-    }
-    public Property sellProperty(Property property){
-        /*
-         * Removes a property from the player's list of properties.
-         */
-        return null;
     }
 
+    /**
+     * Awards the player $200 for passing Go.
+     */
     public void passGo() {
         wallet.addMoney(200);
     }
 
+    /**
+     * Gets the player's wallet.
+     * @return The player's wallet.
+     */
     public Wallet getWallet() {
         return wallet;
     }
 
+    /**
+     * Pays rent to another player.
+     * @param p The player receiving the rent.
+     * @param amount The amount to be paid.
+     */
     public void payRent(Player p, int amount) {
         wallet.removeMoney(amount);
         p.getWallet().addMoney(amount);
     }
 
     /**
-     * Sells a property if the player owns it
-     * Gives the buyer the property and transfers the cost of the property
-     * 
-     * @param property
-     * @return
+     * Sells a property to another player if the seller owns it.
+     * @param property The property to sell.
+     * @param buyer The player purchasing the property.
+     * @return The property if successfully sold, null otherwise.
      */
     public Property sellProperty(Property property, Player buyer) {
         if (wallet.getProperties().contains(property)) {
@@ -117,6 +145,11 @@ public class Player {
             return null;
         }
     }
+
+    /**
+     * Gets a list of all unmortgaged properties owned by the player.
+     * @return A sorted list of unmortgaged properties.
+     */
     public List<Property> getUnmortgagedProperties(){
         List<Property> unmortgagedProperties = new ArrayList<Property>();
         for (Property property : wallet.getProperties()) {
@@ -128,37 +161,55 @@ public class Player {
         return unmortgagedProperties;
     }
 
+    /**
+     * Mortgages a property, adding half of its price to the player's wallet.
+     * @param property The property to mortgage.
+     */
     public void mortgageProperty(Property property) {
-        // mortgage the property by setting it to mortgaged and give the player the mortgage amount
-        property.morgtage();
+        property.mortgage();
         wallet.addMoney(property.getPrice() / 2);
     }
+
+    /**
+     * Unmortgages a property, deducting half of its price from the player's wallet.
+     * @param property The property to unmortgage.
+     */
     public void unmortgageProperty(Property property) {
-        property.unmorgtage();
+        property.unmortgage();
         wallet.removeMoney(property.getPrice() / 2);
-        // unmortgage a property by setting it to unmortgaged and charge the player the amount to unmortgage
+        //TODO: implement this option in the GUI
     }
 
+    /**
+     * Calculates the total wealth of the player, including money and properties.
+     * @return The player's total wealth.
+     */
     public int getTotalWealth() {
-        int totalWealth = wallet.getMoney(); // Start with wallet balance
+        int totalWealth = wallet.getMoney();
         for (Property property : wallet.getProperties()) {
             if (property.isMortgaged()) {
-                totalWealth += property.getPrice() / 2; // Add half the value if mortgaged
+                totalWealth += property.getPrice() / 2;
             } else {
-                totalWealth += property.getPrice(); // Add full value otherwise
+                totalWealth += property.getPrice();
             }
         }
         return totalWealth;
     }
 
+    /**
+     * Summarizes the player's money and total wealth.
+     * @return A string summarizing the player's financial status.
+     */
     public String summarizeMoney() {
         return getToken() + " - Total Wealth: $" + getTotalWealth();
     }
 
+    /**
+     * Calculates the rent for railroads owned by the player.
+     * @return The amount to be paid as railroad rent.
+     */
     public int calculateRailroadRent(){
-        // calculate the amount someone will pay in rent based on the number of railroads owned
-//        (25$ for every) railroad that is owned by this player
+        // TODO: Implement rent calculation for railroads.
         return -1;
     }
-
 }
