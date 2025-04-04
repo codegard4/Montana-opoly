@@ -7,6 +7,7 @@ import java.io.*;
 import java.util.*;
 import java.util.List;
 import javax.swing.*;
+import src.main.game.TradeMachine;
 import src.main.player.Player;
 
 // TODO: add javadocs
@@ -50,6 +51,7 @@ public class Board extends JFrame {
         populateTokens();
         board = new JFrame("Montana-opoly");
         board.setBounds(0, 0, WIDTH, HEIGHT);
+        board.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         boardArray = new Space[40];
         // load the board spaces and cards
         loadSpaces();
@@ -176,7 +178,23 @@ public class Board extends JFrame {
      * Allow two players to make a property trade
      */
     private void initiateTrade() {
-        JOptionPane.showMessageDialog(board, "Trade feature not yet implemented.", "Trade", JOptionPane.INFORMATION_MESSAGE);
+        Player trader = players[currentPlayerIndex-1];
+        int index = 0;
+        Player[] partners = new Player[players.length - 1];
+        int playIndex = 0;
+        int partnerIndex = 0;
+        for(Player p : players){
+            if(playIndex == currentPlayerIndex-1){
+                playIndex += 1;
+            }
+            else{
+                partners[partnerIndex] = players[playIndex];
+                partnerIndex++;
+                playIndex++;
+            }
+        }
+        TradeMachine trade = new TradeMachine(trader, partners);
+        // JOptionPane.showMessageDialog(board, "Trade feature not yet implemented.", "Trade", JOptionPane.INFORMATION_MESSAGE);
     }
 
     /**
@@ -251,7 +269,6 @@ public class Board extends JFrame {
         playerPanel.revalidate();
         playerPanel.repaint();
     }
-
 
     /**
      * Shows the tokens that players can select at the start of the game

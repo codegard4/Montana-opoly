@@ -268,46 +268,6 @@ public class MonopolyGame extends JFrame {
         }
     }
 
-
-    /**
-     * Create a frame to allow player trades
-     * //TODO: move this to board -- where it will be displayed
-     */
-    public void trade() {
-        JFrame tradeMachine = new JFrame();
-        Container tradePane = tradeMachine.getContentPane();
-        tradePane.setLayout(null);
-        tradeMachine.setBounds(5,5,600,600);
-        JPanel p1Box = new JPanel();
-        JPanel p2Box = new JPanel();
-        JPanel p1Acquire = new JPanel();
-        JPanel p2Acquire = new JPanel();
-        p1Box.setBounds(10, 10, 150, 500);
-        p2Box.setBounds(400, 10, 150, 500);
-        p1Acquire.setBounds(200, 10, 150, 225);
-        p2Acquire.setBounds(200, 250, 150, 225);
-        JList<String> p1List = new JList<>();
-        loadList(p1List);
-        JList<String> p2List = new JList<>();
-        JList<String> p1AcqList = new JList<>();
-        JList<String> p2AcqList = new JList<>();
-        JScrollPane p1Pane = new JScrollPane();
-        JScrollPane p2Pane =  new JScrollPane();
-        JScrollPane p1AcqPane = new JScrollPane();
-        JScrollPane p2AcqPane = new JScrollPane();
-        JComboBox<String> players = new JComboBox<>();
-        p1Box.add(p1List);
-        p2Box.add(p2List);
-        p1Acquire.add(p1AcqList);
-        p2Acquire.add(p2AcqList);
-        p2Box.add(players);
-        tradePane.add(p1Box);
-        tradePane.add(p2Box);
-        tradePane.add(p1Acquire);
-        tradePane.add(p2Acquire);
-        tradeMachine.setVisible(true);
-    }
-
     /**
      * Load a list of properties from the player
      * @param j the list to load properties too
