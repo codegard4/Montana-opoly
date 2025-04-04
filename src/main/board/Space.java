@@ -1,29 +1,28 @@
 package src.main.board;
+
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Rectangle;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseEvent;
-import java.awt.geom.Rectangle2D;
 import java.awt.Point;
-import java.util.LinkedList;
-import java.util.List;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 
-import src.main.player.Player;
-
-//TODO: javadocs
-
+/**
+ * The Space class represents a space on the game board. Each space has a name,
+ * an image, a type, and an index indicating its position on the board.
+ */
 public class Space {
     private String spaceName;
-//    private List<Player> playersOnSpace;
     private ImageIcon spaceImg;
-
     private Rectangle clickPane;
-    
-    private enum SpaceType {
+
+    /**
+     * Enum representing the different types of spaces on the board.
+     */
+    public enum SpaceType {
         Property,
         RestArea,
         GoToRestArea,
@@ -38,25 +37,60 @@ public class Space {
     private SpaceType spaceType;
     private int index;
 
+    /**
+     * Constructs a new Space object.
+     *
+     * @param spaceType The type of the space.
+     * @param spaceName The name of the space.
+     * @param imgFile The filename of the image representing the space.
+     * @param index The index of the space on the board.
+     */
     public Space(String spaceType, String spaceName, String imgFile, int index) {
         this.spaceType = SpaceType.valueOf(spaceType);
         this.spaceName = spaceName;
-        this.index = index; // keep track of where the space is numerically so that we can move players around spaces easier
+        this.index = index; // Track the numerical position of the space for movement logic
         this.spaceImg = new ImageIcon("src\\dependencies\\propertyImages\\" + imgFile);
-//        this.playersOnSpace = new LinkedList<>();
     }
+
+    /**
+     * Gets the index of this space on the board.
+     *
+     * @return The index of the space.
+     */
     public int getIndex() {
         return index;
     }
 
+    /**
+     * Gets the type of this space.
+     *
+     * @return The space type.
+     */
+    public SpaceType getType() {
+        return spaceType;
+    }
+
+    /**
+     * Sets the clickable area of the space.
+     *
+     * @param coords An array defining the rectangular click area coordinates.
+     */
     public void setClickPane(int[] coords) {
         this.clickPane = new Rectangle(new Point(coords[0], coords[1]), new Dimension(coords[2]-coords[0], coords[7]-coords[3]));
     }
 
+    /**
+     * Gets the clickable area of this space.
+     *
+     * @return The clickable area as a Rectangle object.
+     */
     public Rectangle getClickPane() {
         return clickPane;
     }
 
+    /**
+     * Opens a JFrame to display the property details associated with this space.
+     */
     public void viewProperty() {
         JFrame view = new JFrame();
         view.setBounds(200,200,310,525);
@@ -69,7 +103,6 @@ public class Space {
         view.addMouseListener(new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                // TODO Auto-generated method stub
                 Point clickPoint = new Point(e.getX(), e.getY());
                 if(!view.contains(clickPoint)){
                     view.dispose();
@@ -77,29 +110,24 @@ public class Space {
             }
 
             @Override
-            public void mousePressed(MouseEvent e) {
-                // TODO Auto-generated method stub
-            }
-
+            public void mousePressed(MouseEvent e) {}
             @Override
-            public void mouseReleased(MouseEvent e) {
-                // TODO Auto-generated method stub
-            }
-
+            public void mouseReleased(MouseEvent e) {}
             @Override
-            public void mouseEntered(MouseEvent e) {
-                // TODO Auto-generated method stub
-            }
-
+            public void mouseEntered(MouseEvent e) {}
             @Override
-            public void mouseExited(MouseEvent e) {
-                // TODO Auto-generated method stub
-            }
+            public void mouseExited(MouseEvent e) {}
         });
         view.setVisible(true);
     }
+
+    /**
+     * Returns the name of the space as a string.
+     *
+     * @return The name of the space.
+     */
     @Override
-    public String toString(){
+    public String toString() {
         return spaceName;
     }
 }

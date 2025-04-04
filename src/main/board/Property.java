@@ -1,12 +1,13 @@
 package src.main.board;
 import src.main.player.Player;
 
+/**
+ * Represents a property in the game, extending the Space class.
+ * A property has attributes such as name, price, rent, owner, and number of houses.
+ */
 public class Property extends Space {
-    /*
-     * Constructor for the Property card.
-     * A property card has the property's name, price, rent, owner and number of houses.
-     */
-    private enum PropertyClass {
+    /** Enum representing different property classes. */
+    public enum PropertyClass {
         Brown,
         LightBlue,
         Magenta,
@@ -20,123 +21,207 @@ public class Property extends Space {
     }
 
     private PropertyClass color;
-    
     private String name; // name of the property
     private int price; // price to buy the property
     private int[] rent; // rent for each of the house numbers for the property
-    private int rrRent;
-    private int houses; 
+    private int houses;
     private Player owner;
     private boolean mortgaged;
-    private int[][] playerPlaces;
-    // private JPanel labelHolder;
-    // private JLabel label;
-    // private final static int LABEL_WIDTH = 75;
-    // private final static int LABEL_HEIGHT = 30;
-    // private final int labelX;
-    // private final int labelY;
+    private boolean fullSetMember = false;
 
-    /*
-     * Costructor for standard properties
+    /**
+     * Constructor for standard properties.
+     * @param name Name of the property.
+     * @param imgfile Image file associated with the property.
+     * @param propertyClass Property class/type.
+     * @param price Purchase price of the property.
+     * @param rent Rent values based on the number of houses.
+     * @param index Index of the property on the board.
      */
     public Property(String name, String imgfile, String propertyClass, int price, int[] rent, int index){
-        super("Property", name, imgfile, index); // define a Space instance
+        super("Property", name, imgfile, index);
         this.name = name;
-        this.price = price; // set the property price
+        this.price = price;
         this.color = PropertyClass.valueOf(propertyClass);
-        this.houses = 0; // initially all properties have 0 houses
-        this.rent = rent; 
+        this.houses = 0;
+        this.rent = rent;
         this.owner = null;
-        this.mortgaged = false; // initially all properties are not mortgaged
+        this.mortgaged = false;
     }
 
-    /*
-     * Constructor for Railroads
-    */
+    /**
+     * Constructor for railroads.
+     * @param name Name of the railroad.
+     * @param imgfile Image file associated with the railroad.
+     * @param propertyClass Property class/type.
+     * @param price Purchase price of the railroad.
+     * @param rent Rent values for railroads.
+     * @param index Index of the railroad on the board.
+     */
     public Property(String name, String imgfile, String propertyClass, int price, int rent, int index){
-        super("Property", name, imgfile, index); // define a Space instance
+        super("Property", name, imgfile, index);
         this.name = name;
-        this.price = price; // set the property price
+        this.price = price;
         this.color = PropertyClass.valueOf(propertyClass);
-        this.houses = 0; // initially all properties have 0 houses
-        this.rrRent = rent; 
+        this.houses = 0;
+        this.rent = new int[]{25,50,75,100}; // Railroad rent values
         this.owner = null;
-        this.mortgaged = false; // initially all properties are not mortgaged
+        this.mortgaged = false;
     }
 
-    /*
-     * Constructor for Utilties
+    /**
+     * Constructor for utilities.
+     * @param name Name of the utility.
+     * @param imgfile Image file associated with the utility.
+     * @param propertyClass Property class/type.
+     * @param price Purchase price of the utility.
+     * @param index Index of the utility on the board.
      */
     public Property(String name, String imgfile, String propertyClass, int price, int index){
-        super("Property", name, imgfile, index); // define a Space instance
+        super("Property", name, imgfile, index);
         this.name = name;
-        this.price = price; // set the property price
+        this.rent = new int[]{4,7}; // Utility rent values
+        this.price = price;
         this.color = PropertyClass.valueOf(propertyClass);
-        this.houses = 0; // initially all properties have 0 houses 
+        this.houses = 0;
         this.owner = null;
-        this.mortgaged = false; // initially all properties are not mortgaged
+        this.mortgaged = false;
     }
 
+    /**
+     * Gets the name of the property.
+     * @return Property name.
+     */
     public String getName(){
-        /*
-         * Returns the name of the property.
-         */
         return name;
     }
+
+    /**
+     * Gets the purchase price of the property.
+     * @return Property price.
+     */
     public int getPrice(){
-        /*
-         * Returns the price of the property.
-         */
         return price;
     }
-    public int getRent(){
-        /*
-         * Returns the rent of the property.
-         */
-        return rent[houses];
+
+    /**
+     * Checks if the property is mortgaged.
+     * @return True if the property is mortgaged, false otherwise.
+     */
+    public boolean isMortgaged(){
+        return mortgaged;
     }
+
+    /**
+     * Mortgages the property.
+     */
+    public void mortgage(){
+        mortgaged = true;
+    }
+
+    /**
+     * Removes the mortgage from the property.
+     */
+    public void unmortgage(){
+        mortgaged = false;
+    }
+
+    /**
+     * Gets the current rent value of the property.
+     * @return Rent amount based on the number of houses or full set ownership.
+     */
+    public int getRent(){
+        if(houses > 0){
+            return rent[houses+1];
+        } else {
+            if(fullSetMember){
+                return rent[1];
+            }
+        }
+        return rent[0];
+    }
+
+    /**
+     * Gets the property class.
+     * @return Property class.
+     */
+    public PropertyClass getPropertyClass(){
+        return color;
+    }
+
+    /**
+     * Gets the number of houses on the property.
+     * @return Number of houses.
+     */
     public int getHouses(){
-        /*
-         * Returns the number of houses on the property.
-         */
         return houses;
     }
+
+    /**
+     * Gets the color category of the property.
+     * @return Property color as a string.
+     */
+    public String getColor() {
+        return String.valueOf(color);
+    }
+
+    /**
+     * Adds a house to the property.
+     */
     public void addHouse(){
-        /*
-         * Adds a house to the property.
-         */
         houses += 1;
     }
+
+    /**
+     * Sets whether the property belongs to a full set.
+     * @param b True if the property is part of a full set, false otherwise.
+     */
+    public void fullSet(boolean b){
+        fullSetMember = b;
+    }
+
+    /**
+     * Sells a house from the property.
+     */
     private void sellHouse(){
-        /*
-         * Removes a house from the property.
-         */
         houses -= 1;
     }
+
+    /**
+     * Gets the owner of the property.
+     * @return Property owner.
+     */
     public Player getOwner(){
-        /*
-         * Returns the owner of the property.
-         */
         return owner;
     }
+
+    /**
+     * Assigns a new owner to the property.
+     * @param newOwner The player who purchased the property.
+     */
     public void purchased(Player newOwner){
-        /*
-         * Sets the owner of the property to the player.
-         */
         owner = newOwner;
     }
 
+    /**
+     * Returns a string representation of the property, including price, rent, and number of houses.
+     * @return Property details as a string.
+     */
     @Override
     public String toString(){
         if (!this.color.equals(PropertyClass.Mountain) && !this.color.equals(PropertyClass.Utility)){
             return name + " - Price: " + price + " - Rent: " + rent[houses] + " - Houses: " + houses;
+        } else if (this.color.equals(PropertyClass.Mountain)) {
+            return name + " - Price: " + price + " - Rent: Dependent on Mountain ranges owned - No houses allowed";
         }
-        else {
-            if (this.color.equals(PropertyClass.Mountain)) {
-                return name + " - Price: " + price + " - Rent: Dependent upon how many Mountain ranges are owned"  + " - Houses cannot be placed on this property";
-            }
-        }
-        return name + " - Price: " + price + " - Rent: Dependent upon how many utilities are owned and the roll of the dice"  + " - Houses cannot be placed on this property";
+        return name + " - Price: " + price + " - Rent: Dependent on utilities owned and dice roll - No houses allowed";
     }
 
+    /**
+     * Provides a short summary of the property.
+     * @return Short listing of the property with name and price.
+     */
+    public String shortListing() {
+        return name + " - $" + price;
+    }
 }

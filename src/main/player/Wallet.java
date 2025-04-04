@@ -1,71 +1,87 @@
 package src.main.player;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-
+import java.util.Map;
 import src.main.board.Property;
 
+/**
+ * A Montana-opoly player's wallet contains all of their properties and money.
+ */
 public class Wallet{
-    /*
-     * A player's wallet contains their money and properties.
-     */
     private int money;
     private List<Property> properties;
+    private String[] colors = new String[] {"Brown","LightBlue","Magenta","Orange","Red","Yellow","Green","Blue"};
+    private int[] numFull = new int[] {2,3,3,3,3,3,3,3};
+    private Map<String, Integer> fullSetList;
 
-
+    /**
+     * Creates a wallet with a starting amount of money and no properties.
+     * @param startingMoney The amount of money a player starts with.
+     */
     public Wallet(int startingMoney){
-        /*
-         * Constructor for the Wallet.
-         * A wallet is initialized with 1500 money and an empty list of properties.
-         */
         this.money = startingMoney;
-        this.properties = new ArrayList<Property>();
+        this.properties = new ArrayList<>();
+        fullSetList = new HashMap<>();
+        for(int i = 0; i < colors.length; i++){
+            fullSetList.put(colors[i], numFull[i]);
+        }
     }
 
+    /**
+     * Gets the current amount of money in the wallet.
+     * @return The amount of money the player has.
+     */
     public int getMoney(){
-        /*
-         * Returns the amount of money in the wallet.
-         */
         return money;
     }
+
+    /**
+     * Adds money to the player's wallet.
+     * @param amount The amount of money to add.
+     */
     public void addMoney(int amount){
-        /*
-         * Adds money to the wallet.
-         */
         money += amount;
     }
+
+    /**
+     * Removes money from the player's wallet.
+     * @param amount The amount of money to deduct.
+     */
     public void removeMoney(int amount){
-        /*
-         * Removes money from the wallet.
-         */
         money -= amount;
     }
+
+    /**
+     * Gets the list of properties owned by the player.
+     * @return A list of properties owned by the player.
+     */
     public List<Property> getProperties(){
-        /*
-         * Returns the list of properties in the wallet.
-         */
         return properties;
     }
 
     /**
-     * gets the total value of all properties in the wallet
-     * @return
+     * Adds a property to the player's wallet. If the player collects all properties of the same color,
+     * the full set status is updated.
+     * @param property The property to be added.
+     * @return true if the property was successfully added, false otherwise.
      */
-    public int getPropertyValue(){
-        /*
-         * Returns the total value of all properties in the wallet.
-         */
-        int totalValue = 0;
-        for (Property property : properties){
-            totalValue += property.getPrice(); // TODO: Implement getPrice() in Property.java
-        }
-        return totalValue;
-    }
     public boolean addProperty(Property property){
-        /*
-         * Adds a property to the wallet.
-         */
+        String col = property.getColor();
+        List<Property> checkForSet = new ArrayList<>();
+        checkForSet.add(property);
+        if(!col.equals("Utility") && !col.equals("Mountain")){
+            for(Property p: properties){
+                if(p.getColor().equals(property.getColor())){
+                    checkForSet.add(p);
+                }
+            }
+            if(fullSetList.get(property.getColor()).equals(checkForSet.size())){
+                for(Property p: checkForSet){
+                    p.fullSet(true);
+                }
+            }
+        }
         return properties.add(property);
     }
-
-
 }
