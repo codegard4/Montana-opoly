@@ -7,6 +7,7 @@ import java.io.*;
 import java.util.*;
 import java.util.List;
 import javax.swing.*;
+
 import src.main.game.TradeMachine;
 import src.main.player.Player;
 
@@ -24,10 +25,9 @@ public class Board extends JFrame {
     private List<Card> chanceCards = new ArrayList<>();
     private List<Card> communityChestCards = new ArrayList<>();
     private Map<Rectangle, Space> viewMap;
-    private static final int WIDTH = 900;
-    private static final int HEIGHT = 900;
+    private static final int WIDTH = 725;
+    private static final int HEIGHT = 725;
     private Player[] players;
-    // TODO: change to Montana themed tokens
     private final List<String> tokens = new ArrayList<>();
     private final int turns;
     private int turnsTaken = 0;
@@ -43,8 +43,9 @@ public class Board extends JFrame {
 
     /**
      * Board constructor
+     *
      * @param numPlayers number of players
-     * @param numTurns number of game turns each player gets
+     * @param numTurns   number of game turns each player gets
      */
     public Board(int numPlayers, int numTurns) {
         turns = numTurns;
@@ -96,18 +97,29 @@ public class Board extends JFrame {
             public void mouseClicked(MouseEvent e) {
                 clickProperty(e);
             }
+
             @Override
-            public void mousePressed(MouseEvent e) {}
+            public void mousePressed(MouseEvent e) {
+            }
+
             @Override
-            public void mouseReleased(MouseEvent e) {}
+            public void mouseReleased(MouseEvent e) {
+            }
+
             @Override
-            public void mouseEntered(MouseEvent e) {}
+            public void mouseEntered(MouseEvent e) {
+            }
+
             @Override
-            public void mouseExited(MouseEvent e) {}
+            public void mouseExited(MouseEvent e) {
+            }
         });
 
         // Listen for each of the buttons to be clicked
-        newTurnButton.addActionListener(e -> {newTurnButton.setEnabled(false); startNewTurn();});
+        newTurnButton.addActionListener(e -> {
+            newTurnButton.setEnabled(false);
+            startNewTurn();
+        });
         endGameButton.addActionListener(e -> endGame());
         tradeButton.addActionListener(e -> initiateTrade());
         addHousesButton.addActionListener(e -> addHouses());
@@ -130,6 +142,7 @@ public class Board extends JFrame {
 
     /**
      * Loads each card from a properly formatted .txt file
+     *
      * @param filePath the path to the chance and community chest cards
      */
     private void loadCardFile(String filePath) {
@@ -159,7 +172,7 @@ public class Board extends JFrame {
      */
     private void endGame() {
         // Sort players by total money in descending order
-        Arrays.sort(players, (p1, p2) -> Integer.compare(p2.getMoney(), p1.getMoney()));
+        Arrays.sort(players, (p1, p2) -> Integer.compare(p2.getTotalWealth(), p1.getTotalWealth()));
 
         // Build summary string
         StringBuilder summary = new StringBuilder("Game Over! Final Rankings:\n");
@@ -168,41 +181,150 @@ public class Board extends JFrame {
             summary.append(rank).append(". ").append(p.summarizeMoney()).append("\n");
             rank++;
         }
-
         // Display final rankings
         JOptionPane.showMessageDialog(null, summary.toString(), "Final Rankings", JOptionPane.INFORMATION_MESSAGE);
 
+        System.exit(0);
     }
 
     /**
-     * Allow two players to make a property trade
+     * Allow two players to make a property trade in between turns -- display the value of each property during the trade
      */
     private void initiateTrade() {
-        Player trader = players[currentPlayerIndex-1];
-        int index = 0;
-        Player[] partners = new Player[players.length - 1];
-        int playIndex = 0;
-        int partnerIndex = 0;
-        for(Player p : players){
-            if(playIndex == currentPlayerIndex-1){
-                playIndex += 1;
-            }
-            else{
-                partners[partnerIndex] = players[playIndex];
-                partnerIndex++;
-                playIndex++;
-            }
+        if (players.length < 2) {
+            JOptionPane.showMessageDialog(board, "At least two players are needed to trade.", "Trade Error", JOptionPane.ERROR_MESSAGE);
+            return;
         }
-        TradeMachine trade = new TradeMachine(trader, partners);
-        // JOptionPane.showMessageDialog(board, "Trade feature not yet implemented.", "Trade", JOptionPane.INFORMATION_MESSAGE);
+
+        // Create dropdowns for selecting players
+        Player player1 = (Player) JOptionPane.showInputDialog(board, "Select the first player:",
+                "Player 1", JOptionPane.PLAIN_MESSAGE, null, players, players[0]);
+
+        if (player1 == null) return;
+
+        // Create a filtered list to avoid selecting the same player
+        List<Player> otherPlayers = Arrays.stream(players)
+                .filter(p -> !p.equals(player1))
+                .toList();
+
+        Player player2 = (Player) JOptionPane.showInputDialog(board, "Select the second player:",
+                "Player 2", JOptionPane.PLAIN_MESSAGE, null, otherPlayers.toArray(), otherPlayers.get(0));
+
+        if (player2 == null) return;
+
+        // Get properties to trade
+        List<Property> p1Props = player1.getUnmortgagedProperties();
+        List<Property> p2Props = player2.getUnmortgagedProperties();
+
+        if (p1Props.isEmpty() || p2Props.isEmpty()) {
+            JOptionPane.showMessageDialog(board, "One or both players have no properties to trade.",
+                    "Trade Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        Property p1Prop = (Property) JOptionPane.showInputDialog(board, player1.getToken() + ", select a property to trade:",
+                "Player 1's Property", JOptionPane.PLAIN_MESSAGE, null, p1Props.toArray(), p1Props.get(0));
+
+        Property p2Prop = (Property) JOptionPane.showInputDialog(board, player2.getToken() + ", select a property to trade:",
+                "Player 2's Property", JOptionPane.PLAIN_MESSAGE, null, p2Props.toArray(), p2Props.get(0));
+
+        // Check if both properties were selected
+        if (p1Prop == null || p2Prop == null) {
+            JOptionPane.showMessageDialog(board, "Trade cancelled — one player did not select a property to trade.",
+                    "Trade Cancelled", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        // Confirm trade
+        int confirm = JOptionPane.showConfirmDialog(board,
+                player1.getToken() + " will trade " + p1Prop.getName() + " ($" + p1Prop.getPrice() + ") with " +
+                        player2.getToken() + "'s " + p2Prop.getName() + " ($" + p2Prop.getPrice() + ")\n\nProceed?",
+                "Confirm Trade", JOptionPane.YES_NO_OPTION);
+
+        if (confirm == JOptionPane.YES_OPTION) {
+            player1.wallet.removeProperty(p1Prop);
+            player2.wallet.removeProperty(p2Prop);
+
+            player1.wallet.addProperty(p2Prop);
+            player2.wallet.addProperty(p1Prop);
+
+            JOptionPane.showMessageDialog(board, "Trade successful!", "Trade Complete", JOptionPane.INFORMATION_MESSAGE);
+            updatePlayerPanel(); // Refresh UI if needed
+        } else {
+            JOptionPane.showMessageDialog(board, "Trade cancelled.", "Trade Cancelled", JOptionPane.INFORMATION_MESSAGE);
+        }
     }
 
+
     /**
-     * Allow a player to add houses to their properties
+     * Allow any player to add houses to their properties between turns.
      */
     private void addHouses() {
-        JOptionPane.showMessageDialog(board, "House purchasing not yet implemented.", "Add Houses", JOptionPane.INFORMATION_MESSAGE);
+        // Select a player
+        String[] playerOptions = new String[players.length];
+        for (int i = 0; i < players.length; i++) {
+            playerOptions[i] = players[i].getToken(); // Use token as identifier
+        }
+        String selectedPlayerToken = (String) JOptionPane.showInputDialog(
+                board,
+                "Select a player to add houses:",
+                "Choose Player",
+                JOptionPane.PLAIN_MESSAGE,
+                null,
+                playerOptions,
+                playerOptions[0]
+        );
+        if (selectedPlayerToken == null) return; // Cancelled
+        // Find the selected player
+        Player selectedPlayer = null;
+        for (Player p : players) {
+            if (p.getToken().equals(selectedPlayerToken)) {
+                selectedPlayer = p;
+                break;
+            }
+        }
+
+        if (selectedPlayer == null) return; // Shouldn't happen, but safety check
+
+        List<Property> ownedProperties = selectedPlayer.getUnmortgagedProperties();
+
+        if (ownedProperties.isEmpty()) {
+            JOptionPane.showMessageDialog(board, selectedPlayerToken + " doesn't own any properties to build houses on.", "No Properties", JOptionPane.INFORMATION_MESSAGE);
+            return;
+        }
+
+        // Select a property from the chosen player's owned properties
+        String[] propertyOptions = new String[ownedProperties.size()];
+        for (int i = 0; i < ownedProperties.size(); i++) {
+            Property prop = ownedProperties.get(i);
+            // check to see if it is a railroad or utility
+            if (prop.canAddHouses()) {
+                propertyOptions[i] = prop.getName() + " (Houses: " + prop.getNumHouses() + ")";
+            }
+        }
+        String selectedPropertyName = (String) JOptionPane.showInputDialog(board, "Select a property to add a house for " + selectedPlayerToken + ":", "Choose Property", JOptionPane.PLAIN_MESSAGE, null, propertyOptions, propertyOptions[0]);
+
+        if (selectedPropertyName == null) return; // Cancelled
+
+        // Find the selected property
+        for (Property prop : ownedProperties) {
+            if (selectedPropertyName.startsWith(prop.getName())) {
+                int houseCost = prop.getPrice() / 2; // Assumes you have this method
+
+                if (selectedPlayer.getMoney() >= houseCost) {
+                    prop.addHouse(); // Adds the house
+                    selectedPlayer.wallet.removeMoney(houseCost); // Subtract the cost
+                    JOptionPane.showMessageDialog(board, "Added 1 house to " + prop.getName() + " for $" + houseCost + ".", "House Added", JOptionPane.INFORMATION_MESSAGE);
+                } else {
+                    JOptionPane.showMessageDialog(board, selectedPlayerToken + " doesn't have enough money to build a house.", "Insufficient Funds", JOptionPane.WARNING_MESSAGE);
+                }
+                break;
+            }
+        }
+
+        updatePlayerPanel();
     }
+
 
     /**
      *
@@ -216,6 +338,7 @@ public class Board extends JFrame {
 
     /**
      * Gets the current player
+     *
      * @return the current player
      */
     public Player getCurrentPlayer() {
@@ -272,6 +395,7 @@ public class Board extends JFrame {
 
     /**
      * Shows the tokens that players can select at the start of the game
+     *
      * @param playerIndex which player is selecting their token
      */
     private void showTokenSelectionPopup(int playerIndex) {
@@ -350,6 +474,7 @@ public class Board extends JFrame {
 
     /**
      * Detects when a property is clicked
+     *
      * @param e mouse click event
      */
     public void clickProperty(MouseEvent e) {
@@ -378,6 +503,7 @@ public class Board extends JFrame {
 
     /**
      * Get the space at the index provided
+     *
      * @param index the board index
      * @return the space at that index
      */
@@ -387,6 +513,7 @@ public class Board extends JFrame {
 
     /**
      * Get the size of the game board
+     *
      * @return length of the baord array
      */
     public int getBoardSize() {
@@ -431,6 +558,7 @@ public class Board extends JFrame {
 
     /**
      * Draw a chance card and apply the changes to the player
+     *
      * @param player the player drawing the card
      */
     public void drawChanceCard(Player player) {
@@ -441,6 +569,7 @@ public class Board extends JFrame {
 
     /**
      * Draw a community chest card and apply the changes to the player
+     *
      * @param player the player drawing the card
      */
     public void drawCommunityChestCard(Player player) {
@@ -452,8 +581,9 @@ public class Board extends JFrame {
 
     /**
      * Handle a player landing on a space
+     *
      * @param player the player landing on the space
-     * @param space the space landed on
+     * @param space  the space landed on
      */
     private void handleSpecialSpace(Player player, Space space) {
         if (space instanceof Property) {
@@ -477,7 +607,8 @@ public class Board extends JFrame {
 
     /**
      * Options for a player to take when they land on a property
-     * @param player the player landing on the property
+     *
+     * @param player   the player landing on the property
      * @param property the property landed on
      */
     private void handlePropertyLanding(Player player, Property property) {
@@ -507,12 +638,17 @@ public class Board extends JFrame {
             }
         } else if (!property.getOwner().equals(player)) {
             player.payRent(property.getOwner(), property.getRent());
+            JOptionPane.showMessageDialog(null,
+                    "This property is already owned -- pay rent of $" + property.getRent() + ".",
+                    "Pay Rent",
+                    JOptionPane.WARNING_MESSAGE);
         }
     }
 
     /**
      * Popup to have players mortgage properties until they can afford a required amount of money
-     * @param player the player to choose properties from
+     *
+     * @param player         the player to choose properties from
      * @param requiredAmount the amount the player needs
      */
     private void mortgageToAfford(Player player, int requiredAmount) {
@@ -554,8 +690,9 @@ public class Board extends JFrame {
 
     /**
      * Handle landing on a railroad
+     *
      * @param player the player landing on the railroad
-     * @param space the railroad
+     * @param space  the railroad
      */
     private void handleRailroad(Player player, Space space) {
         Property railroad = (Property) space;
@@ -591,6 +728,7 @@ public class Board extends JFrame {
 
     /**
      * Roll the dice randomly
+     *
      * @return the dice roll
      */
     public int rollDice() {

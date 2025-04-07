@@ -187,6 +187,7 @@ public class Player {
     public int getTotalWealth() {
         int totalWealth = wallet.getMoney();
         for (Property property : wallet.getProperties()) {
+            totalWealth += property.getHouseValue();
             if (property.isMortgaged()) {
                 totalWealth += property.getPrice() / 2;
             } else {
@@ -211,5 +212,9 @@ public class Player {
     public int calculateRailroadRent(){
         // TODO: Implement rent calculation for railroads.
         return -1;
+    }
+
+    public String toString() {
+        return getToken();
     }
 }
