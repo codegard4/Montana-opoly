@@ -28,6 +28,7 @@ public class Property extends Space {
     private Player owner;
     private boolean mortgaged;
     private boolean fullSetMember = false;
+    private final boolean canAddHouses;
 
     /**
      * Constructor for standard properties.
@@ -47,6 +48,7 @@ public class Property extends Space {
         this.rent = rent;
         this.owner = null;
         this.mortgaged = false;
+        this.canAddHouses = true;
     }
 
     /**
@@ -67,6 +69,7 @@ public class Property extends Space {
         this.rent = new int[]{25,50,75,100}; // Railroad rent values
         this.owner = null;
         this.mortgaged = false;
+        this.canAddHouses = false;
     }
 
     /**
@@ -86,6 +89,7 @@ public class Property extends Space {
         this.houses = 0;
         this.owner = null;
         this.mortgaged = false;
+        this.canAddHouses = false;
     }
 
     /**
@@ -102,6 +106,14 @@ public class Property extends Space {
      */
     public int getPrice(){
         return price;
+    }
+
+    public int getHouseValue(){
+        return houses * (getPrice() / 2);
+    }
+
+    public boolean canAddHouses(){
+        return canAddHouses;
     }
 
     /**
@@ -172,6 +184,9 @@ public class Property extends Space {
         houses += 1;
     }
 
+    public int getNumHouses(){
+        return houses;
+    }
     /**
      * Sets whether the property belongs to a full set.
      * @param b True if the property is part of a full set, false otherwise.

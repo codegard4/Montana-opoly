@@ -84,4 +84,40 @@ public class Wallet{
         }
         return properties.add(property);
     }
+
+    /**
+     * Removes a property from a player's wallet
+     * @param property the property to be removed
+     * @return whether the remove was successful
+     */
+    public boolean removeProperty(Property property) {
+        boolean removed = properties.remove(property);
+        if (!removed) return false;
+
+        String col = property.getColor();
+
+        // Only check full set status for color groups (not Utility or Mountain)
+        if (!col.equals("Utility") && !col.equals("Mountain")) {
+            // Count how many properties of this color remain
+            int sameColorCount = 0;
+            for (Property p : properties) {
+                if (p.getColor().equals(col)) {
+                    sameColorCount++;
+                }
+            }
+
+            // If the player no longer has a full set, remove full set status
+            int requiredForSet = fullSetList.getOrDefault(col, Integer.MAX_VALUE);
+            if (sameColorCount < requiredForSet) {
+                for (Property p : properties) {
+                    if (p.getColor().equals(col)) {
+                        p.fullSet(false);
+                    }
+                }
+            }
+        }
+
+        return true;
+    }
+
 }
