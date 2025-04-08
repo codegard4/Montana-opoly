@@ -7,8 +7,6 @@ import java.io.*;
 import java.util.*;
 import java.util.List;
 import javax.swing.*;
-
-import src.main.game.TradeMachine;
 import src.main.player.Player;
 
 // TODO: add javadocs
@@ -241,7 +239,18 @@ public class Board extends JFrame {
                         player2.getToken() + "'s " + p2Prop.getName() + " ($" + p2Prop.getPrice() + ")\n\nProceed?",
                 "Confirm Trade", JOptionPane.YES_NO_OPTION);
 
-        if (confirm == JOptionPane.YES_OPTION) {
+        // Bot behavior (bot player will not accept trade if the property they are requested to trade is greater than 1.5x the value of the property they receive)
+        boolean tradeAccepted = true;
+        if (!player1.isBot() && player2.isBot()) {
+            int totalExchangedValue = 0;
+            totalExchangedValue += p1Prop.getPrice();
+            totalExchangedValue += p2Prop.getPrice();
+            if (((double) p1Prop.getPrice() / totalExchangedValue) < 0.4) {
+                tradeAccepted = false;
+            }
+        }
+
+        if (confirm == JOptionPane.YES_OPTION && tradeAccepted) {
             player1.wallet.removeProperty(p1Prop);
             player2.wallet.removeProperty(p2Prop);
 
@@ -251,6 +260,9 @@ public class Board extends JFrame {
             JOptionPane.showMessageDialog(board, "Trade successful!", "Trade Complete", JOptionPane.INFORMATION_MESSAGE);
             updatePlayerPanel(); // Refresh UI if needed
         } else {
+            if(!tradeAccepted) {
+                JOptionPane.showMessageDialog(board, player2.getToken() + "is not interested in this trade.", "Trade declined.", JOptionPane.ERROR_MESSAGE);
+            }
             JOptionPane.showMessageDialog(board, "Trade cancelled.", "Trade Cancelled", JOptionPane.INFORMATION_MESSAGE);
         }
     }
@@ -613,30 +625,41 @@ public class Board extends JFrame {
      */
     private void handlePropertyLanding(Player player, Property property) {
         if (property.getOwner() == null) {
-            int buyProperty = JOptionPane.showConfirmDialog(null,
-                    "Would you like to buy " + property.getName() + " for $" + property.getPrice() + "?",
-                    "Buy Property",
-                    JOptionPane.YES_NO_OPTION);
-
-            if (buyProperty == JOptionPane.YES_OPTION) {
-                if (player.getMoney() >= property.getPrice()) {
+            // Bot behavior (bot player does not buy property if it costs more than their current cash on hand + $125)
+            if (player.isBot()) {
+                if(property.getPrice() < player.getMoney()+125) {
                     player.buyProperty(property);
-                } else {
-                    // Mortgage properties if player can't afford
-                    mortgageToAfford(player, property.getPrice());
+                }
+                else {
+                    JOptionPane.showMessageDialog(board, player.getToken() + " has elected not to buy " + property.getName() + ".", "Property not purchased", JOptionPane.INFORMATION_MESSAGE);
+                }
+            } else {
+                int buyProperty = JOptionPane.showConfirmDialog(null,
+                        "Would you like to buy " + property.getName() + " for $" + property.getPrice() + "?",
+                        "Buy Property",
+                        JOptionPane.YES_NO_OPTION);
 
-                    // After mortgaging, check if the player has enough money now
+                if (buyProperty == JOptionPane.YES_OPTION) {
                     if (player.getMoney() >= property.getPrice()) {
                         player.buyProperty(property);
                     } else {
-                        JOptionPane.showMessageDialog(null,
-                                "You still don't have enough money to buy this property.",
-                                "Insufficient Funds",
-                                JOptionPane.WARNING_MESSAGE);
+                        // Mortgage properties if player can't afford
+                        mortgageToAfford(player, property.getPrice());
+
+                        // After mortgaging, check if the player has enough money now
+                        if (player.getMoney() >= property.getPrice()) {
+                            player.buyProperty(property);
+                        } else {
+                            JOptionPane.showMessageDialog(null,
+                                    "You still don't have enough money to buy this property.",
+                                    "Insufficient Funds",
+                                    JOptionPane.WARNING_MESSAGE);
+                        }
                     }
                 }
             }
-        } else if (!property.getOwner().equals(player)) {
+        } 
+        else if (!property.getOwner().equals(player)) {
             player.payRent(property.getOwner(), property.getRent());
             JOptionPane.showMessageDialog(null,
                     "This property is already owned -- pay rent of $" + property.getRent() + ".",

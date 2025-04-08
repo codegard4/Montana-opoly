@@ -6,6 +6,7 @@ import src.main.board.Space;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import src.main.player.Player.PlayerType;
 
 /**
  * The Player class represents a player in the game. Players have a token, a
@@ -212,6 +213,14 @@ public class Player {
     public int calculateRailroadRent(){
         // TODO: Implement rent calculation for railroads.
         return -1;
+    }
+
+    /**
+     * 
+     * @return Whether or not the player is a bot
+     */
+    public boolean isBot() {
+        return playerType == PlayerType.CPU;
     }
 
     public String toString() {
