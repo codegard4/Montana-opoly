@@ -625,9 +625,9 @@ public class Board extends JFrame {
      */
     private void handlePropertyLanding(Player player, Property property) {
         if (property.getOwner() == null) {
-            // Bot behavior (bot player does not buy property if it costs more than their current cash on hand + $125)
+            // Bot behavior (bot player does not buy property if it costs more than their current cash on hand - $125)
             if (player.isBot()) {
-                if(property.getPrice() < player.getMoney()+125) {
+                if(property.getPrice() < player.getMoney()-125) {
                     player.buyProperty(property);
                 }
                 else {
