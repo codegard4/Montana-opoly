@@ -6,7 +6,6 @@ import src.main.board.Space;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import src.main.player.Player.PlayerType;
 
 /**
  * The Player class represents a player in the game. Players have a token, a
@@ -14,8 +13,8 @@ import src.main.player.Player.PlayerType;
  */
 public class Player {
 
-    // TODO: implement CPU's :)
-    private enum PlayerType {
+    // TODO: implement CPU's
+    public enum PlayerType {
         HUMAN,
         CPU
     }
@@ -24,16 +23,24 @@ public class Player {
     public Wallet wallet;
     public Space currentSpace;
     private static final int STARTING_MONEY = 1500;
-    private static PlayerType playerType;
+    private final PlayerType playerType;
 
     /**
      * Default constructor for the Player. Players should be constructed fully at the start
      * of the game.
      */
-    public Player() {
+    public Player(boolean isCPU) {
         token = null;
         this.wallet = new Wallet(STARTING_MONEY);
         this.currentSpace = null;
+        if (isCPU) {
+            System.out.println("CPU -- Player class");
+            this.playerType = PlayerType.CPU;
+        }
+        else {
+            System.out.println("Human -- Player class");
+            this.playerType = PlayerType.HUMAN;
+        }
     }
 
     /**
@@ -219,11 +226,15 @@ public class Player {
      * 
      * @return Whether or not the player is a bot
      */
-    public boolean isBot() {
-        return playerType == PlayerType.CPU;
+    public boolean isBot() {return playerType == PlayerType.CPU;}
+
+    @Override
+    public String toString() {
+        if (isBot()) {
+            return getToken() + " (bot)";
+        } else {
+            return getToken();
+        }
     }
 
-    public String toString() {
-        return getToken();
-    }
 }

@@ -6,6 +6,7 @@ import java.awt.Rectangle;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseEvent;
 import java.awt.Point;
+import java.nio.file.Paths;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -49,7 +50,7 @@ public class Space {
         this.spaceType = SpaceType.valueOf(spaceType);
         this.spaceName = spaceName;
         this.index = index; // Track the numerical position of the space for movement logic
-        this.spaceImg = new ImageIcon("src\\dependencies\\propertyImages\\" + imgFile);
+        this.spaceImg = new ImageIcon(Paths.get("src", "dependencies", "propertyImages", imgFile).toString());
     }
 
     /**

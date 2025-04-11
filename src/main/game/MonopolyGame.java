@@ -9,6 +9,7 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Scanner;
 import javax.swing.*;
@@ -21,10 +22,10 @@ import src.main.player.Player;
  */
 public class MonopolyGame extends JFrame {
 
-    private int width = 1200;
-    private int height = 720;
+    private final int width = 1200;
+    private final int height = 720;
     private int centerHrzntl = (int) (width / 2);
-    private int centerVert = (int) (height / 2);
+//    private int centerVert = (int) (height / 2);
     private JFrame startScreen;
     private JPanel buttons;
     private JPanel image;
@@ -46,7 +47,6 @@ public class MonopolyGame extends JFrame {
      */
     public MonopolyGame(){
         openGame();
-//        trade(); //TODO: do not put trade here -- implement it with the trade button in board
     }
 
     /**
@@ -61,7 +61,7 @@ public class MonopolyGame extends JFrame {
         contentPane.setLayout(new OverlayLayout(contentPane));
         JPanel background = new JPanel();
         background.setLayout(null);
-        ImageIcon picture = new ImageIcon("src\\dependencies\\Montana-opoly_Title_Screen.jpg");
+        ImageIcon picture = new ImageIcon(Paths.get("src", "dependencies", "Montana-opoly_Title_Screen.jpg").toString());
         JLabel picLabel = new JLabel(picture);
         picLabel.setBounds(0,0,width,height);
 
@@ -109,8 +109,27 @@ public class MonopolyGame extends JFrame {
     private void startGame() {
         startScreen.dispose(); // Close the start screen
         int numPlayers = getPlayerCount(); // Ask for player count
-        int numTurns = getNumberTurns(); //implement
-        gameBoard = new Board(numPlayers, numTurns); // Pass player count to board
+        int numTurns = getNumberTurns();
+        int numBots = getBotCount();
+        if((numPlayers+numBots) < 2){
+            numBots ++; // only way this is possible is with 1 player and 0 bots so add a bot
+        }
+        gameBoard = new Board(numPlayers, numTurns, numBots); // Pass player count to board
+//        gameBoard.
+        gameBoard.playGame();
+    }
+
+    private int getBotCount() {
+        Integer[] options = {0, 1, 2, 3, 4};
+        return (int) JOptionPane.showInputDialog(
+                null,
+                "How many bots will play?",
+                "Bot Selection",
+                JOptionPane.QUESTION_MESSAGE,
+                null,
+                options,
+                options[0]
+        );
     }
 
     /**
@@ -135,7 +154,7 @@ public class MonopolyGame extends JFrame {
      * @return the number of players selected
      */
     private int getPlayerCount() {
-        Integer[] options = {1, 2, 3, 4};
+        Integer[] options = {0, 1, 2, 3, 4};
         return (int) JOptionPane.showInputDialog(
                 null,
                 "How many players will be playing?",
@@ -143,7 +162,7 @@ public class MonopolyGame extends JFrame {
                 JOptionPane.QUESTION_MESSAGE,
                 null,
                 options,
-                options[0]
+                options[1]
         );
     }
 
@@ -171,7 +190,7 @@ public class MonopolyGame extends JFrame {
         text.setLineWrap(true);
         text.setWrapStyleWord(true);
 
-        try(Scanner bioReader = new Scanner(new File("src\\dependencies\\teamBio.txt"))){
+        try(Scanner bioReader = new Scanner(new File(Paths.get("src", "dependencies", "teamBio.txt").toString()))){
             while(bioReader.hasNext()){
                 text.setText(text.getText() + bioReader.nextLine()+"\n");
             }
