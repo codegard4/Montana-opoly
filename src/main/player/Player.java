@@ -23,7 +23,7 @@ public class Player {
     public Wallet wallet;
     public Space currentSpace;
     private static final int STARTING_MONEY = 1500;
-    private static PlayerType playerType;
+    private final PlayerType playerType;
 
     /**
      * Default constructor for the Player. Players should be constructed fully at the start
@@ -34,10 +34,12 @@ public class Player {
         this.wallet = new Wallet(STARTING_MONEY);
         this.currentSpace = null;
         if (isCPU) {
-            playerType = PlayerType.CPU;
+            System.out.println("CPU -- Player class");
+            this.playerType = PlayerType.CPU;
         }
         else {
-            playerType = PlayerType.HUMAN;
+            System.out.println("Human -- Player class");
+            this.playerType = PlayerType.HUMAN;
         }
     }
 
@@ -224,11 +226,15 @@ public class Player {
      * 
      * @return Whether or not the player is a bot
      */
-    public boolean isBot() {
-        return playerType == PlayerType.CPU;
+    public boolean isBot() {return playerType == PlayerType.CPU;}
+
+    @Override
+    public String toString() {
+        if (isBot()) {
+            return getToken() + " (bot)";
+        } else {
+            return getToken();
+        }
     }
 
-    public String toString() {
-        return getToken();
-    }
 }

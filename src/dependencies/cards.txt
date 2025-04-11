@@ -12,7 +12,7 @@ Ski Pass Expired! Buy a new one for $100,-100,-1,false,false
 Speeding Ticket in Bozeman pay $50,-50,-1,false,true
 Go To Brawl of the Wild Gain $50,50,-1,false,true
 Drill For Oil Gain $100,100,-1,false,false
-Move to Helena,0,12,true,true
+Move to Helena,0,11,true,true
 Camping Permit Fee of $30,-30,-1,false,false
 Rodeo Winnings! Collect $100,100,-1,false,false
 Out-of-state-er cuts you off Lose $10,-10,-1,false,false

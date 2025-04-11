@@ -9,6 +9,7 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Scanner;
 import javax.swing.*;
@@ -60,7 +61,7 @@ public class MonopolyGame extends JFrame {
         contentPane.setLayout(new OverlayLayout(contentPane));
         JPanel background = new JPanel();
         background.setLayout(null);
-        ImageIcon picture = new ImageIcon("src\\dependencies\\Montana-opoly_Title_Screen.jpg");
+        ImageIcon picture = new ImageIcon(Paths.get("src", "dependencies", "Montana-opoly_Title_Screen.jpg").toString());
         JLabel picLabel = new JLabel(picture);
         picLabel.setBounds(0,0,width,height);
 
@@ -108,16 +109,27 @@ public class MonopolyGame extends JFrame {
     private void startGame() {
         startScreen.dispose(); // Close the start screen
         int numPlayers = getPlayerCount(); // Ask for player count
-        int numTurns = getNumberTurns(); //implement
+        int numTurns = getNumberTurns();
         int numBots = getBotCount();
-
+        if((numPlayers+numBots) < 2){
+            numBots ++; // only way this is possible is with 1 player and 0 bots so add a bot
+        }
         gameBoard = new Board(numPlayers, numTurns, numBots); // Pass player count to board
+//        gameBoard.
         gameBoard.playGame();
     }
 
     private int getBotCount() {
-        //TODO implement bots in board and here
-        return 0;
+        Integer[] options = {0, 1, 2, 3, 4};
+        return (int) JOptionPane.showInputDialog(
+                null,
+                "How many bots will play?",
+                "Bot Selection",
+                JOptionPane.QUESTION_MESSAGE,
+                null,
+                options,
+                options[0]
+        );
     }
 
     /**
@@ -142,7 +154,7 @@ public class MonopolyGame extends JFrame {
      * @return the number of players selected
      */
     private int getPlayerCount() {
-        Integer[] options = {1, 2, 3, 4};
+        Integer[] options = {0, 1, 2, 3, 4};
         return (int) JOptionPane.showInputDialog(
                 null,
                 "How many players will be playing?",
@@ -150,7 +162,7 @@ public class MonopolyGame extends JFrame {
                 JOptionPane.QUESTION_MESSAGE,
                 null,
                 options,
-                options[0]
+                options[1]
         );
     }
 
@@ -178,7 +190,7 @@ public class MonopolyGame extends JFrame {
         text.setLineWrap(true);
         text.setWrapStyleWord(true);
 
-        try(Scanner bioReader = new Scanner(new File("src\\dependencies\\teamBio.txt"))){
+        try(Scanner bioReader = new Scanner(new File(Paths.get("src", "dependencies", "teamBio.txt").toString()))){
             while(bioReader.hasNext()){
                 text.setText(text.getText() + bioReader.nextLine()+"\n");
             }
