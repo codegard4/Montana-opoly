@@ -347,7 +347,7 @@ public class Board extends JFrame {
         // Find the selected property
         for (Property prop : ownedProperties) {
             if (selectedPropertyName.startsWith(prop.getName())) {
-                int houseCost = prop.getPrice() / 2; // Assumes you have this method
+                int houseCost = prop.getPrice() / 2;
 
                 if (selectedPlayer.getMoney() >= houseCost) {
                     prop.addHouse(); // Adds the house
