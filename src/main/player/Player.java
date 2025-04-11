@@ -6,7 +6,6 @@ import src.main.board.Space;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import src.main.player.Player.PlayerType;
 
 /**
  * The Player class represents a player in the game. Players have a token, a
@@ -14,8 +13,8 @@ import src.main.player.Player.PlayerType;
  */
 public class Player {
 
-    // TODO: implement CPU's :)
-    private enum PlayerType {
+    // TODO: implement CPU's
+    public enum PlayerType {
         HUMAN,
         CPU
     }
@@ -30,10 +29,16 @@ public class Player {
      * Default constructor for the Player. Players should be constructed fully at the start
      * of the game.
      */
-    public Player() {
+    public Player(boolean isCPU) {
         token = null;
         this.wallet = new Wallet(STARTING_MONEY);
         this.currentSpace = null;
+        if (isCPU) {
+            playerType = PlayerType.CPU;
+        }
+        else {
+            playerType = PlayerType.HUMAN;
+        }
     }
 
     /**

@@ -1,5 +1,6 @@
 package src.main.board;
 
+import java.nio.file.Paths;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -7,9 +8,9 @@ import java.io.*;
 import java.util.*;
 import java.util.List;
 import javax.swing.*;
-import src.main.player.Player;
 
-// TODO: add javadocs
+import src.main.game.MonopolyGame;
+import src.main.player.Player;
 
 /**
  * Board is called by MonopolyGame and creates a gameboard to play monopoly on
@@ -23,8 +24,8 @@ public class Board extends JFrame {
     private List<Card> chanceCards = new ArrayList<>();
     private List<Card> communityChestCards = new ArrayList<>();
     private Map<Rectangle, Space> viewMap;
-    private static final int WIDTH = 725;
-    private static final int HEIGHT = 725;
+    private static final int WIDTH = 900;
+    private static final int HEIGHT = 900;
     private Player[] players;
     private final List<String> tokens = new ArrayList<>();
     private final int turns;
@@ -45,7 +46,7 @@ public class Board extends JFrame {
      * @param numPlayers number of players
      * @param numTurns   number of game turns each player gets
      */
-    public Board(int numPlayers, int numTurns) {
+    public Board(int numPlayers, int numTurns, int numBots) {
         turns = numTurns;
         populateTokens();
         board = new JFrame("Montana-opoly");
@@ -57,19 +58,58 @@ public class Board extends JFrame {
         loadCards();
 
         // Initialize players
-        players = new Player[numPlayers];
+        players = new Player[numPlayers + numBots]; // store bots as players with a CPU controller
         for (int i = 0; i < numPlayers; i++) {
-            players[i] = new Player();
+            players[i] = new Player(true);
             players[i].move(boardArray[0]); // all players start on GO
         }
+
+        //Initialize bots
+        for (int i = numPlayers; i < numBots; i++) {
+            players[i] = new Player(false);
+            players[i].move(boardArray[0]); // all players start on GO
+        }
+
 
         // Show Token Selection Dialog for each player
         for (int i = 0; i < numPlayers; i++) {
             showTokenSelectionPopup(i);
         }
-
         // Setup player panel
         setupPlayerPanel();
+        setupBoard();
+
+        // Listen for each of the buttons to be clicked
+        newTurnButton.addActionListener(e -> {
+            newTurnButton.setEnabled(false);
+            startNewTurn();
+        });
+        endGameButton.addActionListener(e -> endGame());
+        tradeButton.addActionListener(e -> initiateTrade());
+        addHousesButton.addActionListener(e -> addHouses());
+
+        board.paintComponents(getGraphics());
+        board.setVisible(true);
+
+    }
+
+    public static void main(String[] args) {
+        Board testBoard = new Board(2, 5, 0);
+        testBoard.playGame();
+    }
+
+    /**
+     * Load all the chance and community chest cards
+     */
+    private void loadCards() {
+        loadCardFile(Paths.get("src", "dependencies", "cards.txt").toString());
+
+    }
+
+    /**
+     * Setup the board graphics, buttons, labels, etc.
+     */
+    private void setupBoard(){
         board.add(playerPanel);
         // Setup board
         Container boardContent = board.getContentPane();
@@ -92,52 +132,17 @@ public class Board extends JFrame {
         boardContent.add(playerPanel, BorderLayout.SOUTH);
         board.addMouseListener(new MouseListener() {
             @Override
-            public void mouseClicked(MouseEvent e) {
-                clickProperty(e);
-            }
-
+            public void mouseClicked(MouseEvent e) {clickProperty(e);}
             @Override
-            public void mousePressed(MouseEvent e) {
-            }
-
+            public void mousePressed(MouseEvent e) {}
             @Override
-            public void mouseReleased(MouseEvent e) {
-            }
-
+            public void mouseReleased(MouseEvent e) {}
             @Override
-            public void mouseEntered(MouseEvent e) {
-            }
-
+            public void mouseEntered(MouseEvent e) {}
             @Override
-            public void mouseExited(MouseEvent e) {
-            }
-        });
-
-        // Listen for each of the buttons to be clicked
-        newTurnButton.addActionListener(e -> {
-            newTurnButton.setEnabled(false);
-            startNewTurn();
-        });
-        endGameButton.addActionListener(e -> endGame());
-        tradeButton.addActionListener(e -> initiateTrade());
-        addHousesButton.addActionListener(e -> addHouses());
-
-        board.paintComponents(getGraphics());
-        board.setVisible(true);
-        playGame();
+            public void mouseExited(MouseEvent e) {}
+            });
     }
-
-    public static void main(String[] args) {
-        Board testBoard = new Board(2, 5);
-    }
-
-    /**
-     * Load all the chance and community chest cards
-     */
-    private void loadCards() {
-        loadCardFile("src\\dependencies\\cards.txt");
-    }
-
     /**
      * Loads each card from a properly formatted .txt file
      *
@@ -501,7 +506,7 @@ public class Board extends JFrame {
     /**
      * Play the game until the number of turns is reached
      */
-    private void playGame() {
+    public void playGame() {
         while (turnsTaken <= (turns * players.length)) {
             if (newTurn) {
                 JOptionPane.showMessageDialog(null, "Turn " + turnsTaken, "Turns Info", JOptionPane.INFORMATION_MESSAGE);

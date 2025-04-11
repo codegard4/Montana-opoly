@@ -21,10 +21,10 @@ import src.main.player.Player;
  */
 public class MonopolyGame extends JFrame {
 
-    private int width = 1200;
-    private int height = 720;
+    private final int width = 1200;
+    private final int height = 720;
     private int centerHrzntl = (int) (width / 2);
-    private int centerVert = (int) (height / 2);
+//    private int centerVert = (int) (height / 2);
     private JFrame startScreen;
     private JPanel buttons;
     private JPanel image;
@@ -46,7 +46,6 @@ public class MonopolyGame extends JFrame {
      */
     public MonopolyGame(){
         openGame();
-//        trade(); //TODO: do not put trade here -- implement it with the trade button in board
     }
 
     /**
@@ -110,7 +109,15 @@ public class MonopolyGame extends JFrame {
         startScreen.dispose(); // Close the start screen
         int numPlayers = getPlayerCount(); // Ask for player count
         int numTurns = getNumberTurns(); //implement
-        gameBoard = new Board(numPlayers, numTurns); // Pass player count to board
+        int numBots = getBotCount();
+
+        gameBoard = new Board(numPlayers, numTurns, numBots); // Pass player count to board
+        gameBoard.playGame();
+    }
+
+    private int getBotCount() {
+        //TODO implement bots in board and here
+        return 0;
     }
 
     /**
