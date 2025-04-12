@@ -2,7 +2,7 @@ package src.main.board;
 import src.main.player.Player;
 
 /**
- * Represents a property in the game, extending the Space class.
+ * Represents a property in the game.
  * A property has attributes such as name, price, rent, owner, and number of houses.
  */
 public class Property extends Space {
@@ -72,6 +72,8 @@ public class Property extends Space {
         this.canAddHouses = false;
     }
 
+    //TODO: distinguish why -- (rent)
+
     /**
      * Constructor for utilities.
      * @param name Name of the utility.
@@ -108,10 +110,12 @@ public class Property extends Space {
         return price;
     }
 
+    //TODO: add
     public int getHouseValue(){
         return houses * (getPrice() / 2);
     }
 
+    //TODO: add
     public boolean canAddHouses(){
         return canAddHouses;
     }

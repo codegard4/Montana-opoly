@@ -16,35 +16,27 @@ import javax.swing.JLabel;
  * an image, a type, and an index indicating its position on the board.
  */
 public class Space {
-    private String spaceName;
-    private ImageIcon spaceImg;
+    private final String spaceName;
+    private final ImageIcon spaceImg;
     private Rectangle clickPane;
 
     /**
      * Enum representing the different types of spaces on the board.
      */
     public enum SpaceType {
-        Property,
-        RestArea,
-        GoToRestArea,
-        GoToButte,
-        Butte,
-        GO,
-        Chance,
-        CommunityChest,
-        LoseATurn
+        Property, RestArea, GoToRestArea, GoToButte, Butte, GO, Chance, CommunityChest, LoseATurn
     }
 
-    private SpaceType spaceType;
-    private int index;
+    private final SpaceType spaceType;
+    private final int index;
 
     /**
      * Constructs a new Space object.
      *
      * @param spaceType The type of the space.
      * @param spaceName The name of the space.
-     * @param imgFile The filename of the image representing the space.
-     * @param index The index of the space on the board.
+     * @param imgFile   The filename of the image representing the space.
+     * @param index     The index of the space on the board.
      */
     public Space(String spaceType, String spaceName, String imgFile, int index) {
         this.spaceType = SpaceType.valueOf(spaceType);
@@ -77,7 +69,7 @@ public class Space {
      * @param coords An array defining the rectangular click area coordinates.
      */
     public void setClickPane(int[] coords) {
-        this.clickPane = new Rectangle(new Point(coords[0], coords[1]), new Dimension(coords[2]-coords[0], coords[7]-coords[3]));
+        this.clickPane = new Rectangle(new Point(coords[0], coords[1]), new Dimension(coords[2] - coords[0], coords[7] - coords[3]));
     }
 
     /**
@@ -94,30 +86,37 @@ public class Space {
      */
     public void viewProperty() {
         JFrame view = new JFrame();
-        view.setBounds(200,200,310,525);
+        view.setBounds(200, 200, 310, 525);
         view.setLayout(null);
         Container viewPane = view.getContentPane();
         JLabel viewLabel = new JLabel(spaceImg);
-        viewLabel.setBounds(5,5,300,515);
+        viewLabel.setBounds(5, 5, 300, 515);
         viewPane.add(viewLabel);
         view.paintComponents(view.getGraphics());
         view.addMouseListener(new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 Point clickPoint = new Point(e.getX(), e.getY());
-                if(!view.contains(clickPoint)){
+                if (!view.contains(clickPoint)) {
                     view.dispose();
                 }
             }
 
             @Override
-            public void mousePressed(MouseEvent e) {}
+            public void mousePressed(MouseEvent e) {
+            }
+
             @Override
-            public void mouseReleased(MouseEvent e) {}
+            public void mouseReleased(MouseEvent e) {
+            }
+
             @Override
-            public void mouseEntered(MouseEvent e) {}
+            public void mouseEntered(MouseEvent e) {
+            }
+
             @Override
-            public void mouseExited(MouseEvent e) {}
+            public void mouseExited(MouseEvent e) {
+            }
         });
         view.setVisible(true);
     }

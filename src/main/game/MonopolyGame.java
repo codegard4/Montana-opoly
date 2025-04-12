@@ -1,7 +1,6 @@
 package src.main.game;
 
 import src.main.board.Board;
-import src.main.player.Wallet;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -11,12 +10,8 @@ import java.awt.event.WindowListener;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.Scanner;
 import javax.swing.*;
-
-import src.main.board.Property;
-import src.main.player.Player;
 
 /**
  * The MonopolyGame class represents the main game window for Montana-opoly.
@@ -24,24 +19,20 @@ import src.main.player.Player;
  */
 public class MonopolyGame {
 
+    @SuppressWarnings("FieldCanBeLocal")
     private final int width = 1200;
+    @SuppressWarnings("FieldCanBeLocal")
     private final int height = 720;
-    private int centerHrzntl = (int) (width / 2);
-    //    private int centerVert = (int) (height / 2);
     private JFrame startScreen;
-    private JPanel buttons;
-    private JPanel image;
-    private JButton startGame;
-//    private JButton rules;
-    private JButton about;
-    private JButton exit;
-    private Board gameBoard;
     private int[] gameParams = null;
-
-
     private static final Color HUNTER_GREEN = new Color(35, 133, 51);
 
-
+    /**
+     * Main method for monopoly game which calls monopoly game and then board with the arguments
+     * that are passed from monopoly game
+     *
+     * @param args arguments from the command line that are not used
+     */
     public static void main(String[] args) {
         MonopolyGame game = new MonopolyGame();
         while (game.getGameParams() == null) {
@@ -63,7 +54,6 @@ public class MonopolyGame {
     public int[] getGameParams() {
         return gameParams;
     }
-
 
 
     /**
@@ -89,7 +79,8 @@ public class MonopolyGame {
         JLabel picLabel = new JLabel(picture);
         picLabel.setBounds(0, 0, width, height);
 
-        startGame = new JButton("Start Game");
+        JButton startGame = new JButton("Start Game");
+        int centerHrzntl = (int) width / 2;
         startGame.setBounds(2 * centerHrzntl - 235, 20, 200, 30);
         startGame.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -100,7 +91,7 @@ public class MonopolyGame {
 //        rules.setBounds(2 * centerHrzntl - 235, 140, 200, 30);
 
 //        rules.setOpaque(true);
-        about = new JButton("Credits & About the Team");
+        JButton about = new JButton("Credits & About the Team");
         about.setBounds(2 * centerHrzntl - 235, 60, 200, 30);
         about.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -108,7 +99,7 @@ public class MonopolyGame {
             }
         });
 
-        exit = new JButton("Exit Game");
+        JButton exit = new JButton("Exit Game");
 
         exit.setBounds(2 * centerHrzntl - 235, 100, 200, 30);
         exit.addActionListener(new ActionListener() {
@@ -167,15 +158,7 @@ public class MonopolyGame {
      */
     private int getBotCount() {
         Integer[] options = {0, 1, 2, 3, 4};
-        return (int) JOptionPane.showInputDialog(
-                null,
-                "How many bots will play?",
-                "Bot Selection",
-                JOptionPane.QUESTION_MESSAGE,
-                null,
-                options,
-                options[0]
-        );
+        return (int) JOptionPane.showInputDialog(null, "How many bots will play?", "Bot Selection", JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
     }
 
     /**
@@ -185,15 +168,7 @@ public class MonopolyGame {
      */
     private int getNumberTurns() {
         Integer[] options = {5, 10, 20, 30, 50};
-        return (int) JOptionPane.showInputDialog(
-                null,
-                "How many turns will the game last?",
-                "Turn Selection",
-                JOptionPane.QUESTION_MESSAGE,
-                null,
-                options,
-                options[0]
-        );
+        return (int) JOptionPane.showInputDialog(null, "How many turns will the game last?", "Turn Selection", JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
     }
 
     /**
@@ -203,15 +178,7 @@ public class MonopolyGame {
      */
     private int getPlayerCount() {
         Integer[] options = {0, 1, 2, 3, 4};
-        return (int) JOptionPane.showInputDialog(
-                null,
-                "How many players will be playing? (Max 4 real & CPU)",
-                "Player Selection",
-                JOptionPane.QUESTION_MESSAGE,
-                null,
-                options,
-                options[1]
-        );
+        return (int) JOptionPane.showInputDialog(null, "How many players will be playing? (Max 4 real & CPU)", "Player Selection", JOptionPane.QUESTION_MESSAGE, null, options, options[1]);
     }
 
     /**
@@ -262,8 +229,7 @@ public class MonopolyGame {
             bio.setState(java.awt.Frame.ICONIFIED);
             Thread.sleep(200);
             bio.setState(java.awt.Frame.NORMAL);
-        } catch (InterruptedException e) {
-
+        } catch (InterruptedException ignored) {
         }
         bio.addWindowListener(new WindowListener() {
             @Override
@@ -300,64 +266,64 @@ public class MonopolyGame {
 
     }
 
-    /**
-     * Calculates the rent that a player must pay for landing on a property.
-     *
-     * @param p    the player paying rent
-     * @param prop the property landed on
-     * @return the calculated rent amount
-     */
-    public int calculateRent(Player p, Property prop) {
-        Wallet owner = p.getWallet();
-        if (prop.getColor().equals("Mountain")) {
-            int count = 0;
-            for (Property k : owner.getProperties()) {
-                if (k.getColor().equals("Mountain")) {
-                    count += 1;
-                }
-            }
-            return (int) (25 * Math.pow(2.0, (count - 1)));
-        } else {
-            if (prop.getColor().equals("Utility")) {
-                int count = 0;
-                for (Property k : owner.getProperties()) {
-                    if (k.getColor().equals("Utility")) {
-                        count += 1;
-                    }
-                }
-                return (int) (4 + 6 * (count - 1)) * gameBoard.rollDice();
-            } else {
-                return prop.getRent();
-            }
-        }
-    }
-
-    /**
-     * Load a list of properties from the player
-     *
-     * @param j the list to load properties too
-     */
-    private void loadList(JList j) {
-        Player active = gameBoard.getCurrentPlayer();
-        Wallet activeWallet = active.getWallet();
-        ArrayList<String> listProp = new ArrayList<>();
-        for (Property p : activeWallet.getProperties()) {
-            listProp.add(p.shortListing());
-        }
-        j.setListData(listProp.toArray());
-    }
-
-    /**
-     * Load a list of properties from the player
-     *
-     * @param j the list to load properties too
-     */
-    private void loadList(JList j, Player p) {
-        Wallet activeWallet = p.getWallet();
-        ArrayList<String> listProp = new ArrayList<>();
-        for (Property m : activeWallet.getProperties()) {
-            listProp.add(m.shortListing());
-        }
-        j.setListData(listProp.toArray());
-    }
+//    /**
+//     * Calculates the rent that a player must pay for landing on a property.
+//     *
+//     * @param p    the player paying rent
+//     * @param prop the property landed on
+//     * @return the calculated rent amount
+//     */
+//    public int calculateRent(Player p, Property prop) {
+//        Wallet owner = p.getWallet();
+//        if (prop.getColor().equals("Mountain")) {
+//            int count = 0;
+//            for (Property k : owner.getProperties()) {
+//                if (k.getColor().equals("Mountain")) {
+//                    count += 1;
+//                }
+//            }
+//            return (int) (25 * Math.pow(2.0, (count - 1)));
+//        } else {
+//            if (prop.getColor().equals("Utility")) {
+//                int count = 0;
+//                for (Property k : owner.getProperties()) {
+//                    if (k.getColor().equals("Utility")) {
+//                        count += 1;
+//                    }
+//                }
+//                return (int) (4 + 6 * (count - 1)) * gameBoard.rollDice();
+//            } else {
+//                return prop.getRent();
+//            }
+//        }
+//    }
+//
+//    /**
+//     * Load a list of properties from the player
+//     *
+//     * @param j the list to load properties too
+//     */
+//    private void loadList(JList j) {
+//        Player active = gameBoard.getCurrentPlayer();
+//        Wallet activeWallet = active.getWallet();
+//        ArrayList<String> listProp = new ArrayList<>();
+//        for (Property p : activeWallet.getProperties()) {
+//            listProp.add(p.shortListing());
+//        }
+//        j.setListData(listProp.toArray());
+//    }
+//
+//    /**
+//     * Load a list of properties from the player
+//     *
+//     * @param j the list to load properties too
+//     */
+//    private void loadList(JList j, Player p) {
+//        Wallet activeWallet = p.getWallet();
+//        ArrayList<String> listProp = new ArrayList<>();
+//        for (Property m : activeWallet.getProperties()) {
+//            listProp.add(m.shortListing());
+//        }
+//        j.setListData(listProp.toArray());
+//    }
 }

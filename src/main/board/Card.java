@@ -1,13 +1,14 @@
 package src.main.board;
 
 import src.main.player.Player;
+
 import javax.swing.JOptionPane;
 
 public class Card {
-    private String description;
-    private int moneyEffect; // Positive for gain, negative for loss
-    private int moveSpaces;  // Exact board index if goToLocation is true, -1 means no movement
-    private boolean goToLocation; // If true, moveSpaces is an exact index on the board
+    private final String description;
+    private final int moneyEffect; // Positive for gain, negative for loss
+    private final int moveSpaces;  // Exact board index if goToLocation is true, -1 means no movement
+    private final boolean goToLocation; // If true, moveSpaces is an exact index on the board
 
     public Card(String description, int moneyEffect, int moveSpaces, boolean goToLocation) {
         this.description = description;
@@ -39,14 +40,11 @@ public class Card {
                 int newIndex = (currentIndex + moveSpaces) % board.getBoardSize();
                 if (newIndex < currentIndex) { // Looping around the board means they passed GO
                     player.passGo();
-                    JOptionPane.showMessageDialog(null, player.getToken() + " passed GO and collected $200!",
-                            "Pass GO", JOptionPane.INFORMATION_MESSAGE);
+                    JOptionPane.showMessageDialog(null, player.getToken() + " passed GO and collected $200!", "Pass GO", JOptionPane.INFORMATION_MESSAGE);
                 }
                 player.move(board.getSpaceAt(newIndex));
             }
         }
-        else{
-            // move spaces is -1 which indicates we are not moving spaces
-        }
+        // move spaces is -1 which indicates we are not moving spaces
     }
 }

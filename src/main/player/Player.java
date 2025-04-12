@@ -13,7 +13,7 @@ import java.util.List;
  */
 public class Player {
 
-    // TODO: implement CPU's
+    /** Is this player a CPU or a Human */
     public enum PlayerType {
         HUMAN,
         CPU
@@ -97,17 +97,16 @@ public class Player {
 
     /**
      * Buys a property if the player has enough money.
+     *
      * @param property The property to be purchased.
-     * @return true if the property was successfully purchased, false otherwise.
      */
-    public boolean buyProperty(Property property) {
+    public void buyProperty(Property property) {
         if (property.getPrice() > wallet.getMoney()) {
-            return false;
+            return;
         }
         wallet.removeMoney(property.getPrice());
         wallet.addProperty(property);
         property.purchased(this);
-        return true;
     }
 
     /**
@@ -214,13 +213,19 @@ public class Player {
     }
 
     /**
-     * Calculates the rent for railroads owned by the player.
+     * Calculates the rent for railroads (Mountain properties) owned by the player.
      * @return The amount to be paid as railroad rent.
      */
-    public int calculateRailroadRent(){
-        // TODO: Implement rent calculation for railroads.
-        return -1;
+    public int calculateRailroadRent() {
+        int count = 0;
+        for (Property property : wallet.getProperties()) {
+            if (property.getPropertyClass() == Property.PropertyClass.Mountain) {
+                count++;
+            }
+        }
+        return count * 25;
     }
+
 
     /**
      * 
@@ -228,6 +233,10 @@ public class Player {
      */
     public boolean isBot() {return playerType == PlayerType.CPU;}
 
+    /**
+     * Returns the string representation of a player
+     * @return string with a player's token and bot status
+     */
     @Override
     public String toString() {
         if (isBot()) {
