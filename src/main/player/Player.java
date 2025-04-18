@@ -194,7 +194,9 @@ public class Player {
     public int getTotalWealth() {
         int totalWealth = wallet.getMoney();
         for (Property property : wallet.getProperties()) {
-            totalWealth += property.getHouseValue();
+
+            // each property is only worth 90% of its purchase price at the end of the game
+            totalWealth += (int)(property.getHouseValue() * 0.9);
             if (property.isMortgaged()) {
                 totalWealth += property.getPrice() / 2;
             } else {

@@ -1,9 +1,7 @@
-Advance to Yellowstone,0,39,true,false
 Mining Boom! Collect $200,200,-1,false,false
-Go to Butte (Jail),0,10,true,false
 Grizzly Attack! Pay medical fees ($50),-50,-1,false,false
 Flat Tire on I-90 Your Buddy Changed For Free (Gain $50),-50,-1,false,true
-Visit Glacier National Park,0,37,true,true
+See the Northern Lights. Collect 50$,50,-1,false,true
 Tourist Season! Collect $100 extra rent,100,-1,false,false
 Guide a Fly Fishing Trip Gain $75,75,-1,false,false
 Buy Over-priced Local Huckleberry Jam ($25),-25,-1,false,false
@@ -12,11 +10,9 @@ Ski Pass Expired! Buy a new one for $100,-100,-1,false,false
 Speeding Ticket in Bozeman pay $50,-50,-1,false,true
 Go To Brawl of the Wild Gain $50,50,-1,false,true
 Drill For Oil Gain $100,100,-1,false,false
-Move to Helena,0,11,true,true
 Camping Permit Fee of $30,-30,-1,false,false
 Rodeo Winnings! Collect $100,100,-1,false,false
 Out-of-state-er cuts you off Lose $10,-10,-1,false,false
-Move to Missoula,0,8,true,true
 Pay $40 for National Park Entry,-40,-1,false,false
 Bison Block Traffic Lose $20,-20,-1,false,true
 Property Tax Assessment Pay $150,-150,-1,false,false
