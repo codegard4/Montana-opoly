@@ -26,7 +26,7 @@ public class Board extends JFrame {
 
     private final JFrame board;
     private JPanel playerPanel;
-    private final ImageIcon gameBoard = new ImageIcon(Paths.get("src", "dependencies", "fullBoard.jpg").toString());
+    private final ImageIcon gameBoard = new ImageIcon(Paths.get("../MontanaOpoly","src", "dependencies", "fullBoard.jpg").toString());
     private final Space[] boardArray;
     private final List<Card> chanceCards = new ArrayList<>();
     private final List<Card> communityChestCards = new ArrayList<>();
@@ -210,7 +210,7 @@ public class Board extends JFrame {
      * Load all the chance and community chest cards
      */
     private void loadCards() {
-        loadCardFile(Paths.get("src", "dependencies", "cards.txt").toString());
+        loadCardFile(Paths.get("../MontanaOpoly","src", "dependencies", "cards.txt").toString());
 
     }
 
@@ -356,10 +356,7 @@ public class Board extends JFrame {
         // Bot behavior (bot player will not accept trade if the property they are requested to trade is greater than 1.5x the value of the property they receive)
         boolean tradeAccepted = true;
         if (!player1.isBot() && player2.isBot()) {
-            int totalExchangedValue = 0;
-            totalExchangedValue += p1Prop.getPrice();
-            totalExchangedValue += p2Prop.getPrice();
-            if (((double) p1Prop.getPrice() / totalExchangedValue) < 0.4) {
+            if (((double) p1Prop.getPrice() < (double) p2Prop.getPrice())) {
                 tradeAccepted = false;
             }
         }
@@ -443,7 +440,7 @@ public class Board extends JFrame {
      * Add all the tokens that can be selected to the tokens list
      */
     private void populateTokens() {
-        String[] tokensToAdd = {"F-150", "Hay Bale", "Bird Dog", "Fishing Boat", "Pickaxe", "Cowboy Boot"};
+        String[] tokensToAdd = {"Pickup", "Hay Bale", "Bird Dog", "Fishing Boat", "Pickaxe", "Cowboy Boot"};
         tokens.addAll(Arrays.asList(tokensToAdd));
     }
 
@@ -536,7 +533,7 @@ public class Board extends JFrame {
      * Load all the gameboard spaces from a .txt file
      */
     private void loadSpaces() {
-        try (final Scanner spaceReader = new Scanner(new File(Paths.get("src", "dependencies", "spaceList.txt").toString()))) {
+        try (final Scanner spaceReader = new Scanner(new File(Paths.get("../MontanaOpoly","src", "dependencies", "spaceList.txt").toString()))) {
             spaceReader.nextLine();
             int i = 0;
             while (spaceReader.hasNext()) {
@@ -566,7 +563,7 @@ public class Board extends JFrame {
         } catch (IOException e) {
             JOptionPane.showMessageDialog(null, "Space File Not Found!", "Game Initialization Error", JOptionPane.ERROR_MESSAGE);
         }
-        try (final Scanner coordReader = new Scanner(new File(Paths.get("src", "dependencies", "spaceCoords.txt").toString()))) {
+        try (final Scanner coordReader = new Scanner(new File(Paths.get("../MontanaOpoly","src", "dependencies", "spaceCoords.txt").toString()))) {
             coordReader.nextLine();
             int i = 0;
             while (coordReader.hasNext()) {
@@ -610,8 +607,10 @@ public class Board extends JFrame {
 
         // Draw Chance or Community Chest card if applicable
         if (landedSpace.getType() == Space.SpaceType.Chance) {
+            JOptionPane.showMessageDialog(null, currentPlayer.toString() + " Landed on Chance", "Chance", JOptionPane.INFORMATION_MESSAGE);
             drawChanceCard(currentPlayer);
         } else if (landedSpace.getType() == Space.SpaceType.CommunityChest) {
+            JOptionPane.showMessageDialog(null, currentPlayer.toString() + " Landed on Community Chest", "Community Chest", JOptionPane.INFORMATION_MESSAGE);
             drawCommunityChestCard(currentPlayer);
         }
     }
@@ -635,8 +634,9 @@ public class Board extends JFrame {
         } else if (space.getType().equals(Space.SpaceType.Butte)) {
             JOptionPane.showMessageDialog(null, player.toString() + " is just visiting Butte.", "Just Visiting", JOptionPane.INFORMATION_MESSAGE);
         } else if (space.getType().equals(Space.SpaceType.LoseATurn)) {
-            JOptionPane.showMessageDialog(null, player.toString() + "Lost their turn", "Lose a Turn", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(null, player.toString() + " Lost their current turn", "Lose a Turn", JOptionPane.INFORMATION_MESSAGE);
         }
+        updatePlayerPanel();
     }
 
     /**
@@ -679,6 +679,7 @@ public class Board extends JFrame {
             player.payRent(property.getOwner(), property.getRent());
             JOptionPane.showMessageDialog(null, "This property is already owned -- pay rent of $" + property.getRent() + ".", "Pay Rent", JOptionPane.WARNING_MESSAGE);
         }
+        updatePlayerPanel();
     }
 
     /**
@@ -763,6 +764,7 @@ public class Board extends JFrame {
         for (currentPlayerIndex = 0; currentPlayerIndex < players.length; currentPlayerIndex++) {
             System.out.println("Player " + (currentPlayerIndex + 1) + "'s turn.");
             takeTurn();
+            updatePlayerPanel();
         }
 
         // Round complete, disable turns until "New Turn" button is clicked

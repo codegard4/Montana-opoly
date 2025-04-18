@@ -42,7 +42,7 @@ public class Space {
         this.spaceType = SpaceType.valueOf(spaceType);
         this.spaceName = spaceName;
         this.index = index; // Track the numerical position of the space for movement logic
-        this.spaceImg = new ImageIcon(Paths.get("src", "dependencies", "propertyImages", imgFile).toString());
+        this.spaceImg = new ImageIcon(Paths.get("../MontanaOpoly","src", "dependencies", "propertyImages", imgFile).toString());
     }
 
     /**

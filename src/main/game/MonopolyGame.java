@@ -75,7 +75,7 @@ public class MonopolyGame {
         contentPane.setLayout(new OverlayLayout(contentPane));
         JPanel background = new JPanel();
         background.setLayout(null);
-        ImageIcon picture = new ImageIcon(Paths.get("src", "dependencies", "Montana-opoly_Title_Screen.jpg").toString());
+        ImageIcon picture = new ImageIcon(Paths.get("../MontanaOpoly","src", "dependencies", "Montana-opoly_Title_Screen.jpg").toString());
         JLabel picLabel = new JLabel(picture);
         picLabel.setBounds(0, 0, width, height);
 
@@ -87,10 +87,15 @@ public class MonopolyGame {
                 startGame();
             }
         });
-//        rules = new JButton("Rules & How To Play");
-//        rules.setBounds(2 * centerHrzntl - 235, 140, 200, 30);
+        JButton rules = new JButton("Rules & How To Play");
+        rules.setBounds(2 * centerHrzntl - 235, 140, 200, 30);
 
-//        rules.setOpaque(true);
+        rules.setOpaque(true);
+        rules.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                rules();
+            }
+        });
         JButton about = new JButton("Credits & About the Team");
         about.setBounds(2 * centerHrzntl - 235, 60, 200, 30);
         about.addActionListener(new ActionListener() {
@@ -113,16 +118,16 @@ public class MonopolyGame {
         exit.setOpaque(true);
 
         startGame.setBackground(HUNTER_GREEN);
-//        rules.setBackground(HUNTER_GREEN);
+        rules.setBackground(HUNTER_GREEN);
         about.setBackground(HUNTER_GREEN);
         exit.setBackground(HUNTER_GREEN);
         startGame.setForeground(Color.WHITE);
-//        rules.setForeground(Color.WHITE);
+        rules.setForeground(Color.WHITE);
         about.setForeground(Color.WHITE);
         exit.setForeground(Color.WHITE);
 
         background.add(startGame);
-//        background.add(rules);
+        background.add(rules);
         background.add(about);
         background.add(exit);
         background.add(picLabel);
@@ -138,7 +143,7 @@ public class MonopolyGame {
         startScreen.dispose();
         int numPlayers = getPlayerCount();
         int numTurns = getNumberTurns();
-        int numBots = getBotCount();
+        int numBots = getBotCount(4-numPlayers);
 
         if ((numPlayers + numBots) < 2) {
             numBots++;
@@ -156,8 +161,10 @@ public class MonopolyGame {
      *
      * @return the number of bots that is selected
      */
-    private int getBotCount() {
-        Integer[] options = {0, 1, 2, 3, 4};
+    private int getBotCount(int maxBots) {
+        Integer[] options = new Integer[maxBots];
+        for(int i = 0; i < maxBots; i++) {
+        options[i] = i;}
         return (int) JOptionPane.showInputDialog(null, "How many bots will play?", "Bot Selection", JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
     }
 
@@ -177,7 +184,7 @@ public class MonopolyGame {
      * @return the number of players selected
      */
     private int getPlayerCount() {
-        Integer[] options = {0, 1, 2, 3, 4};
+        Integer[] options = {1, 2, 3, 4};
         return (int) JOptionPane.showInputDialog(null, "How many players will be playing? (Max 4 real & CPU)", "Player Selection", JOptionPane.QUESTION_MESSAGE, null, options, options[1]);
     }
 
@@ -205,7 +212,7 @@ public class MonopolyGame {
         text.setLineWrap(true);
         text.setWrapStyleWord(true);
 
-        try (Scanner bioReader = new Scanner(new File(Paths.get("src", "dependencies", "teamBio.txt").toString()))) {
+        try (Scanner bioReader = new Scanner(new File(Paths.get("../MontanaOpoly","src","dependencies", "teamBio.txt").toString()))) {
             while (bioReader.hasNext()) {
                 text.setText(text.getText() + bioReader.nextLine() + "\n");
             }
@@ -266,64 +273,10 @@ public class MonopolyGame {
 
     }
 
-//    /**
-//     * Calculates the rent that a player must pay for landing on a property.
-//     *
-//     * @param p    the player paying rent
-//     * @param prop the property landed on
-//     * @return the calculated rent amount
-//     */
-//    public int calculateRent(Player p, Property prop) {
-//        Wallet owner = p.getWallet();
-//        if (prop.getColor().equals("Mountain")) {
-//            int count = 0;
-//            for (Property k : owner.getProperties()) {
-//                if (k.getColor().equals("Mountain")) {
-//                    count += 1;
-//                }
-//            }
-//            return (int) (25 * Math.pow(2.0, (count - 1)));
-//        } else {
-//            if (prop.getColor().equals("Utility")) {
-//                int count = 0;
-//                for (Property k : owner.getProperties()) {
-//                    if (k.getColor().equals("Utility")) {
-//                        count += 1;
-//                    }
-//                }
-//                return (int) (4 + 6 * (count - 1)) * gameBoard.rollDice();
-//            } else {
-//                return prop.getRent();
-//            }
-//        }
-//    }
-//
-//    /**
-//     * Load a list of properties from the player
-//     *
-//     * @param j the list to load properties too
-//     */
-//    private void loadList(JList j) {
-//        Player active = gameBoard.getCurrentPlayer();
-//        Wallet activeWallet = active.getWallet();
-//        ArrayList<String> listProp = new ArrayList<>();
-//        for (Property p : activeWallet.getProperties()) {
-//            listProp.add(p.shortListing());
-//        }
-//        j.setListData(listProp.toArray());
-//    }
-//
-//    /**
-//     * Load a list of properties from the player
-//     *
-//     * @param j the list to load properties too
-//     */
-//    private void loadList(JList j, Player p) {
-//        Wallet activeWallet = p.getWallet();
-//        ArrayList<String> listProp = new ArrayList<>();
-//        for (Property m : activeWallet.getProperties()) {
-//            listProp.add(m.shortListing());
-//        }
-//        j.setListData(listProp.toArray());
-//    }
+    public void rules(){
+        startScreen.dispose();
+        JFrame rules = new JFrame("Rules");
+
+    }
+
 }
