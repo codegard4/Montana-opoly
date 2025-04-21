@@ -39,10 +39,15 @@ public class Space {
      * @param index     The index of the space on the board.
      */
     public Space(String spaceType, String spaceName, String imgFile, int index) {
+
         this.spaceType = SpaceType.valueOf(spaceType);
         this.spaceName = spaceName;
         this.index = index; // Track the numerical position of the space for movement logic
-        this.spaceImg = new ImageIcon(Paths.get("../MontanaOpoly","src", "dependencies", "propertyImages", imgFile).toString());
+        if (imgFile == null) {
+            this.spaceImg = null;
+        } else {
+            this.spaceImg = new ImageIcon(Paths.get("../MontanaOpoly", "src", "dependencies", "propertyImages", imgFile).toString());
+        }
     }
 
     /**

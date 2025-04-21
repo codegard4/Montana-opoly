@@ -13,10 +13,11 @@ import java.util.List;
  */
 public class Player {
 
-    /** Is this player a CPU or a Human */
+    /**
+     * Is this player a CPU or a Human
+     */
     public enum PlayerType {
-        HUMAN,
-        CPU
+        HUMAN, CPU
     }
 
     private String token;
@@ -34,19 +35,17 @@ public class Player {
         this.wallet = new Wallet(STARTING_MONEY);
         this.currentSpace = null;
         if (isCPU) {
-            System.out.println("CPU -- Player class");
             this.playerType = PlayerType.CPU;
-        }
-        else {
-            System.out.println("Human -- Player class");
+        } else {
             this.playerType = PlayerType.HUMAN;
         }
     }
 
     /**
      * Constructor for the Player with a specified token and type.
+     *
      * @param token The player's token identifier.
-     * @param type The type of player (HUMAN or CPU).
+     * @param type  The type of player (HUMAN or CPU).
      */
     public Player(String token, String type) {
         this.token = token;
@@ -57,41 +56,46 @@ public class Player {
 
     /**
      * Gets the player's token.
+     *
      * @return The player's token.
      */
-    public String getToken(){
+    public String getToken() {
         return token;
     }
 
     /**
      * Sets the player's token.
+     *
      * @param token The new token to be set.
      */
-    public void setToken(String token){
+    public void setToken(String token) {
         this.token = token;
     }
 
     /**
      * Gets the player's current money balance.
+     *
      * @return The amount of money in the player's wallet.
      */
-    public int getMoney(){
+    public int getMoney() {
         return wallet.getMoney();
     }
 
     /**
      * Gets the space the player is currently on.
+     *
      * @return The current space occupied by the player.
      */
-    public Space getSpace(){
+    public Space getSpace() {
         return currentSpace;
     }
 
     /**
      * Moves the player to a new space.
+     *
      * @param newSpace The space to move to.
      */
-    public void move(Space newSpace){
+    public void move(Space newSpace) {
         currentSpace = newSpace;
     }
 
@@ -118,6 +122,7 @@ public class Player {
 
     /**
      * Gets the player's wallet.
+     *
      * @return The player's wallet.
      */
     public Wallet getWallet() {
@@ -126,7 +131,8 @@ public class Player {
 
     /**
      * Pays rent to another player.
-     * @param p The player receiving the rent.
+     *
+     * @param p      The player receiving the rent.
      * @param amount The amount to be paid.
      */
     public void payRent(Player p, int amount) {
@@ -136,8 +142,9 @@ public class Player {
 
     /**
      * Sells a property to another player if the seller owns it.
+     *
      * @param property The property to sell.
-     * @param buyer The player purchasing the property.
+     * @param buyer    The player purchasing the property.
      * @return The property if successfully sold, null otherwise.
      */
     public Property sellProperty(Property property, Player buyer) {
@@ -148,19 +155,20 @@ public class Player {
             buyer.wallet.addProperty(property);
             return property;
         } else {
-            System.out.println("You do not own the property so you cannot sell it");
+            // a player cannot sell a property that they do not own
             return null;
         }
     }
 
     /**
      * Gets a list of all unmortgaged properties owned by the player.
+     *
      * @return A sorted list of unmortgaged properties.
      */
-    public List<Property> getUnmortgagedProperties(){
+    public List<Property> getUnmortgagedProperties() {
         List<Property> unmortgagedProperties = new ArrayList<Property>();
         for (Property property : wallet.getProperties()) {
-            if (!property.isMortgaged()){
+            if (!property.isMortgaged()) {
                 unmortgagedProperties.add(property);
             }
         }
@@ -170,6 +178,7 @@ public class Player {
 
     /**
      * Mortgages a property, adding half of its price to the player's wallet.
+     *
      * @param property The property to mortgage.
      */
     public void mortgageProperty(Property property) {
@@ -179,28 +188,28 @@ public class Player {
 
     /**
      * Unmortgages a property, deducting half of its price from the player's wallet.
+     *
      * @param property The property to unmortgage.
      */
     public void unmortgageProperty(Property property) {
         property.unmortgage();
         wallet.removeMoney(property.getPrice() / 2);
-        //TODO: implement this option in the GUI
     }
 
     /**
      * Calculates the total wealth of the player, including money and properties.
+     *
      * @return The player's total wealth.
      */
     public int getTotalWealth() {
         int totalWealth = wallet.getMoney();
         for (Property property : wallet.getProperties()) {
-
-            // each property is only worth 90% of its purchase price at the end of the game
-            totalWealth += (int)(property.getHouseValue() * 0.9);
+            // each property and house is only worth 90% of its purchase price at the end of the game
+            totalWealth += (int) (property.getHouseValue() * 0.9);
             if (property.isMortgaged()) {
                 totalWealth += property.getPrice() / 2;
             } else {
-                totalWealth += property.getPrice();
+                totalWealth += (int) (property.getPrice() * 0.9);
             }
         }
         return totalWealth;
@@ -208,6 +217,7 @@ public class Player {
 
     /**
      * Summarizes the player's money and total wealth.
+     *
      * @return A string summarizing the player's financial status.
      */
     public String summarizeMoney() {
@@ -216,6 +226,7 @@ public class Player {
 
     /**
      * Calculates the rent for railroads (Mountain properties) owned by the player.
+     *
      * @return The amount to be paid as railroad rent.
      */
     public int calculateRailroadRent() {
@@ -230,13 +241,15 @@ public class Player {
 
 
     /**
-     * 
-     * @return Whether or not the player is a bot
+     * @return Whether the player is a bot
      */
-    public boolean isBot() {return playerType == PlayerType.CPU;}
+    public boolean isBot() {
+        return playerType == PlayerType.CPU;
+    }
 
     /**
      * Returns the string representation of a player
+     *
      * @return string with a player's token and bot status
      */
     @Override
