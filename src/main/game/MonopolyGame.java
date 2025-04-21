@@ -75,7 +75,7 @@ public class MonopolyGame {
         contentPane.setLayout(new OverlayLayout(contentPane));
         JPanel background = new JPanel();
         background.setLayout(null);
-        ImageIcon picture = new ImageIcon(Paths.get("../MontanaOpoly","src", "dependencies", "Montana-opoly_Title_Screen.jpg").toString());
+        ImageIcon picture = new ImageIcon(Paths.get("../MontanaOpoly", "src", "dependencies", "Montana-opoly_Title_Screen.jpg").toString());
         JLabel picLabel = new JLabel(picture);
         picLabel.setBounds(0, 0, width, height);
 
@@ -143,7 +143,7 @@ public class MonopolyGame {
         startScreen.dispose();
         int numPlayers = getPlayerCount();
         int numTurns = getNumberTurns();
-        int numBots = getBotCount(4-numPlayers);
+        int numBots = getBotCount(5 - numPlayers);
 
         if ((numPlayers + numBots) < 2) {
             numBots++;
@@ -163,8 +163,9 @@ public class MonopolyGame {
      */
     private int getBotCount(int maxBots) {
         Integer[] options = new Integer[maxBots];
-        for(int i = 0; i < maxBots; i++) {
-        options[i] = i;}
+        for (int i = 0; i < maxBots; i++) {
+            options[i] = i;
+        }
         return (int) JOptionPane.showInputDialog(null, "How many bots will play?", "Bot Selection", JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
     }
 
@@ -212,19 +213,47 @@ public class MonopolyGame {
         text.setLineWrap(true);
         text.setWrapStyleWord(true);
 
-        try (Scanner bioReader = new Scanner(new File(Paths.get("../MontanaOpoly","src","dependencies", "teamBio.txt").toString()))) {
+        try (Scanner bioReader = new Scanner(new File(Paths.get("../MontanaOpoly", "src", "dependencies", "teamBio.txt").toString()))) {
             while (bioReader.hasNext()) {
                 text.setText(text.getText() + bioReader.nextLine() + "\n");
             }
         } catch (FileNotFoundException e) {
             JOptionPane.showMessageDialog(null, "File Not Found!", ":(", JOptionPane.ERROR_MESSAGE);
         }
+        boundarySet(bio, content, team, text, close);
+
+    }
+
+    public void rules() {
+        startScreen.dispose();
+        JFrame rules = new JFrame("Rules");
+        Container content = rules.getContentPane();
+        content.setLayout(null);
+        JPanel team = new JPanel();
+        JTextArea text = new JTextArea();
+        JButton close = new JButton("Close");
+        text.setText("");
+        text.setLineWrap(true);
+        text.setWrapStyleWord(true);
+        try (Scanner bioReader = new Scanner(new File(Paths.get("../MontanaOpoly", "src", "dependencies", "rules.txt").toString()))) {
+            while (bioReader.hasNext()) {
+                text.setText(text.getText() + bioReader.nextLine() + "\n");
+            }
+        } catch (FileNotFoundException e) {
+            JOptionPane.showMessageDialog(null, "File Not Found!", ":(", JOptionPane.ERROR_MESSAGE);
+        }
+        boundarySet(rules, content, team, text, close);
+
+
+    }
+
+    private void boundarySet(JFrame rules, Container content, JPanel team, JTextArea text, JButton close) {
         team.add(close);
         text.setBounds(20, 20, 350, 170);
         close.setBounds(20, 200, 350, 30);
         close.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                bio.dispose();
+                rules.dispose();
             }
         });
         team.add(text);
@@ -233,12 +262,12 @@ public class MonopolyGame {
         team.setBounds(10, 10, 370, 370);
         try {
             Thread.sleep(200);
-            bio.setState(java.awt.Frame.ICONIFIED);
+            rules.setState(Frame.ICONIFIED);
             Thread.sleep(200);
-            bio.setState(java.awt.Frame.NORMAL);
+            rules.setState(Frame.NORMAL);
         } catch (InterruptedException ignored) {
         }
-        bio.addWindowListener(new WindowListener() {
+        rules.addWindowListener(new WindowListener() {
             @Override
             public void windowOpened(WindowEvent e) {
             }
@@ -268,15 +297,8 @@ public class MonopolyGame {
                 openGame();
             }
         });
-        bio.setBounds(0, 0, 400, 400);
-        bio.setVisible(true);
-
-    }
-
-    public void rules(){
-        startScreen.dispose();
-        JFrame rules = new JFrame("Rules");
-
+        rules.setBounds(0, 0, 400, 400);
+        rules.setVisible(true);
     }
 
 }

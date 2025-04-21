@@ -52,7 +52,7 @@ public class Property extends Space {
     }
 
     /**
-     * Constructor for railroads.
+     * Constructor for railroads. -- different because rent is based on the number of railroads owned
      * @param name Name of the railroad.
      * @param imgfile Image file associated with the railroad.
      * @param propertyClass Property class/type.
@@ -72,10 +72,8 @@ public class Property extends Space {
         this.canAddHouses = false;
     }
 
-    //TODO: distinguish why -- (rent)
-
     /**
-     * Constructor for utilities.
+     * Constructor for utilities. -- different because rent is calculated based on the dice roll
      * @param name Name of the utility.
      * @param imgfile Image file associated with the utility.
      * @param propertyClass Property class/type.
@@ -110,12 +108,18 @@ public class Property extends Space {
         return price;
     }
 
-    //TODO: add
+    /**
+     *
+     * @return the number of houses / 2
+     */
     public int getHouseValue(){
         return houses * (getPrice() / 2);
     }
 
-    //TODO: add
+    /**
+     * Can houses be added to this property?
+     * @return is it a property or utility/railroad/etc.
+     */
     public boolean canAddHouses(){
         return canAddHouses;
     }

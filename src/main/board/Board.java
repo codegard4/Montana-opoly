@@ -79,13 +79,13 @@ public class Board extends JFrame {
         // Initialize players
         players = new Player[numPlayers + numBots]; // store bots as players with a CPU controller
         for (int i = 0; i < players.length; i++) {
-            System.out.println(i);
+//            System.out.println(i);
             if (i < numPlayers) {
-                System.out.println("Adding real player");
+//                System.out.println("Adding real player");
                 players[i] = new Player(false);
             } else {
                 players[i] = new Player(true);
-                System.out.println("Adding BOT");
+//                System.out.println("Adding BOT");
             }
             players[i].move(boardArray[0]); // all players start on GO
         }
@@ -115,9 +115,6 @@ public class Board extends JFrame {
         board.setVisible(true);
 
     }
-//TODO: move static & non-static methods, public and private methods
-    //todo: generate javadoc that is html
-
 
     /**
      * Gets the current player
@@ -762,7 +759,7 @@ public class Board extends JFrame {
     private void nextTurn() {
         // Loop through each player and allow them to take a turn
         for (currentPlayerIndex = 0; currentPlayerIndex < players.length; currentPlayerIndex++) {
-            System.out.println("Player " + (currentPlayerIndex + 1) + "'s turn.");
+//            System.out.println("Player " + (currentPlayerIndex + 1) + "'s turn.");
             takeTurn();
             updatePlayerPanel();
         }
