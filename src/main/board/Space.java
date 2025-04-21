@@ -2,10 +2,10 @@ package src.main.board;
 
 import java.awt.Container;
 import java.awt.Dimension;
-import java.awt.Rectangle;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseEvent;
 import java.awt.Point;
+import java.awt.Rectangle;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.nio.file.Paths;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
@@ -46,7 +46,7 @@ public class Space {
         if (imgFile == null) {
             this.spaceImg = null;
         } else {
-            this.spaceImg = new ImageIcon(Paths.get("../MontanaOpoly", "src", "dependencies", "propertyImages", imgFile).toString());
+            this.spaceImg = new ImageIcon(Paths.get("Montana-opoly", "src", "dependencies", "propertyImages", imgFile).toString());
         }
     }
 
@@ -69,12 +69,21 @@ public class Space {
     }
 
     /**
-     * Sets the clickable area of the space.
+     * Sets the clickable area of the space. Used for initializing the board space.
      *
      * @param coords An array defining the rectangular click area coordinates.
      */
     public void setClickPane(int[] coords) {
         this.clickPane = new Rectangle(new Point(coords[0], coords[1]), new Dimension(coords[2] - coords[0], coords[7] - coords[3]));
+    }
+
+    /**
+     * Sets the clickable area of the space. Used for dynamic resizing during game.
+     *
+     * @param coords An array defining the rectangular click area coordinates.
+     */
+    public void setClickPane(Point p) {
+        this.clickPane = new Rectangle(new Point(clickPane.x + p.x, clickPane.y + p.y), new Dimension(clickPane.width, clickPane.height));
     }
 
     /**

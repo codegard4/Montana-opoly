@@ -75,7 +75,7 @@ public class MonopolyGame {
         contentPane.setLayout(new OverlayLayout(contentPane));
         JPanel background = new JPanel();
         background.setLayout(null);
-        ImageIcon picture = new ImageIcon(Paths.get("../MontanaOpoly", "src", "dependencies", "Montana-opoly_Title_Screen.jpg").toString());
+        ImageIcon picture = new ImageIcon(Paths.get("Montana-opoly", "src", "dependencies", "Montana-opoly_Title_Screen.jpg").toString());
         JLabel picLabel = new JLabel(picture);
         picLabel.setBounds(0, 0, width, height);
 
@@ -213,7 +213,7 @@ public class MonopolyGame {
         text.setLineWrap(true);
         text.setWrapStyleWord(true);
 
-        try (Scanner bioReader = new Scanner(new File(Paths.get("../MontanaOpoly", "src", "dependencies", "teamBio.txt").toString()))) {
+        try (Scanner bioReader = new Scanner(new File(Paths.get("Montana-opoly", "src", "dependencies", "teamBio.txt").toString()))) {
             while (bioReader.hasNext()) {
                 text.setText(text.getText() + bioReader.nextLine() + "\n");
             }
@@ -235,7 +235,8 @@ public class MonopolyGame {
         text.setText("");
         text.setLineWrap(true);
         text.setWrapStyleWord(true);
-        try (Scanner bioReader = new Scanner(new File(Paths.get("../MontanaOpoly", "src", "dependencies", "rules.txt").toString()))) {
+        
+        try (Scanner bioReader = new Scanner(new File(Paths.get("Montana-opoly", "src", "dependencies", "rules.txt").toString()))) {
             while (bioReader.hasNext()) {
                 text.setText(text.getText() + bioReader.nextLine() + "\n");
             }
@@ -243,23 +244,23 @@ public class MonopolyGame {
             JOptionPane.showMessageDialog(null, "File Not Found!", ":(", JOptionPane.ERROR_MESSAGE);
         }
         boundarySet(rules, content, team, text, close);
-
-
     }
 
     private void boundarySet(JFrame rules, Container content, JPanel team, JTextArea text, JButton close) {
+        team.setLayout(null);
         team.add(close);
-        text.setBounds(20, 20, 350, 170);
-        close.setBounds(20, 200, 350, 30);
+        close.setBounds(20, 420, 480, 30);
         close.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 rules.dispose();
             }
         });
-        team.add(text);
+        JScrollPane textPane = new JScrollPane(text);
+        textPane.setBounds(20, 20, 480, 380);
+        team.add(textPane);
         team.add(close);
         content.add(team);
-        team.setBounds(10, 10, 370, 370);
+        team.setBounds(10, 10, 500, 500);
         try {
             Thread.sleep(200);
             rules.setState(Frame.ICONIFIED);
@@ -297,7 +298,7 @@ public class MonopolyGame {
                 openGame();
             }
         });
-        rules.setBounds(0, 0, 400, 400);
+        rules.setBounds(0, 0, 550, 550);
         rules.setVisible(true);
     }
 

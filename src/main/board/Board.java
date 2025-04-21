@@ -1,19 +1,16 @@
 package src.main.board;
 
-import java.nio.file.Paths;
 import java.awt.*;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.*;
+import java.nio.file.Paths;
 import java.util.*;
 import java.util.List;
 import javax.swing.*;
-
-import src.main.game.MonopolyGame;
 import src.main.player.Player;
-
-import java.nio.file.Path;
-import java.nio.file.Paths;
 
 // ...
 
@@ -26,7 +23,7 @@ public class Board extends JFrame {
 
     private final JFrame board;
     private JPanel playerPanel;
-    private final ImageIcon gameBoard = new ImageIcon(Paths.get("../MontanaOpoly", "src", "dependencies", "fullBoard.jpg").toString());
+    private final ImageIcon gameBoard = new ImageIcon(Paths.get("Montana-opoly", "src", "dependencies", "fullBoard.jpg").toString());
     private final Space[] boardArray;
     private final List<Card> chanceCards = new ArrayList<>();
     private final List<Card> communityChestCards = new ArrayList<>();
@@ -208,7 +205,7 @@ public class Board extends JFrame {
      * Load all the chance and community chest cards
      */
     private void loadCards() {
-        loadCardFile(Paths.get("../MontanaOpoly", "src", "dependencies", "cards.txt").toString());
+        loadCardFile(Paths.get("Montana-opoly", "src", "dependencies", "cards.txt").toString());
 
     }
 
@@ -258,6 +255,33 @@ public class Board extends JFrame {
             public void mouseExited(MouseEvent e) {
             }
         });
+
+        board.addComponentListener(new ComponentListener() {
+            @Override
+            public void componentResized(ComponentEvent e) {
+                Point g = boardPanel.getLocation();
+                adjustBoard(g);
+            }
+
+            @Override
+            public void componentMoved(ComponentEvent e) {
+            }
+
+            @Override
+            public void componentShown(ComponentEvent e) {
+            }
+
+            @Override
+            public void componentHidden(ComponentEvent e) {
+            }
+        });
+        adjustBoard(boardPanel.getLocation());
+    }
+
+    private void adjustBoard(Point p) {
+        for(Rectangle r : viewMap.keySet()){
+            viewMap.get(r).setClickPane(p);
+        }
     }
 
     /**
@@ -534,7 +558,7 @@ public class Board extends JFrame {
      * Load all the gameboard spaces from a .txt file
      */
     private void loadSpaces() {
-        try (final Scanner spaceReader = new Scanner(new File(Paths.get("../MontanaOpoly", "src", "dependencies", "spaceList.txt").toString()))) {
+        try (final Scanner spaceReader = new Scanner(new File(Paths.get("Montana-opoly", "src", "dependencies", "spaceList.txt").toString()))) {
             spaceReader.nextLine();
             int i = 0;
             while (spaceReader.hasNext()) {
@@ -564,7 +588,7 @@ public class Board extends JFrame {
         } catch (IOException e) {
             JOptionPane.showMessageDialog(null, "Space File Not Found!", "Game Initialization Error", JOptionPane.ERROR_MESSAGE);
         }
-        try (final Scanner coordReader = new Scanner(new File(Paths.get("../MontanaOpoly", "src", "dependencies", "spaceCoords.txt").toString()))) {
+        try (final Scanner coordReader = new Scanner(new File(Paths.get("Montana-opoly", "src", "dependencies", "spaceCoords.txt").toString()))) {
             coordReader.nextLine();
             int i = 0;
             while (coordReader.hasNext()) {

@@ -1,1 +1,42 @@
-add rules list here
+RULES OF THE GAME
+-----------------
+
+MONTANA-OPOLY vs MONOPOLY
+Montana-opoly is meant to be a more intense, faster-paced version of Monopoly. Thus, it has distinct rules for turns, adding houses, trading, and determining who wins the game.
+
+TURNS
+- In Montana-opoly, a full turn occurs when every player has a chance to roll the dice.
+- After each turn, the options bar unlocks and allows players to start a new turn, end the game, make trades, add houses to their properties, or view the rules.
+
+To begin a new turn, select "New Turn" from the options bar.
+
+ADD HOUSES
+- Differing from regular Monopoly and to supplement the high-octane, high-stakes vision for Montana-opoly, players may add houses to their properties without needing full sets of properties
+- Remember that Utilities and Mountain Ranges may not have houses placed on them, as their rent values are determined by dice rolls and number of ranges owned, respectively
+
+To add a house to a property:
+1. Select "Add Houses"
+2. Select your token from the dropdown menu
+3. Select the property that you would like to add a house to
+
+TRADING
+- Trading may be initiated by human players in between turns
+- Trading occurs in property swaps, one property for another
+- Trading does not involve cash considerations
+- Trading may not occur between two bot players
+- Bot players will not accept trades if they are too one-sided, so offer wisely.
+
+To initiate a trade:
+1. Select "Trade"
+2. Select your token
+3. Select the token of your trading partner
+4. Select the property you would like to trade
+5. Select the property you want in return
+6. Confirm the trade
+
+END OF GAME PROCESS
+- The winner of Montana-opoly is the player who collects the greatest value of assets
+- Properties are considered less valuable than cash, as properties are meant to be investments that generate rent for the player
+- The game may be ended in between any turn by pressing the "End Game" or by completing all turns chosen during game setup
+
+HAPPY PLAYING!
