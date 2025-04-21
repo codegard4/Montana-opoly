@@ -35,10 +35,8 @@ public class Player {
         this.wallet = new Wallet(STARTING_MONEY);
         this.currentSpace = null;
         if (isCPU) {
-//            System.out.println("CPU -- Player class");
             this.playerType = PlayerType.CPU;
         } else {
-//            System.out.println("Human -- Player class");
             this.playerType = PlayerType.HUMAN;
         }
     }
@@ -157,7 +155,7 @@ public class Player {
             buyer.wallet.addProperty(property);
             return property;
         } else {
-//            System.out.println("You do not own the property so you cannot sell it");
+            // a player cannot sell a property that they do not own
             return null;
         }
     }
@@ -196,7 +194,6 @@ public class Player {
     public void unmortgageProperty(Property property) {
         property.unmortgage();
         wallet.removeMoney(property.getPrice() / 2);
-        //TODO: implement this option in the GUI
     }
 
     /**
@@ -244,7 +241,7 @@ public class Player {
 
 
     /**
-     * @return Whether or not the player is a bot
+     * @return Whether the player is a bot
      */
     public boolean isBot() {
         return playerType == PlayerType.CPU;

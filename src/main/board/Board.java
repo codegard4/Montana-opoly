@@ -26,7 +26,7 @@ public class Board extends JFrame {
 
     private final JFrame board;
     private JPanel playerPanel;
-    private final ImageIcon gameBoard = new ImageIcon(Paths.get("../MontanaOpoly","src", "dependencies", "fullBoard.jpg").toString());
+    private final ImageIcon gameBoard = new ImageIcon(Paths.get("../MontanaOpoly", "src", "dependencies", "fullBoard.jpg").toString());
     private final Space[] boardArray;
     private final List<Card> chanceCards = new ArrayList<>();
     private final List<Card> communityChestCards = new ArrayList<>();
@@ -50,6 +50,7 @@ public class Board extends JFrame {
 
     /**
      * This is the main method
+     *
      * @param args command line arguments (ignored)
      */
     public static void main(String[] args) {
@@ -207,7 +208,7 @@ public class Board extends JFrame {
      * Load all the chance and community chest cards
      */
     private void loadCards() {
-        loadCardFile(Paths.get("../MontanaOpoly","src", "dependencies", "cards.txt").toString());
+        loadCardFile(Paths.get("../MontanaOpoly", "src", "dependencies", "cards.txt").toString());
 
     }
 
@@ -324,6 +325,7 @@ public class Board extends JFrame {
         Player player2 = (Player) JOptionPane.showInputDialog(board, "Select the second player:", "Player 2", JOptionPane.PLAIN_MESSAGE, null, otherPlayers.toArray(), otherPlayers.get(0));
         if (player2 == null) return;
 
+        // Two bots cannot trade so return here
         if (player1.isBot() && player2.isBot()) {
             JOptionPane.showMessageDialog(board, "Trade cancelled — two bot players may not trade with each other.", "Trade Cancelled", JOptionPane.WARNING_MESSAGE);
             return;
@@ -357,6 +359,8 @@ public class Board extends JFrame {
                 tradeAccepted = false;
             }
         }
+
+        // The trade was confirmed, move properties between players
         if (confirm == JOptionPane.YES_OPTION && tradeAccepted) {
             player1.wallet.removeProperty(p1Prop);
             player2.wallet.removeProperty(p2Prop);
@@ -530,7 +534,7 @@ public class Board extends JFrame {
      * Load all the gameboard spaces from a .txt file
      */
     private void loadSpaces() {
-        try (final Scanner spaceReader = new Scanner(new File(Paths.get("../MontanaOpoly","src", "dependencies", "spaceList.txt").toString()))) {
+        try (final Scanner spaceReader = new Scanner(new File(Paths.get("../MontanaOpoly", "src", "dependencies", "spaceList.txt").toString()))) {
             spaceReader.nextLine();
             int i = 0;
             while (spaceReader.hasNext()) {
@@ -560,7 +564,7 @@ public class Board extends JFrame {
         } catch (IOException e) {
             JOptionPane.showMessageDialog(null, "Space File Not Found!", "Game Initialization Error", JOptionPane.ERROR_MESSAGE);
         }
-        try (final Scanner coordReader = new Scanner(new File(Paths.get("../MontanaOpoly","src", "dependencies", "spaceCoords.txt").toString()))) {
+        try (final Scanner coordReader = new Scanner(new File(Paths.get("../MontanaOpoly", "src", "dependencies", "spaceCoords.txt").toString()))) {
             coordReader.nextLine();
             int i = 0;
             while (coordReader.hasNext()) {
@@ -597,6 +601,8 @@ public class Board extends JFrame {
             currentPlayer.passGo();
             JOptionPane.showMessageDialog(null, currentPlayer.toString() + " passed GO and collected $200!", "Pass GO", JOptionPane.INFORMATION_MESSAGE);
         }
+
+        // Move the player then handle the new space they moved to
         Space landedSpace = boardArray[newIndex];
         currentPlayer.move(landedSpace);
         updatePlayerPanel();
@@ -673,6 +679,7 @@ public class Board extends JFrame {
                 }
             }
         } else if (!property.getOwner().equals(player)) {
+            // Pay rent!
             player.payRent(property.getOwner(), property.getRent());
             JOptionPane.showMessageDialog(null, "This property is already owned -- pay rent of $" + property.getRent() + ".", "Pay Rent", JOptionPane.WARNING_MESSAGE);
         }
@@ -759,7 +766,6 @@ public class Board extends JFrame {
     private void nextTurn() {
         // Loop through each player and allow them to take a turn
         for (currentPlayerIndex = 0; currentPlayerIndex < players.length; currentPlayerIndex++) {
-//            System.out.println("Player " + (currentPlayerIndex + 1) + "'s turn.");
             takeTurn();
             updatePlayerPanel();
         }

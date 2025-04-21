@@ -5,6 +5,9 @@ import src.main.player.Player;
 
 import java.util.List;
 
+/**
+ * Tests the functionality of a monopoly player's common transactions
+ */
 public class PlayerTest {
 
     public static void main(String[] args) {
@@ -14,6 +17,12 @@ public class PlayerTest {
         System.out.println("All tests finished.");
     }
 
+    /**
+     * Checks if a conditional test is true
+     *
+     * @param condition is true?
+     * @param testName  What should the test be named
+     */
     public static void checkTrue(boolean condition, String testName) {
         if (condition) {
             System.out.println(testName + ": PASSED");
@@ -22,6 +31,12 @@ public class PlayerTest {
         }
     }
 
+    /**
+     * Checks if a conditional test is false
+     *
+     * @param condition is false?
+     * @param testName  What should the test be named
+     */
     public static void checkFalse(boolean condition, String testName) {
         if (!condition) {
             System.out.println(testName + ": PASSED");
@@ -30,6 +45,9 @@ public class PlayerTest {
         }
     }
 
+    /**
+     * test buy property functionality
+     */
     public static void testBuyProperty() {
         Player testPlayer = new Player(false);
         Property testProperty = new Property("TestProperty", null, "Brown", 100, new int[]{10, 20, 40, 80, 120}, 0);
@@ -44,6 +62,9 @@ public class PlayerTest {
         checkTrue(testProperty.getOwner() == testPlayer, "testBuyProperty - Player should be the owner");
     }
 
+    /**
+     * Test that a player cannot buy an expensive property
+     */
     public static void testCannotBuyExpensiveProperty() {
         Player testPlayer = new Player(false);
         Property testProperty = new Property("TestProperty", null, "Brown", 2000, new int[]{10, 20, 40, 80, 120}, 0);
@@ -58,6 +79,9 @@ public class PlayerTest {
         checkTrue(testProperty.getOwner() == null, "testCannotBuyExpensiveProperty - Property should have no owner");
     }
 
+    /**
+     * Test that a player cannot sell a property a player do not own
+     */
     public static void testCannotSellPropertyNotOwned() {
         Player seller = new Player(false);
         Player buyer = new Player(false);
