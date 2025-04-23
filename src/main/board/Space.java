@@ -74,7 +74,7 @@ public class Space {
      * @param coords An array defining the rectangular click area coordinates.
      */
     public void setClickPane(int[] coords) {
-        this.clickPane = new Rectangle(new Point(coords[0]+65, coords[1]+20), new Dimension(coords[2] - coords[0], coords[7] - coords[3]));
+        this.clickPane = new Rectangle(new Point(coords[0], coords[1]), new Dimension(coords[2] - coords[0], coords[7] - coords[3]));
     }
 
     /**
@@ -82,31 +82,9 @@ public class Space {
      *
      * @param coords An array defining the rectangular click area coordinates.
      */
-    public void setClickPane(Point p, int i) {
-        if(i > 0 && i <= 9){
-            this.clickPane = new Rectangle(new Point(p.x + (9-i)*clickPane.width, p.y + 8*clickPane.width+clickPane.height), new Dimension(clickPane.width, clickPane.height));
-        }
-        if(i >  10 && i <= 19) {
-            this.clickPane = new Rectangle(new Point(p.x, p.y + (19-i)*clickPane.width+clickPane.height), new Dimension(clickPane.width, clickPane.height));
-        }
-        if(i > 20 && i <= 29) {
-
-        }
-        if(i > 30 && i <= 39) {
-
-        }
-        if(i == 0){
-            this.clickPane = new Rectangle(new Point(p.x, p.y), new Dimension(clickPane.width, clickPane.height));
-        }
-        if(i == 10){
-
-        }
-        if(i == 20){
-
-        }
-        if(i == 30){
-
-        }
+    public void move(Point current, Point newAnchor) {
+        this.clickPane.x += (newAnchor.x - current.x);
+        this.clickPane.y += (newAnchor.y - current.y);
     }
 
     /**

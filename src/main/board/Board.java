@@ -1,10 +1,14 @@
 package src.main.board;
 
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.io.*;
 import java.nio.file.Paths;
 import java.util.*;
@@ -39,11 +43,13 @@ public class Board extends JFrame {
     private int currentPlayerIndex = 0; // start with the first player
     private final Random dice = new Random();
     private final Random randomCard = new Random();
+    private Point anchorPoint;
 
     public JButton newTurnButton = new JButton("New Turn");
     public JButton endGameButton = new JButton("End Game");
     public JButton tradeButton = new JButton("Trade");
     public JButton addHousesButton = new JButton("Add Houses");
+    public JButton rulesButton = new JButton("Rules");
 
     /**
      * This is the main method
@@ -108,10 +114,10 @@ public class Board extends JFrame {
         endGameButton.addActionListener(e -> endGame());
         tradeButton.addActionListener(e -> initiateTrade());
         addHousesButton.addActionListener(e -> addHouses());
+        rulesButton.addActionListener(e -> rules());
 
         board.paintComponents(getGraphics());
         board.setVisible(true);
-
     }
 
     /**
@@ -228,6 +234,7 @@ public class Board extends JFrame {
         buttonPanel.add(endGameButton);
         buttonPanel.add(tradeButton);
         buttonPanel.add(addHousesButton);
+        buttonPanel.add(rulesButton);
 
         boardPanel.add(boardLabel);
         boardContent.add(buttonPanel, BorderLayout.NORTH);
@@ -261,6 +268,7 @@ public class Board extends JFrame {
             public void componentResized(ComponentEvent e) {
                 Point g = boardPanel.getLocation();
                 adjustBoard(g);
+                anchorPoint = g;
             }
 
             @Override
@@ -275,12 +283,15 @@ public class Board extends JFrame {
             public void componentHidden(ComponentEvent e) {
             }
         });
-        adjustBoard(boardPanel.getLocation());
     }
 
     private void adjustBoard(Point p) {
         for(int i = 0;i < boardArray.length;i++){
-            boardArray[i].setClickPane(p, i);
+            boardArray[i].move(anchorPoint, p);
+        }
+        viewMap = new HashMap<>();
+        for (Space c : boardArray) {
+            viewMap.put(c.getClickPane(), c);
         }
     }
 
@@ -607,6 +618,7 @@ public class Board extends JFrame {
         for (Space c : boardArray) {
             viewMap.put(c.getClickPane(), c);
         }
+        anchorPoint = new Point(boardArray[20].getClickPane().x, boardArray[20].getClickPane().y);
     }
 
     /**
@@ -806,6 +818,83 @@ public class Board extends JFrame {
 
         // Increment turnsTaken to track game progress
         turnsTaken++;
+    }
+
+    public void rules() {
+        JFrame rules = new JFrame("Rules");
+        Container content = rules.getContentPane();
+        content.setLayout(null);
+        JPanel team = new JPanel();
+        JTextArea text = new JTextArea();
+        JButton close = new JButton("Close");
+        text.setText("");
+        text.setLineWrap(true);
+        text.setWrapStyleWord(true);
+        
+        try (Scanner bioReader = new Scanner(new File(Paths.get("Montana-opoly", "src", "dependencies", "rules.txt").toString()))) {
+            while (bioReader.hasNext()) {
+                text.setText(text.getText() + bioReader.nextLine() + "\n");
+            }
+        } catch (FileNotFoundException e) {
+            JOptionPane.showMessageDialog(null, "File Not Found!", ":(", JOptionPane.ERROR_MESSAGE);
+        }
+        boundarySet(rules, content, team, text, close);
+    }
+
+    private void boundarySet(JFrame rules, Container content, JPanel team, JTextArea text, JButton close) {
+        team.setLayout(null);
+        team.add(close);
+        close.setBounds(20, 420, 480, 30);
+        close.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                rules.dispose();
+            }
+        });
+        JScrollPane textPane = new JScrollPane(text);
+        textPane.setBounds(20, 20, 480, 380);
+        team.add(textPane);
+        team.add(close);
+        content.add(team);
+        team.setBounds(10, 10, 500, 500);
+        try {
+            Thread.sleep(200);
+            rules.setState(Frame.ICONIFIED);
+            Thread.sleep(200);
+            rules.setState(Frame.NORMAL);
+        } catch (InterruptedException ignored) {
+        }
+        rules.addWindowListener(new WindowListener() {
+            @Override
+            public void windowOpened(WindowEvent e) {
+            }
+
+            @Override
+            public void windowClosing(WindowEvent e) {
+            }
+
+            @Override
+            public void windowClosed(WindowEvent e) {
+            }
+
+            @Override
+            public void windowIconified(WindowEvent e) {
+            }
+
+            @Override
+            public void windowDeiconified(WindowEvent e) {
+            }
+
+            @Override
+            public void windowActivated(WindowEvent e) {
+            }
+
+            @Override
+            public void windowDeactivated(WindowEvent e) {
+            }
+        });
+        rules.setBounds(0, 0, 550, 550);
+        rules.setVisible(true);
     }
 }
     

@@ -83,15 +83,17 @@ public class MonopolyGame {
         int centerHrzntl = (int) width / 2;
         startGame.setBounds(2 * centerHrzntl - 235, 20, 200, 30);
         startGame.addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent e) {
                 startGame();
             }
         });
         JButton rules = new JButton("Rules & How To Play");
-        rules.setBounds(2 * centerHrzntl - 235, 140, 200, 30);
+        rules.setBounds(2 * centerHrzntl - 235, 100, 200, 30);
 
         rules.setOpaque(true);
         rules.addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent e) {
                 rules();
             }
@@ -99,6 +101,7 @@ public class MonopolyGame {
         JButton about = new JButton("Credits & About the Team");
         about.setBounds(2 * centerHrzntl - 235, 60, 200, 30);
         about.addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent e) {
                 teamBio();
             }
@@ -106,8 +109,9 @@ public class MonopolyGame {
 
         JButton exit = new JButton("Exit Game");
 
-        exit.setBounds(2 * centerHrzntl - 235, 100, 200, 30);
+        exit.setBounds(2 * centerHrzntl - 235, 140, 200, 30);
         exit.addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent e) {
                 exit();
             }
@@ -251,6 +255,7 @@ public class MonopolyGame {
         team.add(close);
         close.setBounds(20, 420, 480, 30);
         close.addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent e) {
                 rules.dispose();
             }
@@ -301,5 +306,4 @@ public class MonopolyGame {
         rules.setBounds(0, 0, 550, 550);
         rules.setVisible(true);
     }
-
 }
