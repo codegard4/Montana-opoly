@@ -1,8 +1,7 @@
 package src.main.board;
 
-import src.main.player.Player;
-
 import javax.swing.JOptionPane;
+import src.main.player.Player;
 
 public class Card {
     private final String description;
@@ -10,6 +9,14 @@ public class Card {
     private final int moveSpaces;  // Exact board index if goToLocation is true, -1 means no movement
     private final boolean goToLocation; // If true, moveSpaces is an exact index on the board
 
+    /**
+     * Constructor for Chance and Community Chest cards
+     * 
+     * @param description
+     * @param moneyEffect
+     * @param moveSpaces
+     * @param goToLocation
+     */
     public Card(String description, int moneyEffect, int moveSpaces, boolean goToLocation) {
         this.description = description;
         this.moneyEffect = moneyEffect;
@@ -17,6 +24,12 @@ public class Card {
         this.goToLocation = goToLocation;
     }
 
+    /**
+     * Applies effect of Chance/Community Chest card drawn to player and displays message to board.
+     * 
+     * @param player 
+     * @param board
+     */
     public void applyEffect(Player player, Board board) {
         JOptionPane.showMessageDialog(null, description, "Card Drawn", JOptionPane.INFORMATION_MESSAGE);
 

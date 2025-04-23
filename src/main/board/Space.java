@@ -1,7 +1,6 @@
 package src.main.board;
 
 import java.awt.Container;
-import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
@@ -74,7 +73,18 @@ public class Space {
      * @param coords An array defining the rectangular click area coordinates.
      */
     public void setClickPane(int[] coords) {
-        this.clickPane = new Rectangle(new Point(coords[0], coords[1]), new Dimension(coords[2] - coords[0], coords[7] - coords[3]));
+        int topLeftX = coords[0];
+        int topLeftY = coords[1];
+        int bottomRightX = coords[6];
+        int bottomRightY = coords[7];
+    
+        int x = Math.min(topLeftX, bottomRightX);
+        int y = Math.min(topLeftY, bottomRightY);
+        int width = Math.abs(bottomRightX - topLeftX);
+        int height = Math.abs(bottomRightY - topLeftY);
+    
+        this.clickPane = new Rectangle(x+55, y+32, width, height);
+        System.out.println("Rectangle placed at (" + clickPane.x + "," + clickPane.y + ")");
     }
 
     /**

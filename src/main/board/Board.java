@@ -136,6 +136,7 @@ public class Board extends JFrame {
      */
     public void clickProperty(MouseEvent e) {
         Point clickPoint = new Point(e.getX(), e.getY());
+        System.out.println("Click occurred at (" + clickPoint.x + "," + clickPoint.y + ")");
         for (Rectangle r : viewMap.keySet()) {
             if (r.contains(clickPoint)) {
                 viewMap.get(r).viewProperty();
@@ -286,8 +287,8 @@ public class Board extends JFrame {
     }
 
     private void adjustBoard(Point p) {
-        for(int i = 0;i < boardArray.length;i++){
-            boardArray[i].move(anchorPoint, p);
+        for (Space space : boardArray) {
+            space.move(anchorPoint, p);
         }
         viewMap = new HashMap<>();
         for (Space c : boardArray) {
@@ -568,7 +569,7 @@ public class Board extends JFrame {
     /**
      * Load all the gameboard spaces from a .txt file
      */
-    private void loadSpaces() {
+    public void loadSpaces() {
         try (final Scanner spaceReader = new Scanner(new File(Paths.get("Montana-opoly", "src", "dependencies", "spaceList.txt").toString()))) {
             spaceReader.nextLine();
             int i = 0;
@@ -616,7 +617,9 @@ public class Board extends JFrame {
         }
         viewMap = new HashMap<>();
         for (Space c : boardArray) {
-            viewMap.put(c.getClickPane(), c);
+            Rectangle click = c.getClickPane();
+            System.out.println("Clicking pane placed at (" + click.x + "," + click.y + ")");
+            viewMap.put(click, c);
         }
         anchorPoint = new Point(boardArray[20].getClickPane().x, boardArray[20].getClickPane().y);
     }
