@@ -154,6 +154,15 @@ public class Space {
         return spaceName;
     }
 
+    /**
+     * Returns the name of the space as a string.
+     *
+     * @return The name of the space.
+     */
+    public String toString() {
+        return spaceName;
+    }
+
     public ImageIcon getImage() {
         return this.spaceImg;
     }

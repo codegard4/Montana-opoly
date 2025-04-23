@@ -10,8 +10,10 @@ import java.awt.event.WindowListener;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.nio.file.Paths;
+import java.util.Enumeration;
 import java.util.Scanner;
 import javax.swing.*;
+import javax.swing.plaf.FontUIResource;
 
 /**
  * The MonopolyGame class represents the main game window for Montana-opoly.
@@ -34,6 +36,7 @@ public class MonopolyGame {
      * @param args arguments from the command line that are not used
      */
     public static void main(String[] args) {
+        setUIFont(new FontUIResource("Arial", Font.PLAIN, 16));
         MonopolyGame game = new MonopolyGame();
         while (game.getGameParams() == null) {
             try {
@@ -51,6 +54,17 @@ public class MonopolyGame {
         }
     }
 
+    public static void setUIFont(FontUIResource f) {
+        Enumeration<Object> keys = UIManager.getDefaults().keys();
+        while (keys.hasMoreElements()) {
+            Object key = keys.nextElement();
+            Object value = UIManager.get(key);
+            if (value instanceof FontUIResource) {
+                UIManager.put(key, f);
+            }
+        }
+    }   
+    
     public int[] getGameParams() {
         return gameParams;
     }
