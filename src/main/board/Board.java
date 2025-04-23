@@ -279,8 +279,8 @@ public class Board extends JFrame {
     }
 
     private void adjustBoard(Point p) {
-        for(Rectangle r : viewMap.keySet()){
-            viewMap.get(r).setClickPane(p);
+        for(int i = 0;i < boardArray.length;i++){
+            boardArray[i].setClickPane(p, i);
         }
     }
 

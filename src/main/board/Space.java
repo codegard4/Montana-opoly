@@ -74,7 +74,7 @@ public class Space {
      * @param coords An array defining the rectangular click area coordinates.
      */
     public void setClickPane(int[] coords) {
-        this.clickPane = new Rectangle(new Point(coords[0], coords[1]), new Dimension(coords[2] - coords[0], coords[7] - coords[3]));
+        this.clickPane = new Rectangle(new Point(coords[0]+65, coords[1]+20), new Dimension(coords[2] - coords[0], coords[7] - coords[3]));
     }
 
     /**
@@ -82,8 +82,31 @@ public class Space {
      *
      * @param coords An array defining the rectangular click area coordinates.
      */
-    public void setClickPane(Point p) {
-        this.clickPane = new Rectangle(new Point(clickPane.x + p.x, clickPane.y + p.y), new Dimension(clickPane.width, clickPane.height));
+    public void setClickPane(Point p, int i) {
+        if(i > 0 && i <= 9){
+            this.clickPane = new Rectangle(new Point(p.x + (9-i)*clickPane.width, p.y + 8*clickPane.width+clickPane.height), new Dimension(clickPane.width, clickPane.height));
+        }
+        if(i >  10 && i <= 19) {
+            this.clickPane = new Rectangle(new Point(p.x, p.y + (19-i)*clickPane.width+clickPane.height), new Dimension(clickPane.width, clickPane.height));
+        }
+        if(i > 20 && i <= 29) {
+
+        }
+        if(i > 30 && i <= 39) {
+
+        }
+        if(i == 0){
+            this.clickPane = new Rectangle(new Point(p.x, p.y), new Dimension(clickPane.width, clickPane.height));
+        }
+        if(i == 10){
+
+        }
+        if(i == 20){
+
+        }
+        if(i == 30){
+
+        }
     }
 
     /**
@@ -100,7 +123,7 @@ public class Space {
      */
     public void viewProperty() {
         JFrame view = new JFrame();
-        view.setBounds(200, 200, 310, 525);
+        view.setBounds(200, 200, 325, 525);
         view.setLayout(null);
         Container viewPane = view.getContentPane();
         JLabel viewLabel = new JLabel(spaceImg);
