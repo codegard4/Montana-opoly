@@ -84,11 +84,10 @@ public class Space {
         int height = Math.abs(bottomRightY - topLeftY);
     
         this.clickPane = new Rectangle(x+55, y+32, width, height);
-        System.out.println("Rectangle placed at (" + clickPane.x + "," + clickPane.y + ")");
     }
 
     /**
-     * Sets the clickable area of the space. Used for dynamic resizing during game.
+     * Moves the clickable area of the space. Used for dynamic resizing during game.
      *
      * @param coords An array defining the rectangular click area coordinates.
      */
@@ -151,8 +150,11 @@ public class Space {
      *
      * @return The name of the space.
      */
-    @Override
-    public String toString() {
+    public String getName() {
         return spaceName;
+    }
+
+    public ImageIcon getImage() {
+        return this.spaceImg;
     }
 }

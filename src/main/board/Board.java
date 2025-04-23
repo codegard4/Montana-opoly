@@ -50,6 +50,9 @@ public class Board extends JFrame {
     public JButton tradeButton = new JButton("Trade");
     public JButton addHousesButton = new JButton("Add Houses");
     public JButton rulesButton = new JButton("Rules");
+    public JButton viewButton = new JButton("View Properties");
+
+    private ImageIcon propImage;
 
     /**
      * This is the main method
@@ -115,6 +118,7 @@ public class Board extends JFrame {
         tradeButton.addActionListener(e -> initiateTrade());
         addHousesButton.addActionListener(e -> addHouses());
         rulesButton.addActionListener(e -> rules());
+        viewButton.addActionListener(e -> viewProperties());
 
         board.paintComponents(getGraphics());
         board.setVisible(true);
@@ -134,14 +138,74 @@ public class Board extends JFrame {
      *
      * @param e mouse click event
      */
-    public void clickProperty(MouseEvent e) {
-        Point clickPoint = new Point(e.getX(), e.getY());
-        System.out.println("Click occurred at (" + clickPoint.x + "," + clickPoint.y + ")");
-        for (Rectangle r : viewMap.keySet()) {
-            if (r.contains(clickPoint)) {
-                viewMap.get(r).viewProperty();
-            }
+    public void viewProperties() {
+        JFrame propView = new JFrame("View Properties");
+        Container pane = propView.getContentPane();
+        pane.setLayout(null);
+        JPanel propImagePanel = new JPanel();
+        Space[] propNames = new Space[40];
+        for(int i = 0; i < boardArray.length; i++) {
+            propNames[i] = boardArray[i];
         }
+        JList<Space> propList = new JList<>();
+        propList.setListData(propNames);
+        JScrollPane propScroll = new JScrollPane(propList);
+        propList.setSelectedIndex(0);
+        
+        // AI-generated for cleaning up and shortening list elements
+        propList.setCellRenderer(new DefaultListCellRenderer() {
+            @Override
+            public Component getListCellRendererComponent(JList<?> list, Object value, int index,
+                                                          boolean isSelected, boolean cellHasFocus) {
+                super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+        
+                if (value instanceof Space) {
+                    Space space = (Space) value;
+                    setText(space.getName()); // customize display text here
+                }
+        
+                return this;
+            }
+        });
+        
+        propScroll.setBounds(5,5,200,525);
+
+        pane.add(propScroll);
+
+        propImage = boardArray[propList.getSelectedIndex()].getImage();
+        JLabel propLabel = new JLabel(propImage);
+        propImagePanel.add(propLabel);
+        propImagePanel.setBounds(210, 5, 325, 525);
+
+        pane.add(propImagePanel);
+
+        propList.addMouseListener(new MouseListener(){
+
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                propImage = boardArray[propList.getSelectedIndex()].getImage();
+                propLabel.setIcon(propImage);
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+            }
+
+        });
+        propView.setBounds(0, 0, 550, 575);
+        propView.setVisible(true);
     }
 
     /**
@@ -236,33 +300,12 @@ public class Board extends JFrame {
         buttonPanel.add(tradeButton);
         buttonPanel.add(addHousesButton);
         buttonPanel.add(rulesButton);
+        buttonPanel.add(viewButton);
 
         boardPanel.add(boardLabel);
         boardContent.add(buttonPanel, BorderLayout.NORTH);
         boardContent.add(boardPanel, BorderLayout.CENTER);
         boardContent.add(playerPanel, BorderLayout.SOUTH);
-        board.addMouseListener(new MouseListener() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                clickProperty(e);
-            }
-
-            @Override
-            public void mousePressed(MouseEvent e) {
-            }
-
-            @Override
-            public void mouseReleased(MouseEvent e) {
-            }
-
-            @Override
-            public void mouseEntered(MouseEvent e) {
-            }
-
-            @Override
-            public void mouseExited(MouseEvent e) {
-            }
-        });
 
         board.addComponentListener(new ComponentListener() {
             @Override
@@ -284,6 +327,7 @@ public class Board extends JFrame {
             public void componentHidden(ComponentEvent e) {
             }
         });
+        adjustBoard(boardPanel.getLocation());
     }
 
     private void adjustBoard(Point p) {
@@ -618,7 +662,6 @@ public class Board extends JFrame {
         viewMap = new HashMap<>();
         for (Space c : boardArray) {
             Rectangle click = c.getClickPane();
-            System.out.println("Clicking pane placed at (" + click.x + "," + click.y + ")");
             viewMap.put(click, c);
         }
         anchorPoint = new Point(boardArray[20].getClickPane().x, boardArray[20].getClickPane().y);
