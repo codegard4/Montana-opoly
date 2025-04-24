@@ -24,10 +24,10 @@ public class Property extends Space {
         Utility
     }
 
-    private PropertyClass color; // Color of the property
-    private String name; // Name of the property
-    private int price; // Price to buy the property
-    private int[] rent; // Rent for each of the house numbers for the property
+    private final PropertyClass color; // Color of the property
+    private final String name; // Name of the property
+    private final int price; // Price to buy the property
+    private final int[] rent; // Rent for each of the house numbers for the property
     private int houses; // Number of houses on the property
     private Player owner; // Property owner
     private boolean mortgaged; // Whether the property is mortgaged

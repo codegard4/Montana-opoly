@@ -1,0 +1,10 @@
+@startuml
+class Board
+class Card
+class Property
+class Space
+class MonopolyGame
+class Player
+class Wallet
+
+@enduml

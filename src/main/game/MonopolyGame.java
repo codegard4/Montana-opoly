@@ -94,7 +94,7 @@ public class MonopolyGame {
         picLabel.setBounds(0, 0, width, height);
 
         JButton startGame = new JButton("Start Game");
-        int centerHrzntl = (int) width / 2;
+        int centerHrzntl = width / 2;
         startGame.setBounds(2 * centerHrzntl - 235, 20, 200, 30);
         startGame.addActionListener(new ActionListener() {
             @Override

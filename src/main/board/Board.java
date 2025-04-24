@@ -128,9 +128,7 @@ public class Board extends JFrame {
         pane.setLayout(null);
         JPanel propImagePanel = new JPanel();
         Space[] propNames = new Space[40];
-        for (int i = 0; i < boardArray.length; i++) {
-            propNames[i] = boardArray[i];
-        }
+        System.arraycopy(boardArray, 0, propNames, 0, boardArray.length);
         JList<Space> propList = new JList<>();
         propList.setListData(propNames);
         JScrollPane propScroll = new JScrollPane(propList);
