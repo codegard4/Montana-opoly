@@ -13,18 +13,11 @@ import java.util.List;
  */
 public class Player {
 
-    /**
-     * Is this player a CPU or a Human
-     */
-    public enum PlayerType {
-        HUMAN, CPU
-    }
-
-    private String token;
-    public Wallet wallet;
-    public Space currentSpace;
-    private static final int STARTING_MONEY = 1500;
-    private final PlayerType playerType;
+    private static final int STARTING_MONEY = 1500; // Player's starting cash balance
+    private final PlayerType playerType; // Human or CPU
+    public Wallet wallet; // Player's wallet
+    public Space currentSpace; // Player's current space
+    private String token; // Player's token
 
     /**
      * Default constructor for the Player. Players should be constructed fully at the start
@@ -149,13 +142,16 @@ public class Player {
      */
     public Property sellProperty(Property property, Player buyer) {
         if (wallet.getProperties().contains(property)) {
+
+            // Add the money and remove the money from the player; remove the money and add the property to the buyer
             wallet.addMoney(property.getPrice());
             wallet.getProperties().remove(property);
             buyer.wallet.removeMoney(property.getPrice());
             buyer.wallet.addProperty(property);
             return property;
         } else {
-            // a player cannot sell a property that they do not own
+
+            // A player cannot sell a property that they do not own
             return null;
         }
     }
@@ -204,7 +200,8 @@ public class Player {
     public int getTotalWealth() {
         int totalWealth = wallet.getMoney();
         for (Property property : wallet.getProperties()) {
-            // each property and house is only worth 90% of its purchase price at the end of the game
+
+            // Each property and house are only worth 90% of their purchase price at the end of the game
             totalWealth += (int) (property.getHouseValue() * 0.9);
             if (property.isMortgaged()) {
                 totalWealth += property.getPrice() / 2;
@@ -239,8 +236,9 @@ public class Player {
         return count * 25;
     }
 
-
     /**
+     * Returns whether the player is a bot
+     *
      * @return Whether the player is a bot
      */
     public boolean isBot() {
@@ -261,4 +259,10 @@ public class Player {
         }
     }
 
+    /**
+     * Is this player a CPU or a Human
+     */
+    public enum PlayerType {
+        HUMAN, CPU
+    }
 }

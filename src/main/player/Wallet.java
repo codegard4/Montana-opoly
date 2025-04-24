@@ -11,9 +11,9 @@ import src.main.board.Property;
  * A Montana-opoly player's wallet contains all of their properties and money.
  */
 public class Wallet {
-    private int money;
-    private final List<Property> properties;
-    private final Map<String, Integer> fullSetList;
+    private int money; // A player's money
+    private final List<Property> properties; // A player's properties
+    private final Map<String, Integer> fullSetList; // A list of a player's full sets
 
     /**
      * Creates a wallet with a starting amount of money and no properties.
@@ -105,6 +105,7 @@ public class Wallet {
 
         // Only check full set status for color groups (not Utility or Mountain)
         if (!col.equals("Utility") && !col.equals("Mountain")) {
+
             // Count how many properties of this color remain
             int sameColorCount = 0;
             for (Property p : properties) {
@@ -112,6 +113,7 @@ public class Wallet {
                     sameColorCount++;
                 }
             }
+
             // If the player no longer has a full set, remove full set status
             int requiredForSet = fullSetList.getOrDefault(col, Integer.MAX_VALUE);
             if (sameColorCount < requiredForSet) {

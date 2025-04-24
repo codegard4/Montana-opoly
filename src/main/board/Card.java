@@ -1,8 +1,12 @@
 package src.main.board;
 
 import javax.swing.JOptionPane;
+
 import src.main.player.Player;
 
+/**
+ * The card class stores chance and community chest cards and applies their rewards / penalties to the player
+ */
 public class Card {
     private final String description;
     private final int moneyEffect; // Positive for gain, negative for loss
@@ -11,11 +15,11 @@ public class Card {
 
     /**
      * Constructor for Chance and Community Chest cards
-     * 
-     * @param description
-     * @param moneyEffect
-     * @param moveSpaces
-     * @param goToLocation
+     *
+     * @param description  the card description
+     * @param moneyEffect  how the player's money will change
+     * @param moveSpaces   how the player's position will change
+     * @param goToLocation whether the player is moving locations
      */
     public Card(String description, int moneyEffect, int moveSpaces, boolean goToLocation) {
         this.description = description;
@@ -26,9 +30,9 @@ public class Card {
 
     /**
      * Applies effect of Chance/Community Chest card drawn to player and displays message to board.
-     * 
-     * @param player 
-     * @param board
+     *
+     * @param player player who drew the card
+     * @param board  board the player is playing on
      */
     public void applyEffect(Player player, Board board) {
         JOptionPane.showMessageDialog(null, description, "Card Drawn", JOptionPane.INFORMATION_MESSAGE);

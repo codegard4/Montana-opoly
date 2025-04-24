@@ -2,6 +2,8 @@ package src.main.game;
 
 import src.main.board.Board;
 
+import javax.swing.*;
+import javax.swing.plaf.FontUIResource;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -12,8 +14,6 @@ import java.io.FileNotFoundException;
 import java.nio.file.Paths;
 import java.util.Enumeration;
 import java.util.Scanner;
-import javax.swing.*;
-import javax.swing.plaf.FontUIResource;
 
 /**
  * The MonopolyGame class represents the main game window for Montana-opoly.
@@ -21,13 +21,14 @@ import javax.swing.plaf.FontUIResource;
  */
 public class MonopolyGame {
 
+    private final String baseDir = System.getProperty("user.dir"); // Base directory of files
     @SuppressWarnings("FieldCanBeLocal")
-    private final int width = 1200;
+    private final int width = 1200; // Frame width
     @SuppressWarnings("FieldCanBeLocal")
-    private final int height = 720;
-    private JFrame startScreen;
-    private int[] gameParams = null;
-    private static final Color HUNTER_GREEN = new Color(35, 133, 51);
+    private final int height = 720; // Frame height
+    private JFrame startScreen; // Start screen frame
+    private int[] gameParams = null; // Game parameters to be loaded
+    private static final Color HUNTER_GREEN = new Color(35, 133, 51); // Background color
 
     /**
      * Main method for monopoly game which calls monopoly game and then board with the arguments
@@ -40,7 +41,7 @@ public class MonopolyGame {
         MonopolyGame game = new MonopolyGame();
         while (game.getGameParams() == null) {
             try {
-                Thread.sleep(100); // Check every 100ms
+                Thread.sleep(300); // Check every 300ms
             } catch (InterruptedException ignore) {
             }
         }
@@ -48,12 +49,16 @@ public class MonopolyGame {
             int players = game.getGameParams()[0];
             int turns = game.getGameParams()[1];
             int bots = game.getGameParams()[2];
-
             Board board = new Board(players, turns, bots);
             board.playGame();
         }
     }
 
+    /**
+     * Sets the font of the UI
+     *
+     * @param f the font to set the UI to
+     */
     public static void setUIFont(FontUIResource f) {
         Enumeration<Object> keys = UIManager.getDefaults().keys();
         while (keys.hasMoreElements()) {
@@ -63,8 +68,13 @@ public class MonopolyGame {
                 UIManager.put(key, f);
             }
         }
-    }   
-    
+    }
+
+    /**
+     * Gets the game parameters (number of turns, players, bots)
+     *
+     * @return the array of game parameters
+     */
     public int[] getGameParams() {
         return gameParams;
     }
@@ -89,12 +99,12 @@ public class MonopolyGame {
         contentPane.setLayout(new OverlayLayout(contentPane));
         JPanel background = new JPanel();
         background.setLayout(null);
-        ImageIcon picture = new ImageIcon(Paths.get("Montana-opoly", "src", "dependencies", "Montana-opoly_Title_Screen.jpg").toString());
+        ImageIcon picture = new ImageIcon(Paths.get(baseDir, "src", "dependencies", "Montana-opoly_Title_Screen.jpg").toString());
         JLabel picLabel = new JLabel(picture);
         picLabel.setBounds(0, 0, width, height);
 
         JButton startGame = new JButton("Start Game");
-        int centerHrzntl = (int) width / 2;
+        int centerHrzntl = width / 2;
         startGame.setBounds(2 * centerHrzntl - 235, 20, 200, 30);
         startGame.addActionListener(new ActionListener() {
             @Override
@@ -221,7 +231,8 @@ public class MonopolyGame {
     private void teamBio() {
         startScreen.dispose();
         JFrame bio = new JFrame("Team Bio");
-        Container content = bio.getContentPane();
+        Container content;
+        content = bio.getContentPane();
 
         content.setLayout(null);
         JPanel team = new JPanel();
@@ -231,7 +242,7 @@ public class MonopolyGame {
         text.setLineWrap(true);
         text.setWrapStyleWord(true);
 
-        try (Scanner bioReader = new Scanner(new File(Paths.get("Montana-opoly", "src", "dependencies", "teamBio.txt").toString()))) {
+        try (Scanner bioReader = new Scanner(new File(Paths.get(baseDir, "src", "dependencies", "teamBio.txt").toString()))) {
             while (bioReader.hasNext()) {
                 text.setText(text.getText() + bioReader.nextLine() + "\n");
             }
@@ -242,6 +253,9 @@ public class MonopolyGame {
 
     }
 
+    /**
+     * Displays the rules of the monopolyGame
+     */
     public void rules() {
         startScreen.dispose();
         JFrame rules = new JFrame("Rules");
@@ -253,8 +267,7 @@ public class MonopolyGame {
         text.setText("");
         text.setLineWrap(true);
         text.setWrapStyleWord(true);
-        
-        try (Scanner bioReader = new Scanner(new File(Paths.get("Montana-opoly", "src", "dependencies", "rules.txt").toString()))) {
+        try (Scanner bioReader = new Scanner(new File(Paths.get(baseDir, "src", "dependencies", "rules.txt").toString()))) {
             while (bioReader.hasNext()) {
                 text.setText(text.getText() + bioReader.nextLine() + "\n");
             }
@@ -264,30 +277,39 @@ public class MonopolyGame {
         boundarySet(rules, content, team, text, close);
     }
 
-    private void boundarySet(JFrame rules, Container content, JPanel team, JTextArea text, JButton close) {
-        team.setLayout(null);
-        team.add(close);
-        close.setBounds(20, 420, 480, 30);
-        close.addActionListener(new ActionListener() {
+    /**
+     * Sets the boundary of a container
+     *
+     * @param frameToSet the frame to set the layout of
+     * @param content    the content container
+     * @param panel      the panel to set
+     * @param text       the text area of the container
+     * @param button     the button
+     */
+    private void boundarySet(JFrame frameToSet, Container content, JPanel panel, JTextArea text, JButton button) {
+        panel.setLayout(null);
+        panel.add(button);
+        button.setBounds(20, 420, 480, 30);
+        button.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                rules.dispose();
+                frameToSet.dispose();
             }
         });
         JScrollPane textPane = new JScrollPane(text);
         textPane.setBounds(20, 20, 480, 380);
-        team.add(textPane);
-        team.add(close);
-        content.add(team);
-        team.setBounds(10, 10, 500, 500);
+        panel.add(textPane);
+        panel.add(button);
+        content.add(panel);
+        panel.setBounds(10, 10, 500, 500);
         try {
             Thread.sleep(200);
-            rules.setState(Frame.ICONIFIED);
+            frameToSet.setState(Frame.ICONIFIED);
             Thread.sleep(200);
-            rules.setState(Frame.NORMAL);
+            frameToSet.setState(Frame.NORMAL);
         } catch (InterruptedException ignored) {
         }
-        rules.addWindowListener(new WindowListener() {
+        frameToSet.addWindowListener(new WindowListener() {
             @Override
             public void windowOpened(WindowEvent e) {
             }
@@ -317,7 +339,7 @@ public class MonopolyGame {
                 openGame();
             }
         });
-        rules.setBounds(0, 0, 550, 550);
-        rules.setVisible(true);
+        frameToSet.setBounds(0, 0, 550, 550);
+        frameToSet.setVisible(true);
     }
 }

@@ -7,6 +7,7 @@ import src.main.player.Player;
  * A property has attributes such as name, price, rent, owner, and number of houses.
  */
 public class Property extends Space {
+
     /**
      * Enum representing different property classes.
      */
@@ -23,15 +24,15 @@ public class Property extends Space {
         Utility
     }
 
-    private PropertyClass color;
-    private String name; // name of the property
-    private int price; // price to buy the property
-    private int[] rent; // rent for each of the house numbers for the property
-    private int houses;
-    private Player owner;
-    private boolean mortgaged;
-    private boolean fullSetMember = false;
-    private final boolean canAddHouses;
+    private final PropertyClass color; // Color of the property
+    private final String name; // Name of the property
+    private final int price; // Price to buy the property
+    private final int[] rent; // Rent for each of the house numbers for the property
+    private int houses; // Number of houses on the property
+    private Player owner; // Property owner
+    private boolean mortgaged; // Whether the property is mortgaged
+    private boolean fullSetMember = false; // Is this a member of a full set
+    private final boolean canAddHouses; // Can this property have houses added to it?
 
     /**
      * Constructor for standard properties.
@@ -71,7 +72,9 @@ public class Property extends Space {
         this.price = price;
         this.color = PropertyClass.valueOf(propertyClass);
         this.houses = 0;
-        this.rent = new int[]{25, 50, 75, 100}; // Railroad rent values
+
+        // Railroad rent values
+        this.rent = new int[]{25, 50, 75, 100};
         this.owner = null;
         this.mortgaged = false;
         this.canAddHouses = false;
@@ -89,7 +92,9 @@ public class Property extends Space {
     public Property(String name, String imgfile, String propertyClass, int price, int index) {
         super("Property", name, imgfile, index);
         this.name = name;
-        this.rent = new int[]{4, 7}; // Utility rent values
+
+        // Utility rent values -- times the dice roll
+        this.rent = new int[]{4, 7};
         this.price = price;
         this.color = PropertyClass.valueOf(propertyClass);
         this.houses = 0;
@@ -181,15 +186,6 @@ public class Property extends Space {
     }
 
     /**
-     * Gets the number of houses on the property.
-     *
-     * @return Number of houses.
-     */
-    public int getHouses() {
-        return houses;
-    }
-
-    /**
      * Gets the color category of the property.
      *
      * @return Property color as a string.
@@ -256,14 +252,5 @@ public class Property extends Space {
             return name + " - Price: " + price + " - Rent: Dependent on Mountain ranges owned - No houses allowed";
         }
         return name + " - Price: " + price + " - Rent: Dependent on utilities owned and dice roll - No houses allowed";
-    }
-
-    /**
-     * Provides a short summary of the property.
-     *
-     * @return Short listing of the property with name and price.
-     */
-    public String shortListing() {
-        return name + " - $" + price;
     }
 }
