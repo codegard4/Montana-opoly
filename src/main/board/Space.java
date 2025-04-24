@@ -15,9 +15,11 @@ import javax.swing.JLabel;
  * an image, a type, and an index indicating its position on the board.
  */
 public class Space {
-    private final String spaceName;
-    private final ImageIcon spaceImg;
-    private Rectangle clickPane;
+
+    private final String baseDir = System.getProperty("user.dir"); // Relative path to files
+    private final String spaceName; // Name of the space
+    private final ImageIcon spaceImg; // Image of the space
+    private Rectangle clickPane; // Clickable pane of the space
 
     /**
      * Enum representing the different types of spaces on the board.
@@ -45,7 +47,7 @@ public class Space {
         if (imgFile == null) {
             this.spaceImg = null;
         } else {
-            this.spaceImg = new ImageIcon(Paths.get("Montana-opoly", "src", "dependencies", "propertyImages", imgFile).toString());
+            this.spaceImg = new ImageIcon(Paths.get(baseDir, "src", "dependencies", "propertyImages", imgFile).toString());
         }
     }
 
@@ -77,19 +79,18 @@ public class Space {
         int topLeftY = coords[1];
         int bottomRightX = coords[6];
         int bottomRightY = coords[7];
-    
         int x = Math.min(topLeftX, bottomRightX);
         int y = Math.min(topLeftY, bottomRightY);
         int width = Math.abs(bottomRightX - topLeftX);
         int height = Math.abs(bottomRightY - topLeftY);
-    
-        this.clickPane = new Rectangle(x+55, y+32, width, height);
+        this.clickPane = new Rectangle(x + 55, y + 32, width, height);
     }
 
     /**
      * Moves the clickable area of the space. Used for dynamic resizing during game.
      *
-     * @param coords An array defining the rectangular click area coordinates.
+     * @param current   The current anchor
+     * @param newAnchor The new anchor
      */
     public void move(Point current, Point newAnchor) {
         this.clickPane.x += (newAnchor.x - current.x);
@@ -163,6 +164,11 @@ public class Space {
         return spaceName;
     }
 
+    /**
+     * Get the image for this space
+     *
+     * @return The image of this space
+     */
     public ImageIcon getImage() {
         return this.spaceImg;
     }

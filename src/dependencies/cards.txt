@@ -1,6 +1,6 @@
 Mining Boom! Collect $200,200,-1,false,false
 Grizzly Attack! Pay medical fees ($50),-50,-1,false,false
-Flat Tire on I-90 Your Buddy Changed For Free (Gain $50),-50,-1,false,true
+Flat Tire on I-90 Your Buddy Changed For Free (Gain $50),50,-1,false,true
 See the Northern Lights. Collect 50$,50,-1,false,true
 Tourist Season! Collect $100 extra rent,100,-1,false,false
 Guide a Fly Fishing Trip Gain $75,75,-1,false,false
