@@ -18,6 +18,7 @@ public class Player {
     public Wallet wallet; // Player's wallet
     public Space currentSpace; // Player's current space
     private String token; // Player's token
+
     /**
      * Default constructor for the Player. Players should be constructed fully at the start
      * of the game.
@@ -236,6 +237,8 @@ public class Player {
     }
 
     /**
+     * Returns whether the player is a bot
+     *
      * @return Whether the player is a bot
      */
     public boolean isBot() {

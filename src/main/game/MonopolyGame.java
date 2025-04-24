@@ -2,6 +2,8 @@ package src.main.game;
 
 import src.main.board.Board;
 
+import javax.swing.*;
+import javax.swing.plaf.FontUIResource;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -12,8 +14,6 @@ import java.io.FileNotFoundException;
 import java.nio.file.Paths;
 import java.util.Enumeration;
 import java.util.Scanner;
-import javax.swing.*;
-import javax.swing.plaf.FontUIResource;
 
 /**
  * The MonopolyGame class represents the main game window for Montana-opoly.
@@ -54,6 +54,11 @@ public class MonopolyGame {
         }
     }
 
+    /**
+     * Sets the font of the UI
+     *
+     * @param f the font to set the UI to
+     */
     public static void setUIFont(FontUIResource f) {
         Enumeration<Object> keys = UIManager.getDefaults().keys();
         while (keys.hasMoreElements()) {
@@ -65,6 +70,11 @@ public class MonopolyGame {
         }
     }
 
+    /**
+     * Gets the game parameters (number of turns, players, bots)
+     *
+     * @return the array of game parameters
+     */
     public int[] getGameParams() {
         return gameParams;
     }

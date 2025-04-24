@@ -1,0 +1,45 @@
+@startuml
+
+class Player {
+  + Player(String, String): 
+  + Player(boolean): 
+  + wallet: Wallet
+  - token: String
+  + unmortgageProperty(Property): void
+  + move(Space): void
+  + passGo(): void
+  + toString(): String
+  + payRent(Player, int): void
+  + calculateRailroadRent(): int
+  + buyProperty(Property): void
+  + summarizeMoney(): String
+  + sellProperty(Property, Player): Property
+  + mortgageProperty(Property): void
+   token: String
+   money: int
+   totalWealth: int
+   unmortgagedProperties: List<Property>
+   bot: boolean
+   space: Space
+   wallet: Wallet
+}
+class Wallet {
+  + Wallet(int): 
+  - properties: List<Property>
+  - money: int
+  + addMoney(int): void
+  + addProperty(Property): void
+  + removeProperty(Property): void
+  + removeMoney(int): void
+   money: int
+   properties: List<Property>
+}
+
+enum PlayerType << enumeration >> {
+  + PlayerType():
+  + values(): PlayerType[]
+  + valueOf(String): PlayerType
+}
+
+PlayerType  +--  Player
+@enduml

@@ -1,0 +1,96 @@
+@startuml
+
+class Board {
+  + Board(int, int, int): 
+  + drawChanceCard(Player): void
+  - showTokenSelectionPopup(int): void
+  - takeTurn(): void
+  - addHouses(): void
+  - populateTokens(): void
+  + main(String[]): void
+  - loadCards(): void
+  - gameOver(): void
+  - loadSpaces(): void
+  - rules(): void
+  - boundarySet(JFrame, Container, JPanel, JTextArea, JButton): void
+  - initiateTrade(): void
+  - handleRailroad(Player, Space): void
+  - updatePlayerPanel(): void
+  - assignTokensToBots(int): void
+  + viewProperties(): void
+  - handlePropertyLanding(Player, Property): void
+  - setupBoard(): void
+  - handleSpecialSpace(Player, Space): void
+  - startNewTurn(): void
+  - adjustBoard(Point): void
+  - nextTurn(): void
+  + rollDice(): int
+  - mortgageToAfford(Player, int): void
+  + drawCommunityChestCard(Player): void
+  + getSpaceAt(int): Space
+  - endGame(): void
+  - loadCardFile(String): void
+  + playGame(): void
+  - setupPlayerPanel(): void
+   boardSize: int
+}
+class Property {
+  + Property(String, String, String, int, int[], int): 
+  + Property(String, String, String, int, int, int): 
+  + Property(String, String, String, int, int): 
+  - price: int
+  - owner: Player
+  - name: String
+  - mortgaged: boolean
+  - rent: int[]
+  - color: PropertyClass
+  + addHouse(): void
+  + toString(): String
+  + mortgage(): void
+  + unmortgage(): void
+  + purchased(Player): void
+  - sellHouse(): void
+  + canAddHouses(): boolean
+  + fullSet(boolean): void
+   name: String
+   owner: Player
+   rent: int
+   mortgaged: boolean
+   numHouses: int
+   price: int
+   houseValue: int
+   propertyClass: PropertyClass
+   color: String
+}
+enum PropertyClass << enumeration >> {
+  + PropertyClass(): 
+  + valueOf(String): PropertyClass
+  + values(): PropertyClass[]
+}
+class Space {
+  + Space(String, String, String, int): 
+  - index: int
+  - clickPane: Rectangle
+  + toString(): String
+  + move(Point, Point): void
+  + viewProperty(): void
+   name: String
+   clickPane: Rectangle
+   index: int
+   type: SpaceType
+   image: ImageIcon
+}
+enum SpaceType << enumeration >> {
+  + SpaceType(): 
+  + values(): SpaceType[]
+  + valueOf(String): SpaceType
+}
+class Card {
+  + Card(String, int, int, boolean):
+  + applyEffect(Player, Board): void
+}
+
+Property       -[#000082,plain]-^  Space         
+PropertyClass  +-[#820000,plain]-  Property      
+SpaceType      +-[#820000,plain]-  Space         
+@enduml
