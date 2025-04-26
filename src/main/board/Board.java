@@ -13,6 +13,10 @@ import java.util.List;
 import java.util.*;
 
 /**
+ * Note -- a couple methods in Board are AI generated -- these are noted in the javadocs of the method or in line comments
+ */
+
+/**
  * Board is the container for all of our monopoly game logic
  * Board is called by MonopolyGame and creates a gameboard to play monopoly on
  */
@@ -376,7 +380,7 @@ public class Board extends JFrame {
     }
 
     /**
-     * Allow two players to make a property trade in between turns -- display the value of each property during the trade
+     * Allow two players to make a property trade in between turns -- display the value of each property during the trade -- AI
      */
     private void initiateTrade() {
         if (players.length < 2) {
@@ -443,7 +447,7 @@ public class Board extends JFrame {
     }
 
     /**
-     * Allow any player to add houses to their properties between turns.
+     * Allow any player to add houses to their properties between turns. -- AI
      */
     private void addHouses() {
         // Select a player
@@ -516,7 +520,7 @@ public class Board extends JFrame {
 
 
     /**
-     * Sets up the panel that will display player information
+     * Sets up the panel that will display player information -- AI
      */
     private void setupPlayerPanel() {
         playerPanel = new JPanel();
@@ -526,7 +530,7 @@ public class Board extends JFrame {
     }
 
     /**
-     * Updates the player panel to display players' money and owned properties.
+     * Updates the player panel to display players' money and owned properties. -- AI
      */
     private void updatePlayerPanel() {
         playerPanel.removeAll();
@@ -766,7 +770,7 @@ public class Board extends JFrame {
     }
 
     /**
-     * Popup to have players mortgage properties until they can afford a required amount of money
+     * Popup to have players mortgage properties until they can afford a required amount of money -- AI
      *
      * @param player         the player to choose properties from
      * @param requiredAmount the amount the player needs

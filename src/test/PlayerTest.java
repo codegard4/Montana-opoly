@@ -6,7 +6,7 @@ import src.main.player.Player;
 import java.util.List;
 
 /**
- * Tests the functionality of a monopoly player's common transactions
+ * Tests the functionality of a monopoly player's common transactions -- AI
  */
 public class PlayerTest {
 

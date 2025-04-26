@@ -21,6 +21,7 @@ import java.util.Scanner;
  */
 public class MonopolyGame {
 
+    // System.getProperty is from Stack Overflow
     private final String baseDir = System.getProperty("user.dir"); // Base directory of files
     @SuppressWarnings("FieldCanBeLocal")
     private final int width = 1200; // Frame width
