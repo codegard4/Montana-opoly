@@ -25,7 +25,8 @@ public class Board extends JFrame {
     private final String baseDir = System.getProperty("user.dir"); // Relative path for files
     private final JFrame board; // The board frame
     private JPanel playerPanel; // The player panel with player info
-    private final ImageIcon gameBoard = new ImageIcon(Paths.get(baseDir, "src", "dependencies", "fullBoard.jpg").toString()); // The game board image
+    private final ImageIcon gameBoard = new ImageIcon(
+            Paths.get(baseDir, "src", "dependencies", "fullBoard.jpg").toString()); // The game board image
     private final Space[] boardArray; // The array of board spaces
     private final List<Card> chanceCards = new ArrayList<>(); // List of chance cards
     private final List<Card> communityChestCards = new ArrayList<>(); // List of community chest cards
@@ -96,7 +97,6 @@ public class Board extends JFrame {
             players[i].move(boardArray[0]);
         }
 
-
         // Show Token Selection Dialog for each player
         for (int i = 0; i < numPlayers; i++) {
             showTokenSelectionPopup(i);
@@ -142,7 +142,7 @@ public class Board extends JFrame {
         propList.setCellRenderer(new DefaultListCellRenderer() {
             @Override
             public Component getListCellRendererComponent(JList<?> list, Object value, int index,
-                                                          boolean isSelected, boolean cellHasFocus) {
+                    boolean isSelected, boolean cellHasFocus) {
                 super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
                 if (value instanceof Space space) {
                     setText(space.getName());
@@ -191,7 +191,8 @@ public class Board extends JFrame {
     public void playGame() {
         while (turnsTaken <= turns) {
             if (newTurn) {
-                JOptionPane.showMessageDialog(null, "Turn " + (turnsTaken + 1), "Turns Info", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(null, "Turn " + (turnsTaken + 1), "Turns Info",
+                        JOptionPane.INFORMATION_MESSAGE);
                 nextTurn();
             }
         }
@@ -204,7 +205,8 @@ public class Board extends JFrame {
      * @param player the player drawing the card
      */
     public void drawChanceCard(Player player) {
-        if (chanceCards.isEmpty()) return;
+        if (chanceCards.isEmpty())
+            return;
         Card drawnCard = chanceCards.get(randomCard.nextInt(chanceCards.size()));
         drawnCard.applyEffect(player, this);
     }
@@ -215,7 +217,8 @@ public class Board extends JFrame {
      * @param player the player drawing the card
      */
     public void drawCommunityChestCard(Player player) {
-        if (communityChestCards.isEmpty()) return;
+        if (communityChestCards.isEmpty())
+            return;
         Card drawnCard = communityChestCards.get(randomCard.nextInt(communityChestCards.size()));
         drawnCard.applyEffect(player, this);
     }
@@ -354,7 +357,8 @@ public class Board extends JFrame {
                 }
             }
         } catch (IOException e) {
-            JOptionPane.showMessageDialog(null, "Error loading cards from file: " + filePath, "File Load Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Error loading cards from file: " + filePath, "File Load Error",
+                    JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -380,26 +384,33 @@ public class Board extends JFrame {
     }
 
     /**
-     * Allow two players to make a property trade in between turns -- display the value of each property during the trade -- AI
+     * Allow two players to make a property trade in between turns -- display the
+     * value of each property during the trade -- AI
      */
     private void initiateTrade() {
         if (players.length < 2) {
-            JOptionPane.showMessageDialog(board, "At least two players are needed to trade.", "Trade Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(board, "At least two players are needed to trade.", "Trade Error",
+                    JOptionPane.ERROR_MESSAGE);
             return;
         }
 
         // Create dropdowns for selecting players
-        Player player1 = (Player) JOptionPane.showInputDialog(board, "Select the first player:", "Player 1", JOptionPane.PLAIN_MESSAGE, null, players, players[0]);
-        if (player1 == null) return;
+        Player player1 = (Player) JOptionPane.showInputDialog(board, "Select the first player:", "Player 1",
+                JOptionPane.PLAIN_MESSAGE, null, players, players[0]);
+        if (player1 == null)
+            return;
 
         // Create a filtered list to avoid selecting the same player
         List<Player> otherPlayers = Arrays.stream(players).filter(p -> !p.equals(player1)).toList();
-        Player player2 = (Player) JOptionPane.showInputDialog(board, "Select the second player:", "Player 2", JOptionPane.PLAIN_MESSAGE, null, otherPlayers.toArray(), otherPlayers.get(0));
-        if (player2 == null) return;
+        Player player2 = (Player) JOptionPane.showInputDialog(board, "Select the second player:", "Player 2",
+                JOptionPane.PLAIN_MESSAGE, null, otherPlayers.toArray(), otherPlayers.get(0));
+        if (player2 == null)
+            return;
 
         // Two bots cannot trade so return here
         if (player1.isBot() && player2.isBot()) {
-            JOptionPane.showMessageDialog(board, "Trade cancelled — two bot players may not trade with each other.", "Trade Cancelled", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(board, "Trade cancelled — two bot players may not trade with each other.",
+                    "Trade Cancelled", JOptionPane.WARNING_MESSAGE);
             return;
         }
 
@@ -407,22 +418,31 @@ public class Board extends JFrame {
         List<Property> p1Props = player1.getUnmortgagedProperties();
         List<Property> p2Props = player2.getUnmortgagedProperties();
         if (p1Props.isEmpty() || p2Props.isEmpty()) {
-            JOptionPane.showMessageDialog(board, "One or both players have no properties to trade.", "Trade Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(board, "One or both players have no properties to trade.", "Trade Error",
+                    JOptionPane.ERROR_MESSAGE);
             return;
         }
-        Property p1Prop = (Property) JOptionPane.showInputDialog(board, player1 + ", select a property to trade:", "Player 1's Property", JOptionPane.PLAIN_MESSAGE, null, p1Props.toArray(), p1Props.get(0));
-        Property p2Prop = (Property) JOptionPane.showInputDialog(board, player2 + ", select a property to trade:", "Player 2's Property", JOptionPane.PLAIN_MESSAGE, null, p2Props.toArray(), p2Props.get(0));
+        Property p1Prop = (Property) JOptionPane.showInputDialog(board, player1 + ", select a property to trade:",
+                "Player 1's Property", JOptionPane.PLAIN_MESSAGE, null, p1Props.toArray(), p1Props.get(0));
+        Property p2Prop = (Property) JOptionPane.showInputDialog(board, player2 + ", select a property to trade:",
+                "Player 2's Property", JOptionPane.PLAIN_MESSAGE, null, p2Props.toArray(), p2Props.get(0));
 
         // Check if both properties were selected
         if (p1Prop == null || p2Prop == null) {
-            JOptionPane.showMessageDialog(board, "Trade cancelled — one player did not select a property to trade.", "Trade Cancelled", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(board, "Trade cancelled — one player did not select a property to trade.",
+                    "Trade Cancelled", JOptionPane.WARNING_MESSAGE);
             return;
         }
 
         // Confirm trade
-        int confirm = JOptionPane.showConfirmDialog(board, player1 + " will trade " + p1Prop.getName() + " ($" + p1Prop.getPrice() + ") with " + player2 + "'s " + p2Prop.getName() + " ($" + p2Prop.getPrice() + ")\n\nProceed?", "Confirm Trade", JOptionPane.YES_NO_OPTION);
+        int confirm = JOptionPane.showConfirmDialog(board,
+                player1 + " will trade " + p1Prop.getName() + " ($" + p1Prop.getPrice() + ") with " + player2 + "'s "
+                        + p2Prop.getName() + " ($" + p2Prop.getPrice() + ")\n\nProceed?",
+                "Confirm Trade", JOptionPane.YES_NO_OPTION);
 
-        // Bot behavior (bot player will not accept trade if the property they are requested to trade is greater than 1.5x the value of the property they receive)
+        // Bot behavior (bot player will not accept trade if the property they are
+        // requested to trade is greater than 1.5x the value of the property they
+        // receive)
         boolean tradeAccepted = true;
         if (!player1.isBot() && player2.isBot()) {
             if (((double) p1Prop.getPrice() < (double) p2Prop.getPrice())) {
@@ -436,13 +456,16 @@ public class Board extends JFrame {
             player2.wallet.removeProperty(p2Prop);
             player1.wallet.addProperty(p2Prop);
             player2.wallet.addProperty(p1Prop);
-            JOptionPane.showMessageDialog(board, "Trade successful!", "Trade Complete", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(board, "Trade successful!", "Trade Complete",
+                    JOptionPane.INFORMATION_MESSAGE);
             updatePlayerPanel(); // Refresh UI if needed
         } else {
             if (!tradeAccepted) {
-                JOptionPane.showMessageDialog(board, player2.getToken() + " is not interested in this trade.", "Trade declined.", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(board, player2.getToken() + " is not interested in this trade.",
+                        "Trade declined.", JOptionPane.ERROR_MESSAGE);
             }
-            JOptionPane.showMessageDialog(board, "Trade cancelled.", "Trade Cancelled", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(board, "Trade cancelled.", "Trade Cancelled",
+                    JOptionPane.INFORMATION_MESSAGE);
         }
     }
 
@@ -453,11 +476,14 @@ public class Board extends JFrame {
         // Select a player
         String[] playerOptions = new String[numRealPlayers];
         for (int i = 0; i < players.length; i++) {
-            if (players[i].isBot()) continue;
+            if (players[i].isBot())
+                continue;
             playerOptions[i] = players[i].getToken(); // Use token as identifier
         }
-        String selectedPlayerToken = (String) JOptionPane.showInputDialog(board, "Select a player to add houses:", "Choose Player", JOptionPane.PLAIN_MESSAGE, null, playerOptions, playerOptions[0]);
-        if (selectedPlayerToken == null) return; // Cancelled
+        String selectedPlayerToken = (String) JOptionPane.showInputDialog(board, "Select a player to add houses:",
+                "Choose Player", JOptionPane.PLAIN_MESSAGE, null, playerOptions, playerOptions[0]);
+        if (selectedPlayerToken == null)
+            return; // Cancelled
 
         // Find the selected player
         Player selectedPlayer = null;
@@ -467,11 +493,15 @@ public class Board extends JFrame {
                 break;
             }
         }
-        if (selectedPlayer == null) return; // Shouldn't happen, but safety check
-        if (selectedPlayer.isBot()) return; // Bots cannot add houses
+        if (selectedPlayer == null)
+            return; // Shouldn't happen, but safety check
+        if (selectedPlayer.isBot())
+            return; // Bots cannot add houses
         List<Property> ownedProperties = selectedPlayer.getUnmortgagedProperties();
         if (ownedProperties.isEmpty()) {
-            JOptionPane.showMessageDialog(board, selectedPlayerToken + " doesn't own any properties to build houses on.", "No Properties", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(board,
+                    selectedPlayerToken + " doesn't own any properties to build houses on.", "No Properties",
+                    JOptionPane.INFORMATION_MESSAGE);
             return;
         }
 
@@ -485,10 +515,13 @@ public class Board extends JFrame {
                 propertyOptions[i] = prop.getName() + " (Houses: " + prop.getNumHouses() + ")";
             }
         }
-        String selectedPropertyName = (String) JOptionPane.showInputDialog(board, "Select a property to add a house for " + selectedPlayerToken + ":", "Choose Property", JOptionPane.PLAIN_MESSAGE, null, propertyOptions, propertyOptions[0]);
+        String selectedPropertyName = (String) JOptionPane.showInputDialog(board,
+                "Select a property to add a house for " + selectedPlayerToken + ":", "Choose Property",
+                JOptionPane.PLAIN_MESSAGE, null, propertyOptions, propertyOptions[0]);
 
         // Cancelled trade
-        if (selectedPropertyName == null) return;
+        if (selectedPropertyName == null)
+            return;
 
         // Find the selected property
         for (Property prop : ownedProperties) {
@@ -499,9 +532,13 @@ public class Board extends JFrame {
                     // Add the house and subtract the cost
                     prop.addHouse();
                     selectedPlayer.wallet.removeMoney(houseCost);
-                    JOptionPane.showMessageDialog(board, "Added 1 house to " + prop.getName() + " for $" + houseCost + ".", "House Added", JOptionPane.INFORMATION_MESSAGE);
+                    JOptionPane.showMessageDialog(board,
+                            "Added 1 house to " + prop.getName() + " for $" + houseCost + ".", "House Added",
+                            JOptionPane.INFORMATION_MESSAGE);
                 } else {
-                    JOptionPane.showMessageDialog(board, selectedPlayerToken + " doesn't have enough money to build a house.", "Insufficient Funds", JOptionPane.WARNING_MESSAGE);
+                    JOptionPane.showMessageDialog(board,
+                            selectedPlayerToken + " doesn't have enough money to build a house.", "Insufficient Funds",
+                            JOptionPane.WARNING_MESSAGE);
                 }
                 break;
             }
@@ -509,15 +546,13 @@ public class Board extends JFrame {
         updatePlayerPanel();
     }
 
-
     /**
      * Add all the tokens that can be selected to the tokens list
      */
     private void populateTokens() {
-        String[] tokensToAdd = {"Pickup", "Hay Bale", "Bird Dog", "Fishing Boat", "Pickaxe", "Cowboy Boot"};
+        String[] tokensToAdd = { "Pickup", "Hay Bale", "Bird Dog", "Fishing Boat", "Pickaxe", "Cowboy Boot" };
         tokens.addAll(Arrays.asList(tokensToAdd));
     }
-
 
     /**
      * Sets up the panel that will display player information -- AI
@@ -530,7 +565,8 @@ public class Board extends JFrame {
     }
 
     /**
-     * Updates the player panel to display players' money and owned properties. -- AI
+     * Updates the player panel to display players' money and owned properties. --
+     * AI
      */
     private void updatePlayerPanel() {
         playerPanel.removeAll();
@@ -574,9 +610,13 @@ public class Board extends JFrame {
      */
     private void showTokenSelectionPopup(int playerIndex) {
 
-        // Display a dropdown for token selection -- NOTE: we have to pass the JOptionPane a []
+        // Display a dropdown for token selection -- NOTE: we have to pass the
+        // JOptionPane a []
         String[] tokenChoices = tokens.toArray(new String[0]);
-        String token = (String) JOptionPane.showInputDialog(board, "Player " + (playerIndex + 1) + ", pick your token:", "Token Selection", JOptionPane.QUESTION_MESSAGE, null, tokenChoices, tokens.getFirst()); // Set default to the first token
+        String token = (String) JOptionPane.showInputDialog(board, "Player " + (playerIndex + 1) + ", pick your token:",
+                "Token Selection", JOptionPane.QUESTION_MESSAGE, null, tokenChoices, tokens.getFirst()); // Set default
+                                                                                                         // to the first
+                                                                                                         // token
         if (token != null) {
             players[playerIndex].setToken(token);
             tokens.remove(token);
@@ -585,7 +625,8 @@ public class Board extends JFrame {
 
     /**
      * Randomly assigns the remaining tokens to the bot players.
-     * Assumes human players have already selected their tokens and they have been removed from the `tokens` list.
+     * Assumes human players have already selected their tokens and they have been
+     * removed from the `tokens` list.
      */
     private void assignTokensToBots(int numHumanPlayers) {
 
@@ -615,7 +656,8 @@ public class Board extends JFrame {
      * Load all the gameboard spaces from a .txt file
      */
     private void loadSpaces() {
-        try (final Scanner spaceReader = new Scanner(new File(Paths.get(baseDir, "src", "dependencies", "spaceList.txt").toString()))) {
+        try (final Scanner spaceReader = new Scanner(
+                new File(Paths.get(baseDir, "src", "dependencies", "spaceList.txt").toString()))) {
             spaceReader.nextLine();
             int i = 0;
             while (spaceReader.hasNext()) {
@@ -626,14 +668,17 @@ public class Board extends JFrame {
                         for (int k = 5; k < 12; k++) {
                             propRent[k - 5] = Integer.parseInt(newSpace[k]);
                         }
-                        boardArray[i] = new Property(newSpace[0], newSpace[2], newSpace[3], Integer.parseInt(newSpace[4]), propRent, i);
+                        boardArray[i] = new Property(newSpace[0], newSpace[2], newSpace[3],
+                                Integer.parseInt(newSpace[4]), propRent, i);
                         i++;
                     } else {
                         if (newSpace.length > 5) {
-                            boardArray[i] = new Property(newSpace[0], newSpace[2], newSpace[3], Integer.parseInt(newSpace[4]), Integer.parseInt(newSpace[5]), i);
+                            boardArray[i] = new Property(newSpace[0], newSpace[2], newSpace[3],
+                                    Integer.parseInt(newSpace[4]), Integer.parseInt(newSpace[5]), i);
                             i++;
                         } else {
-                            boardArray[i] = new Property(newSpace[0], newSpace[2], newSpace[3], Integer.parseInt(newSpace[4]), i);
+                            boardArray[i] = new Property(newSpace[0], newSpace[2], newSpace[3],
+                                    Integer.parseInt(newSpace[4]), i);
                             i++;
                         }
                     }
@@ -643,9 +688,11 @@ public class Board extends JFrame {
                 }
             }
         } catch (IOException e) {
-            JOptionPane.showMessageDialog(null, "Space File Not Found!", "Game Initialization Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Space File Not Found!", "Game Initialization Error",
+                    JOptionPane.ERROR_MESSAGE);
         }
-        try (final Scanner coordReader = new Scanner(new File(Paths.get(baseDir, "src", "dependencies", "spaceCoords.txt").toString()))) {
+        try (final Scanner coordReader = new Scanner(
+                new File(Paths.get(baseDir, "src", "dependencies", "spaceCoords.txt").toString()))) {
             coordReader.nextLine();
             int i = 0;
             while (coordReader.hasNext()) {
@@ -658,7 +705,8 @@ public class Board extends JFrame {
                 i++;
             }
         } catch (IOException e) {
-            JOptionPane.showMessageDialog(null, "Coordinates File Not Found!", "Game Initialization Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Coordinates File Not Found!", "Game Initialization Error",
+                    JOptionPane.ERROR_MESSAGE);
         }
         viewMap = new HashMap<>();
         for (Space c : boardArray) {
@@ -673,16 +721,19 @@ public class Board extends JFrame {
      */
     private void takeTurn() {
         Player currentPlayer = players[currentPlayerIndex];
-        JOptionPane.showMessageDialog(null, currentPlayer.toString() + "'s turn!", "Turn Notification", JOptionPane.INFORMATION_MESSAGE);
+        JOptionPane.showMessageDialog(null, currentPlayer.toString() + "'s turn!", "Turn Notification",
+                JOptionPane.INFORMATION_MESSAGE);
         int roll = rollDice();
-        JOptionPane.showMessageDialog(null, currentPlayer + " rolled a " + roll, "Dice Roll", JOptionPane.INFORMATION_MESSAGE);
+        JOptionPane.showMessageDialog(null, currentPlayer + " rolled a " + roll, "Dice Roll",
+                JOptionPane.INFORMATION_MESSAGE);
         int currentIndex = currentPlayer.getSpace().getIndex();
         int newIndex = (currentIndex + roll) % boardArray.length;
 
         // Check if player passes GO
         if (newIndex < currentIndex) {
             currentPlayer.passGo();
-            JOptionPane.showMessageDialog(null, currentPlayer + " passed GO and collected $200!", "Pass GO", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(null, currentPlayer + " passed GO and collected $200!", "Pass GO",
+                    JOptionPane.INFORMATION_MESSAGE);
         }
 
         // Move the player then handle the new space they moved to
@@ -693,10 +744,12 @@ public class Board extends JFrame {
 
         // Draw Chance or Community Chest card if applicable
         if (landedSpace.getType() == Space.SpaceType.Chance) {
-            JOptionPane.showMessageDialog(null, currentPlayer + " Landed on Chance", "Chance", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(null, currentPlayer + " Landed on Chance", "Chance",
+                    JOptionPane.INFORMATION_MESSAGE);
             drawChanceCard(currentPlayer);
         } else if (landedSpace.getType() == Space.SpaceType.CommunityChest) {
-            JOptionPane.showMessageDialog(null, currentPlayer + " Landed on Community Chest", "Community Chest", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(null, currentPlayer + " Landed on Community Chest", "Community Chest",
+                    JOptionPane.INFORMATION_MESSAGE);
             drawCommunityChestCard(currentPlayer);
         }
     }
@@ -713,14 +766,18 @@ public class Board extends JFrame {
         } else if (space.getType().equals(Space.SpaceType.Property)) {
             handleRailroad(player, space);
         } else if (space.getType().equals(Space.SpaceType.GoToRestArea)) {
-            JOptionPane.showMessageDialog(null, player.toString() + " landed on Rest Area.", "Rest Area", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(null, player.toString() + " landed on Rest Area.", "Rest Area",
+                    JOptionPane.INFORMATION_MESSAGE);
         } else if (space.getType().equals(Space.SpaceType.GoToButte)) {
-            JOptionPane.showMessageDialog(null, player.toString() + " must go to Butte! Oh the horror!!", "Go to Butte", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(null, player.toString() + " must go to Butte! Oh the horror!!", "Go to Butte",
+                    JOptionPane.INFORMATION_MESSAGE);
             player.move(boardArray[9]);
         } else if (space.getType().equals(Space.SpaceType.Butte)) {
-            JOptionPane.showMessageDialog(null, player.toString() + " is just visiting Butte.", "Just Visiting", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(null, player.toString() + " is just visiting Butte.", "Just Visiting",
+                    JOptionPane.INFORMATION_MESSAGE);
         } else if (space.getType().equals(Space.SpaceType.LoseATurn)) {
-            JOptionPane.showMessageDialog(null, player.toString() + " Lost their current turn", "Lose a Turn", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(null, player.toString() + " Lost their current turn", "Lose a Turn",
+                    JOptionPane.INFORMATION_MESSAGE);
         }
         updatePlayerPanel();
     }
@@ -734,15 +791,19 @@ public class Board extends JFrame {
     private void handlePropertyLanding(Player player, Property property) {
         if (property.getOwner() == null) {
 
-            // Bot behavior (bot player does not buy property if it costs more than their current cash on hand - $125)
+            // Bot behavior (bot player does not buy property if it costs more than their
+            // current cash on hand - $125)
             if (player.isBot()) {
                 if (property.getPrice() < player.getMoney() - 125) {
                     player.buyProperty(property);
                 } else {
-                    JOptionPane.showMessageDialog(board, player + " has elected not to buy " + property.getName() + ".", "Property not purchased", JOptionPane.INFORMATION_MESSAGE);
+                    JOptionPane.showMessageDialog(board, player + " has elected not to buy " + property.getName() + ".",
+                            "Property not purchased", JOptionPane.INFORMATION_MESSAGE);
                 }
             } else {
-                int buyProperty = JOptionPane.showConfirmDialog(null, "Would you like to buy " + property.getName() + " for $" + property.getPrice() + "?", "Buy Property", JOptionPane.YES_NO_OPTION);
+                int buyProperty = JOptionPane.showConfirmDialog(null,
+                        "Would you like to buy " + property.getName() + " for $" + property.getPrice() + "?",
+                        "Buy Property", JOptionPane.YES_NO_OPTION);
                 if (buyProperty == JOptionPane.YES_OPTION) {
                     if (player.getMoney() >= property.getPrice()) {
                         player.buyProperty(property);
@@ -755,7 +816,9 @@ public class Board extends JFrame {
                         if (player.getMoney() >= property.getPrice()) {
                             player.buyProperty(property);
                         } else {
-                            JOptionPane.showMessageDialog(null, "You still don't have enough money to buy this property.", "Insufficient Funds", JOptionPane.WARNING_MESSAGE);
+                            JOptionPane.showMessageDialog(null,
+                                    "You still don't have enough money to buy this property.", "Insufficient Funds",
+                                    JOptionPane.WARNING_MESSAGE);
                         }
                     }
                 }
@@ -764,13 +827,16 @@ public class Board extends JFrame {
 
             // Pay rent!
             player.payRent(property.getOwner(), property.getRent());
-            JOptionPane.showMessageDialog(null, "This property is already owned -- pay rent of $" + property.getRent() + ".", "Pay Rent", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(null,
+                    "This property is already owned -- pay rent of $" + property.getRent() + ".", "Pay Rent",
+                    JOptionPane.WARNING_MESSAGE);
         }
         updatePlayerPanel();
     }
 
     /**
-     * Popup to have players mortgage properties until they can afford a required amount of money -- AI
+     * Popup to have players mortgage properties until they can afford a required
+     * amount of money -- AI
      *
      * @param player         the player to choose properties from
      * @param requiredAmount the amount the player needs
@@ -779,16 +845,20 @@ public class Board extends JFrame {
         while (player.getMoney() < requiredAmount) {
             List<Property> unmortgagedProperties = player.getUnmortgagedProperties();
             if (unmortgagedProperties.isEmpty()) {
-                JOptionPane.showMessageDialog(null, "You have no properties left to mortgage.", "No Available Properties", JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showMessageDialog(null, "You have no properties left to mortgage.",
+                        "No Available Properties", JOptionPane.WARNING_MESSAGE);
                 return;
             }
 
             // Convert properties to String list for selection
             String[] propertyChoices = new String[unmortgagedProperties.size()];
             for (int i = 0; i < unmortgagedProperties.size(); i++) {
-                propertyChoices[i] = unmortgagedProperties.get(i).getName() + " (Mortgage Value: $" + unmortgagedProperties.get(i).getPrice() / 2 + ")";
+                propertyChoices[i] = unmortgagedProperties.get(i).getName() + " (Mortgage Value: $"
+                        + unmortgagedProperties.get(i).getPrice() / 2 + ")";
             }
-            String chosenProperty = (String) JOptionPane.showInputDialog(null, "You need more money! Choose a property to mortgage:", "Mortgage Property", JOptionPane.QUESTION_MESSAGE, null, propertyChoices, propertyChoices[0]);
+            String chosenProperty = (String) JOptionPane.showInputDialog(null,
+                    "You need more money! Choose a property to mortgage:", "Mortgage Property",
+                    JOptionPane.QUESTION_MESSAGE, null, propertyChoices, propertyChoices[0]);
             if (chosenProperty == null) {
                 break;
             }
@@ -815,12 +885,17 @@ public class Board extends JFrame {
         if (railroad.getOwner() == null) {
 
             // Offer to buy the railroad
-            int buyRailroad = JOptionPane.showConfirmDialog(null, "Would you like to buy " + railroad.getName() + " for $" + railroad.getPrice() + "?", "Buy Railroad", JOptionPane.YES_NO_OPTION);
+            int buyRailroad = JOptionPane.showConfirmDialog(null,
+                    "Would you like to buy " + railroad.getName() + " for $" + railroad.getPrice() + "?",
+                    "Buy Railroad", JOptionPane.YES_NO_OPTION);
             if (buyRailroad == JOptionPane.YES_OPTION && player.getMoney() >= railroad.getPrice()) {
                 player.buyProperty(railroad);
-                JOptionPane.showMessageDialog(null, player + " purchased " + railroad.getName() + " for $" + railroad.getPrice(), "Purchase Successful", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(null,
+                        player + " purchased " + railroad.getName() + " for $" + railroad.getPrice(),
+                        "Purchase Successful", JOptionPane.INFORMATION_MESSAGE);
             } else if (buyRailroad == JOptionPane.YES_OPTION) {
-                JOptionPane.showMessageDialog(null, "You don't have enough money to buy this railroad!", "Not Enough Funds", JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showMessageDialog(null, "You don't have enough money to buy this railroad!",
+                        "Not Enough Funds", JOptionPane.WARNING_MESSAGE);
             }
         } else if (!railroad.getOwner().equals(player)) {
 
@@ -828,7 +903,9 @@ public class Board extends JFrame {
             int rent = railroad.getOwner().calculateRailroadRent();
             player.payRent(railroad.getOwner(), rent);
 
-            JOptionPane.showMessageDialog(null, player + " paid $" + rent + " in railroad fees to " + railroad.getOwner().getToken(), "Rent Paid", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(null,
+                    player + " paid $" + rent + " in railroad fees to " + railroad.getOwner().getToken(), "Rent Paid",
+                    JOptionPane.INFORMATION_MESSAGE);
         }
     }
 
@@ -854,7 +931,9 @@ public class Board extends JFrame {
         newTurn = false;
 
         // Show message to indicate that all players have taken their turn
-        JOptionPane.showMessageDialog(board, "All players have taken their turns. You can trade, buy houses, or end the game before continuing.", "Round Complete", JOptionPane.INFORMATION_MESSAGE);
+        JOptionPane.showMessageDialog(board,
+                "All players have taken their turns. You can trade, buy houses, or end the game before continuing.",
+                "Round Complete", JOptionPane.INFORMATION_MESSAGE);
         updatePlayerPanel();
 
         // Enable the "New Turn" button for the user to start the next round
@@ -881,7 +960,8 @@ public class Board extends JFrame {
         text.setLineWrap(true);
         text.setWrapStyleWord(true);
 
-        try (Scanner bioReader = new Scanner(new File(Paths.get(baseDir, "src", "dependencies", "rules.txt").toString()))) {
+        try (Scanner bioReader = new Scanner(
+                new File(Paths.get(baseDir, "src", "dependencies", "rules.txt").toString()))) {
             while (bioReader.hasNext()) {
                 text.setText(text.getText() + bioReader.nextLine() + "\n");
             }
@@ -956,4 +1036,3 @@ public class Board extends JFrame {
         frameToSet.setVisible(true);
     }
 }
-    

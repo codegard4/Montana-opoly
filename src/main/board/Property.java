@@ -4,7 +4,8 @@ import src.main.player.Player;
 
 /**
  * Represents a property in the game.
- * A property has attributes such as name, price, rent, owner, and number of houses.
+ * A property has attributes such as name, price, rent, owner, and number of
+ * houses.
  */
 public class Property extends Space {
 
@@ -57,7 +58,8 @@ public class Property extends Space {
     }
 
     /**
-     * Constructor for railroads. -- different because rent is based on the number of railroads owned
+     * Constructor for railroads. -- different because rent is based on the number
+     * of railroads owned
      *
      * @param name          Name of the railroad.
      * @param imgfile       Image file associated with the railroad.
@@ -74,14 +76,15 @@ public class Property extends Space {
         this.houses = 0;
 
         // Railroad rent values
-        this.rent = new int[]{25, 50, 75, 100};
+        this.rent = new int[] { 25, 50, 75, 100 };
         this.owner = null;
         this.mortgaged = false;
         this.canAddHouses = false;
     }
 
     /**
-     * Constructor for utilities. -- different because rent is calculated based on the dice roll
+     * Constructor for utilities. -- different because rent is calculated based on
+     * the dice roll
      *
      * @param name          Name of the utility.
      * @param imgfile       Image file associated with the utility.
@@ -94,7 +97,7 @@ public class Property extends Space {
         this.name = name;
 
         // Utility rent values -- times the dice roll
-        this.rent = new int[]{4, 7};
+        this.rent = new int[] { 4, 7 };
         this.price = price;
         this.color = PropertyClass.valueOf(propertyClass);
         this.houses = 0;
@@ -240,7 +243,8 @@ public class Property extends Space {
     }
 
     /**
-     * Returns a string representation of the property, including price, rent, and number of houses.
+     * Returns a string representation of the property, including price, rent, and
+     * number of houses.
      *
      * @return Property details as a string.
      */

@@ -1,16 +1,16 @@
 package src.main.board;
 
 import javax.swing.JOptionPane;
-
 import src.main.player.Player;
 
 /**
- * The card class stores chance and community chest cards and applies their rewards / penalties to the player
+ * The card class stores chance and community chest cards and applies their
+ * rewards / penalties to the player
  */
 public class Card {
     private final String description;
     private final int moneyEffect; // Positive for gain, negative for loss
-    private final int moveSpaces;  // Exact board index if goToLocation is true, -1 means no movement
+    private final int moveSpaces; // Exact board index if goToLocation is true, -1 means no movement
     private final boolean goToLocation; // If true, moveSpaces is an exact index on the board
 
     /**
@@ -29,7 +29,8 @@ public class Card {
     }
 
     /**
-     * Applies effect of Chance/Community Chest card drawn to player and displays message to board.
+     * Applies effect of Chance/Community Chest card drawn to player and displays
+     * message to board.
      *
      * @param player player who drew the card
      * @param board  board the player is playing on
@@ -49,7 +50,8 @@ public class Card {
                 if (moveSpaces >= 0 && moveSpaces < board.getBoardSize()) {
                     player.move(board.getSpaceAt(moveSpaces));
                 } else {
-                    JOptionPane.showMessageDialog(null, "Invalid move location on card: " + description, "Card Error", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(null, "Invalid move location on card: " + description, "Card Error",
+                            JOptionPane.ERROR_MESSAGE);
                 }
             } else {
                 // Move relative to the current position
@@ -57,7 +59,8 @@ public class Card {
                 int newIndex = (currentIndex + moveSpaces) % board.getBoardSize();
                 if (newIndex < currentIndex) { // Looping around the board means they passed GO
                     player.passGo();
-                    JOptionPane.showMessageDialog(null, player.getToken() + " passed GO and collected $200!", "Pass GO", JOptionPane.INFORMATION_MESSAGE);
+                    JOptionPane.showMessageDialog(null, player.getToken() + " passed GO and collected $200!", "Pass GO",
+                            JOptionPane.INFORMATION_MESSAGE);
                 }
                 player.move(board.getSpaceAt(newIndex));
             }

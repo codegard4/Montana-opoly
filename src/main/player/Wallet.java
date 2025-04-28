@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import src.main.board.Property;
 
 /**
@@ -24,9 +23,9 @@ public class Wallet {
         this.money = startingMoney;
         this.properties = new ArrayList<>();
         fullSetList = new HashMap<>();
-        String[] colors = new String[]{"Brown", "LightBlue", "Magenta", "Orange", "Red", "Yellow", "Green", "Blue"};
+        String[] colors = new String[] { "Brown", "LightBlue", "Magenta", "Orange", "Red", "Yellow", "Green", "Blue" };
         for (int i = 0; i < colors.length; i++) {
-            int[] numFull = new int[]{2, 3, 3, 3, 3, 3, 3, 3};
+            int[] numFull = new int[] { 2, 3, 3, 3, 3, 3, 3, 3 };
             fullSetList.put(colors[i], numFull[i]);
         }
     }
@@ -68,7 +67,8 @@ public class Wallet {
     }
 
     /**
-     * Adds a property to the player's wallet. If the player collects all properties of the same color,
+     * Adds a property to the player's wallet. If the player collects all properties
+     * of the same color,
      * the full set status is updated.
      *
      * @param property The property to be added.
@@ -99,7 +99,8 @@ public class Wallet {
      */
     public void removeProperty(Property property) {
         boolean removed = properties.remove(property);
-        if (!removed) return;
+        if (!removed)
+            return;
 
         String col = property.getColor();
 

@@ -47,7 +47,8 @@ public class Space {
         if (imgFile == null) {
             this.spaceImg = null;
         } else {
-            this.spaceImg = new ImageIcon(Paths.get(baseDir, "src", "dependencies", "propertyImages", imgFile).toString());
+            this.spaceImg = new ImageIcon(
+                    Paths.get(baseDir, "src", "dependencies", "propertyImages", imgFile).toString());
         }
     }
 

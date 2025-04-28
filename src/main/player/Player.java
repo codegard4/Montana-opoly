@@ -20,7 +20,8 @@ public class Player {
     private String token; // Player's token
 
     /**
-     * Default constructor for the Player. Players should be constructed fully at the start
+     * Default constructor for the Player. Players should be constructed fully at
+     * the start
      * of the game.
      */
     public Player(boolean isCPU) {
@@ -143,7 +144,8 @@ public class Player {
     public Property sellProperty(Property property, Player buyer) {
         if (wallet.getProperties().contains(property)) {
 
-            // Add the money and remove the money from the player; remove the money and add the property to the buyer
+            // Add the money and remove the money from the player; remove the money and add
+            // the property to the buyer
             wallet.addMoney(property.getPrice());
             wallet.getProperties().remove(property);
             buyer.wallet.removeMoney(property.getPrice());
@@ -201,7 +203,8 @@ public class Player {
         int totalWealth = wallet.getMoney();
         for (Property property : wallet.getProperties()) {
 
-            // Each property and house are only worth 90% of their purchase price at the end of the game
+            // Each property and house are only worth 90% of their purchase price at the end
+            // of the game
             totalWealth += (int) (property.getHouseValue() * 0.9);
             if (property.isMortgaged()) {
                 totalWealth += property.getPrice() / 2;

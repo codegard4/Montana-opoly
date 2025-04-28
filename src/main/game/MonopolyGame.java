@@ -32,7 +32,8 @@ public class MonopolyGame {
     private static final Color HUNTER_GREEN = new Color(35, 133, 51); // Background color
 
     /**
-     * Main method for monopoly game which calls monopoly game and then board with the arguments
+     * Main method for monopoly game which calls monopoly game and then board with
+     * the arguments
      * that are passed from monopoly game
      *
      * @param args arguments from the command line that are not used
@@ -80,7 +81,6 @@ public class MonopolyGame {
         return gameParams;
     }
 
-
     /**
      * Constructor initializes the game and opens the start screen.
      */
@@ -89,7 +89,8 @@ public class MonopolyGame {
     }
 
     /**
-     * Opens the start screen of the game, allowing the player to start or view game details.
+     * Opens the start screen of the game, allowing the player to start or view game
+     * details.
      */
     private void openGame() {
         startScreen = new JFrame("Montana-opoly");
@@ -100,7 +101,8 @@ public class MonopolyGame {
         contentPane.setLayout(new OverlayLayout(contentPane));
         JPanel background = new JPanel();
         background.setLayout(null);
-        ImageIcon picture = new ImageIcon(Paths.get(baseDir, "src", "dependencies", "Montana-opoly_Title_Screen.jpg").toString());
+        ImageIcon picture = new ImageIcon(
+                Paths.get(baseDir, "src", "dependencies", "Montana-opoly_Title_Screen.jpg").toString());
         JLabel picLabel = new JLabel(picture);
         picLabel.setBounds(0, 0, width, height);
 
@@ -176,13 +178,15 @@ public class MonopolyGame {
 
         if ((numPlayers + numBots) < 2) {
             numBots++;
-            JOptionPane.showMessageDialog(null, "Must have at least 2 players -- adding a bot", "Too Few Players", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Must have at least 2 players -- adding a bot", "Too Few Players",
+                    JOptionPane.WARNING_MESSAGE);
         }
         if (numPlayers + numBots > 4) {
             numBots = 4 - numPlayers;
-            JOptionPane.showMessageDialog(null, "Number of players must be <= 4 -- removing bot(s)", "Too Many Players", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Number of players must be <= 4 -- removing bot(s)", "Too Many Players",
+                    JOptionPane.WARNING_MESSAGE);
         }
-        gameParams = new int[]{numPlayers, numTurns, numBots};
+        gameParams = new int[] { numPlayers, numTurns, numBots };
     }
 
     /**
@@ -195,7 +199,8 @@ public class MonopolyGame {
         for (int i = 0; i < maxBots; i++) {
             options[i] = i;
         }
-        return (int) JOptionPane.showInputDialog(null, "How many bots will play?", "Bot Selection", JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
+        return (int) JOptionPane.showInputDialog(null, "How many bots will play?", "Bot Selection",
+                JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
     }
 
     /**
@@ -204,8 +209,9 @@ public class MonopolyGame {
      * @return the number of turns selected
      */
     private int getNumberTurns() {
-        Integer[] options = {5, 10, 20, 30, 50};
-        return (int) JOptionPane.showInputDialog(null, "How many turns will the game last?", "Turn Selection", JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
+        Integer[] options = { 5, 10, 20, 30, 50 };
+        return (int) JOptionPane.showInputDialog(null, "How many turns will the game last?", "Turn Selection",
+                JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
     }
 
     /**
@@ -214,8 +220,9 @@ public class MonopolyGame {
      * @return the number of players selected
      */
     private int getPlayerCount() {
-        Integer[] options = {1, 2, 3, 4};
-        return (int) JOptionPane.showInputDialog(null, "How many players will be playing? (Max 4 real & CPU)", "Player Selection", JOptionPane.QUESTION_MESSAGE, null, options, options[1]);
+        Integer[] options = { 1, 2, 3, 4 };
+        return (int) JOptionPane.showInputDialog(null, "How many players will be playing? (Max 4 real & CPU)",
+                "Player Selection", JOptionPane.QUESTION_MESSAGE, null, options, options[1]);
     }
 
     /**
@@ -224,7 +231,6 @@ public class MonopolyGame {
     private void exit() {
         System.exit(0);
     }
-
 
     /**
      * Loads and displays the team biography screen.
@@ -243,7 +249,8 @@ public class MonopolyGame {
         text.setLineWrap(true);
         text.setWrapStyleWord(true);
 
-        try (Scanner bioReader = new Scanner(new File(Paths.get(baseDir, "src", "dependencies", "teamBio.txt").toString()))) {
+        try (Scanner bioReader = new Scanner(
+                new File(Paths.get(baseDir, "src", "dependencies", "teamBio.txt").toString()))) {
             while (bioReader.hasNext()) {
                 text.setText(text.getText() + bioReader.nextLine() + "\n");
             }
@@ -268,7 +275,8 @@ public class MonopolyGame {
         text.setText("");
         text.setLineWrap(true);
         text.setWrapStyleWord(true);
-        try (Scanner bioReader = new Scanner(new File(Paths.get(baseDir, "src", "dependencies", "rules.txt").toString()))) {
+        try (Scanner bioReader = new Scanner(
+                new File(Paths.get(baseDir, "src", "dependencies", "rules.txt").toString()))) {
             while (bioReader.hasNext()) {
                 text.setText(text.getText() + bioReader.nextLine() + "\n");
             }
